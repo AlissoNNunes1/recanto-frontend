@@ -1,0 +1,53 @@
+.site-header {
+    background-color: #f8f9fa;
+    padding: 10px;
+    text-align: center;
+  }
+  
+  .logo {
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  nav ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  nav ul li a {
+    text-decoration: none;
+    color: #007bff;
+    display: block;
+  }
+
+  @media (min-width: 768px) {
+    .site-header {
+      text-align: left;
+      padding: 20px 40px;
+    }
+  
+    .logo {
+      font-size: 24px;
+    }
+  
+    nav ul {
+      display: flex;
+      justify-content: center;
+    }
+  
+    nav ul li {
+      border-bottom: none;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  
+    nav ul li a {
+      font-size: 18px;
+    }
+  }

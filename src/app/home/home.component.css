@@ -1,0 +1,35 @@
+.home-container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+  }
+  
+  .home-container h2 {
+    color: #333;
+  }
+  
+  .home-container p {
+    margin-bottom: 1rem;
+  }
+  
+  .home-container ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  .home-container ul li {
+    margin-bottom: 0.5rem;
+  }
+  
+  .home-container ul li a {
+    color: #007bff;
+    text-decoration: none;
+  }
+  
+  .home-container ul li a:hover {
+    text-decoration: underline;
+  }
+  

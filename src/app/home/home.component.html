@@ -1,0 +1,11 @@
+<!-- src/app/home/home.component.html -->
+
+<div class="home-container">
+    <h2>Bem-vindo à página inicial!</h2>
+    <p *ngIf="role === 'adm'">Você está logado como administrador.</p>
+    <p *ngIf="role === 'funcionario'">Você está logado como usuário.</p>
+    <p *ngIf="!role">Você está logado, mas seu tipo de usuário não é identificado.</p>
+
+  </div>
+
+  

@@ -1,1 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+
+/* Responsividade */
+
+@media screen and (min-width: 768px) {
+    .login-container {
+      max-width: 400px; /* Largura máxima de 400px para desktops */
+      margin: 50px auto; /* Margem de 50px acima e abaixo e centralizado horizontalmente */
+    }
+  
+    .form-group {
+      margin-bottom: 15px;
+    }
+  
+    .form-group label {
+      margin-bottom: 5px;
+    }
+  
+    .form-group input[type="text"],
+    .form-group input[type="password"] {
+      width: 100%;
+      padding: 10px;
+    }
+  
+    button[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+    }
+  }
+
