@@ -1,0 +1,44 @@
+<form [formGroup]="residentForm" (ngSubmit)="onSubmit()">
+    <div>
+      <label for="name">Nome:</label>
+      <input id="name" type="text" formControlName="name">
+    </div>
+  
+    <div>
+      <label for="cpf">CPF:</label>
+      <input id="cpf" type="text" formControlName="cpf">
+    </div>
+  
+    <div>
+      <label for="rg">RG:</label>
+      <input id="rg" type="text" formControlName="rg">
+    </div>
+  
+    <div>
+      <label for="email">Email:</label>
+      <input id="email" type="email" formControlName="email">
+    </div>
+  
+    <div>
+      <label for="emergency_contact">Contato de Emergência:</label>
+      <input id="emergency_contact" type="text" formControlName="emergency_contact">
+    </div>
+  
+    <div>
+      <label for="birth_date">Data de Nascimento:</label>
+      <input id="birth_date" type="date" formControlName="birth_date">
+    </div>
+  
+    <div>
+      <label for="medical_history">Histórico Médico:</label>
+      <textarea id="medical_history" formControlName="medical_history"></textarea>
+    </div>
+  
+    <div>
+      <label for="photo">Foto:</label>
+      <input id="photo" type="text" formControlName="photo">
+    </div>
+  
+    <button type="submit" [disabled]="!residentForm.valid">Adicionar Residente</button>
+  </form>
+  

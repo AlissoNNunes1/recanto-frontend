@@ -1,5 +1,7 @@
 <div class="residents-container">
     <h1>Residents</h1>
+    <!-- Botão Adicionar Residente -->
+<button (click)="addResident()" *ngIf="isAdmin">Adicionar Residente</button>
     <table>
       <thead>
         <tr>
