@@ -1,12 +1,23 @@
 /* You can add global styles to this file, and also import other style files */
+
 * {
     font-family: 'Roboto', sans-serif;
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  
 }
 
+body {
+  display: flex;
+  flex-direction: column;
+}
+footer {
+  flex-shrink: 0;
+}
 
+main {
+  flex: 1;
+  padding: 20px;
+}
 /* Responsividade */
 
 @media screen and (min-width: 768px) {

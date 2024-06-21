@@ -1,0 +1,32 @@
+<div class="residents-container">
+    <h1>Residents</h1>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>CPF</th>
+          <th>RG</th>
+          <th>Emergency Contact</th>
+          <th>Medical History</th>
+          <th>Birth Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let resident of residents">
+          <td>{{ resident.name }}</td>
+          <td>{{ resident.email }}</td>
+          <td>{{ resident.cpf }}</td>
+          <td>{{ resident.rg }}</td>
+          <td>{{ resident.emergency_contact }}</td>
+          <td>{{ resident.medical_history }}</td>
+          <td>{{ resident.birth_date | date }}</td>
+          <td>
+            <button (click)="deleteResident(resident.id)" *ngIf="isAdmin">Delete</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  
