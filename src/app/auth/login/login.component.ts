@@ -13,24 +13,21 @@ import { FormsModule } from '@angular/forms'; // Import FormsModule
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
-  username: string = '';
-  password: string = '';
+  email: string = '';
+  senha: string = '';
 
   constructor(private authService: AuthService, private router: Router) {}
 
   onSubmit() {
-    this.authService.login(this.username, this.password).subscribe({
-      next: (response) => {
+    this.authService.login(this.email, this.senha).subscribe({
+      next: (response: any) => { // Adicione o tipo 'any' ou um tipo mais específico se disponível
         console.log('Login successful');
-        // Save token to localStorage or session storage if needed
-        // For example:
-        localStorage.setItem('access_token', response.access_token);
+        localStorage.setItem('token', response.token);
         localStorage.setItem('role', response.role);
-        this.router.navigate(['/home']); // Navigate after successful login
+        this.router.navigate(['/home']);
       },
-      error: (err) => {
+      error: (err: any) => { // Adicione o tipo 'any' ou um tipo mais específico se disponível
         console.error('Login failed', err);
-        // Display error message to the user if needed
       }
     });
   }

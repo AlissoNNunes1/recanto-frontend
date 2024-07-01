@@ -1,18 +1,18 @@
 import { Injectable } from '@angular/core';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpHeaders } from '@angular/common/http';
+import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authReq = req;
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
 
-    // Se o token existir, adicioná-lo ao header da requisição
     if (token) {
       authReq = req.clone({
         headers: req.headers.set('Authorization', `Bearer ${token}`)
@@ -20,23 +20,32 @@ export class AuthInterceptor implements HttpInterceptor {
     }
 
     return next.handle(authReq).pipe(
-      catchError(error => {
-        // Se a requisição falhou devido a um token expirado
-        if (error.status === 401 && !authReq.url.endsWith('/auth/token')) {
+      catchError((error: HttpErrorResponse) => {
+        // Verifica se o erro é devido a um token expirado ou acesso proibido
+        if ((error.status === 401 || error.status === 403) && !authReq.url.includes('/refresh-token')) {
           // Tenta obter um novo token
-          return this.authService.refreshToken().pipe(
-            switchMap((token: any) => {
-              localStorage.setItem('access_token', token.access_token);
-              // Repete a requisição original com o novo token
-              const headers = new HttpHeaders({
-                'Authorization': `Bearer ${token.access_token}`
-              });
-              const authReqRepeat = req.clone({ headers });
-              return next.handle(authReqRepeat);
-            })
-          );
+          return this.tryRefreshingTokens(authReq, next);
         }
         return throwError(error);
+      })
+    );
+  }
+
+  private tryRefreshingTokens(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return this.authService.refreshToken().pipe(
+      switchMap((response: any) => {
+        localStorage.setItem('token', response.token);
+        // Repete a requisição original com o novo token
+        const authReqRepeat = req.clone({
+          headers: req.headers.set('Authorization', `Bearer ${response.token}`)
+        });
+        return next.handle(authReqRepeat);
+      }),
+      catchError((err) => {
+        // Se o refresh também falhar, redireciona para o login
+        console.error('Error refreshing token or forbidden access', err);
+        this.authService.logout(); // Limpa o armazenamento local e redireciona para o login
+        return throwError(err);
       })
     );
   }

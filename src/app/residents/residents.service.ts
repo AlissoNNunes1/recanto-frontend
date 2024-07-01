@@ -7,13 +7,13 @@ import { Resident, ResidentCreate, ResidentUpdate, Message } from './resident';
   providedIn: 'root'
 })
 export class ResidentsService {
-  private apiUrl = 'http://localhost:8000/residents';
+  private apiUrl = 'http://localhost:3000/api/residentes';
 
   constructor(private http: HttpClient) { }
 
   private getHttpOptions() {
     console.log("Chamando getHttpOptions"); // Verifica se a função está sendo chamada
-    const token = localStorage.getItem('access_token');
+    const token = localStorage.getItem('token');
     console.log(`Token: ${token}`); // Deve mostrar o token no console
     const headers = new HttpHeaders({
       'Authorization': `Bearer ${token}`

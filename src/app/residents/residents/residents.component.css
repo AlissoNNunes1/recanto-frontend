@@ -1,0 +1,58 @@
+/* Estilos Básicos - Mobile First */
+.residents-container {
+  padding: 15px;
+}
+
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.mat-table {
+  width: 100%;
+}
+
+.mat-header-cell, .mat-cell {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+button {
+  background-color: #4CAF50; /* Cor primária */
+  color: white;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px; /* Adiciona bordas arredondadas para melhor estética */
+}
+
+button:hover {
+  background-color: #367c39; /* Escurece o botão ao passar o mouse para melhor feedback visual */
+}
+
+/* Estilos para telas maiores que 600px */
+@media (min-width: 37.5rem) { /* 600px / 16px = 37.5rem */
+  .residents-container {
+      padding: 2.5rem; /* 40px / 16px = 2.5rem */
+  }
+
+  h1 {
+      font-size: 2rem; /* 32px / 16px = 2rem */
+  }
+
+  .mat-header-cell, .mat-cell {
+      padding: 0.75rem; /* 12px / 16px = 0.75rem */
+  }
+}
+
+/* Estilos para telas de PC - acima de 1024px */
+@media (min-width: 64rem) { /* 1024px / 16px = 64rem */
+  .mat-header-cell, .mat-cell {
+      padding: 0.9375rem; /* 15px / 16px = 0.9375rem */
+  }
+
+  button {
+      padding: 0.9375rem; /* 15px / 16px = 0.9375rem */
+  }
+}

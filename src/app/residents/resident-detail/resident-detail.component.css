@@ -1,0 +1,99 @@
+/* Estilos Básicos - Mobile First */
+.resident-detail-container {
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+  }
+  
+  h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .gender-and-photo {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+  
+  .gender {
+    flex: 1;
+  }
+  
+  .gender strong {
+    display: block;
+  }
+  
+  .gender-symbol {
+    font-size: 24px;
+    margin-left: 5px;
+  }
+  
+  .photo {
+    flex-shrink: 0;
+    margin-left: 20px;
+  }
+  
+  .photo img {
+    max-width: 150px;
+    max-height: 150px;
+    border-radius: 50%;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  .resident-detail-container > div {
+    margin-bottom: 10px;
+  }
+  
+  button {
+    margin-top: 15px;
+  }
+  
+  /* Estilos para telas maiores que 600px */
+  @media (min-width: 37.5rem) { /* 600px / 16px = 37.5rem */
+    .resident-detail-container {
+      padding: 30px;
+    }
+  
+    h2 {
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+  
+    .gender-and-photo {
+      margin-bottom: 20px;
+    }
+  
+    .gender-symbol {
+      font-size: 32px;
+    }
+  
+    .photo img {
+      max-width: 200px;
+      max-height: 200px;
+    }
+  }
+  
+  /* Estilos para telas de PC - acima de 1024px */
+  @media (min-width: 64rem) { /* 1024px / 16px = 64rem */
+    .resident-detail-container {
+      padding: 40px;
+    }
+  
+    h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+  
+    .gender-symbol {
+      font-size: 36px;
+    }
+  
+    .photo img {
+      max-width: 250px;
+      max-height: 250px;
+    }
+  }
+  

@@ -1,0 +1,37 @@
+<div class="resident-detail-container" *ngIf="resident">
+    <h2>{{resident.nome}}</h2>
+    
+    <div class="gender-and-photo">
+      <div class="gender">
+        
+        <span class="gender-symbol">{{resident.sexo === 'M' ? '♂' : '♀'}}</span>
+      </div>
+      <div class="photo">
+        <strong>Foto:</strong>
+        <img [src]="resident.foto" alt="Foto do Residente" *ngIf="resident.foto">
+      </div>
+    </div>
+  
+    <div>
+      <strong>CPF:</strong> {{resident.cpf}}
+    </div>
+    
+    <div>
+      <strong>Email:</strong> {{resident.email}}
+    </div>
+    
+    <div>
+      <strong>Contato de Emergência:</strong> {{resident.contatoEmergencia}}
+    </div>
+    
+    <div>
+      <strong>Data de Nascimento:</strong> {{resident.dataNascimento | date:'dd/MM/yyyy'}}
+    </div>
+    
+    <div>
+      <strong>Histórico Médico:</strong> {{resident.historicoMedico}}
+    </div>
+    
+    <button mat-button color="green" (click)="goBack()">Voltar</button>
+  </div>
+  

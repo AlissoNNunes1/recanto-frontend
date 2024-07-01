@@ -1,44 +1,51 @@
 <form [formGroup]="residentForm" (ngSubmit)="onSubmit()">
-    <div>
-      <label for="name">Nome:</label>
-      <input id="name" type="text" formControlName="name">
-    </div>
-  
-    <div>
-      <label for="cpf">CPF:</label>
-      <input id="cpf" type="text" formControlName="cpf">
-    </div>
-  
-    <div>
-      <label for="rg">RG:</label>
-      <input id="rg" type="text" formControlName="rg">
-    </div>
-  
-    <div>
-      <label for="email">Email:</label>
-      <input id="email" type="email" formControlName="email">
-    </div>
-  
-    <div>
-      <label for="emergency_contact">Contato de Emergência:</label>
-      <input id="emergency_contact" type="text" formControlName="emergency_contact">
-    </div>
-  
-    <div>
-      <label for="birth_date">Data de Nascimento:</label>
-      <input id="birth_date" type="date" formControlName="birth_date">
-    </div>
-  
-    <div>
-      <label for="medical_history">Histórico Médico:</label>
-      <textarea id="medical_history" formControlName="medical_history"></textarea>
-    </div>
-  
-    <div>
-      <label for="photo">Foto:</label>
-      <input id="photo" type="text" formControlName="photo">
-    </div>
-  
-    <button type="submit" [disabled]="!residentForm.valid">Adicionar Residente</button>
-  </form>
-  
+  <mat-form-field appearance="fill">
+    <mat-label>Nome:</mat-label>
+    <input matInput id="name" formControlName="nome">
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Sexo:</mat-label>
+    <mat-select id="sexo" formControlName="sexo">
+      <mat-option value="M">Masculino</mat-option>
+      <mat-option value="F">Feminino</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill" hintLabel="Max 11 caracteres">
+    <mat-label>CPF:</mat-label>
+    <input matInput #input maxlength="11" placeholder="sem pontuação" (input)="onInput($event)" id="cpf" formControlName="cpf">
+    <mat-hint align="end">{{value().length}}/11</mat-hint>
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Email:</mat-label>
+    <input matInput id="email" type="email" formControlName="email">
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>Telefone</mat-label>
+    <input matInput id="telefone" formControlName="telefone">
+
+  </mat-form-field>
+  <mat-form-field appearance="fill">
+    <mat-label>Contato de Emergência:</mat-label>
+    <input matInput id="contatoEmergencia" formControlName="contatoEmergencia">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Data de Nascimento:</mat-label>
+    <input matInput id="dataNascimento" type="date" formControlName="dataNascimento">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Histórico Médico:</mat-label>
+    <textarea matInput id="historicoMedico" formControlName="historicoMedico"></textarea>
+  </mat-form-field>
+
+  <div class="foto-upload">
+    <label for="foto">Foto:</label>
+    <input type="file" (change)="onFileSelected($event)" id="foto" accept="image/*">
+  </div>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="!residentForm.valid">Adicionar Residente</button>
+</form>

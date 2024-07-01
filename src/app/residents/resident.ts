@@ -1,36 +1,39 @@
 export interface Resident {
     id: number;
-    name: string;
+    nome: string;
+    sexo: string;
     email: string;
     cpf: string;
     rg: string;
-    emergency_contact: string;
-    medical_history: string;
-    photo: string;
-    birth_date: string;
+    contatoEmergencia: string;
+    historicoMedico: string;
+    foto: string;
+    dataNascimento: string;
     user_id: number;
   }
   
   export interface ResidentCreate {
-    name: string;
+    nome: string;
     email: string;
+    sexo: string;
     cpf: string;
     rg: string;
-    emergency_contact: string;
-    medical_history: string;
-    photo: string;
-    birth_date: string;
+    contatoEmergencia: string;
+    historicoMedico: string;
+    foto: string;
+    dataNascimento: string;
   }
   
   export interface ResidentUpdate {
-    name: string;
+    nome: string;
     email: string;
+    sexo: string;
     cpf: string;
     rg: string;
-    emergency_contact: string;
-    medical_history: string;
-    photo: string;
-    birth_date: string;
+    contatoEmergencia: string;
+    historicoMedico: string;
+    foto: string;
+    dataNascimento: string;
   }
   
   export interface Message {
