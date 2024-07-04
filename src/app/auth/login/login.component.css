@@ -1,57 +1,33 @@
-.login-container {
-    max-width: 90%;
-    margin: 10rem auto;
-    padding: 1.5rem;
-    border: 1px solid #ccc;
-    border-radius: 0.5rem;
-    box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
-    background-color: #f9f9f9;
+/* login.component.css */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+
+.spinner {
+  border: 4px solid rgba(0, 0, 0, 0.1);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border-left-color: #09f;
+  animation: spin 1s ease infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
   }
-  
-  .login-container h2 {
-    text-align: center;
-    margin-bottom: 1rem;
-    color: #333;
+  100% {
+    transform: rotate(360deg);
   }
-  
-  .form-group {
-    margin-bottom: 1rem;
-  }
-  
-  .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #666;
-  }
-  
-  .form-group input[type="text"],
-  .form-group input[type="password"] {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ccc;
-    border-radius: 0.25rem;
-    box-sizing: border-box;
-  }
-  
-  button[type="submit"] {
-    width: 100%;
-    padding: 0.75rem;
-    border: none;
-    border-radius: 0.25rem;
-    background-color: #007bff;
-    color: white;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button[type="submit"]:hover {
-    background-color: #0056b3;
-  }
-  
-  button[type="submit"]:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
-  
+}
+
+p {
+  margin-top: 20px;
+  font-size: 1.2em;
+  color: #555;
+}

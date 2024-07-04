@@ -7,7 +7,7 @@ import { Resident, ResidentCreate, ResidentUpdate, Message } from './resident';
   providedIn: 'root'
 })
 export class ResidentsService {
-  private apiUrl = 'http://localhost:3000/api/residentes';
+  private apiUrl = 'http://192.168.0.169:3000/api/residentes';
 
   constructor(private http: HttpClient) { }
 

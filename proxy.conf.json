@@ -1,0 +1,10 @@
+{
+  "/api-ip": {
+    "target": "http://ipv4.myexternalip.com/json",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": {
+      "^/api-ip": ""
+    }
+  }
+}
