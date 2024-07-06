@@ -6,8 +6,9 @@
       <!-- Navbar brand -->
       <a class="navbar-brand" href="/home"><img
         src="https://raw.githubusercontent.com/AlissoNNunes1/recanto-frontend/main/src/assets/6.png"
-        height="60"
+
         loading="eager"
+        fetchpriority="high"
 
         />
       </a>
@@ -36,6 +37,7 @@
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="residents">Residentes</a>
+            <a *ngIf="role === 'admin'" class="nav-link active" aria-current="page" href="funcionarios">Funcionários</a>
           </li>
 
         </ul>

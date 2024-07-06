@@ -1,0 +1,36 @@
+<div class="funcionarios-container">
+  <h1>Funcionários</h1>
+  <!-- Campo de Filtro -->
+  <input matInput (keyup)="applyFilter($event)" placeholder="Filtrar">
+  <!-- Lista de Funcionários em Grid -->
+  <mat-grid-list cols="4" rowHeight="1:1" gutterSize="16px">
+    <mat-grid-tile *ngFor="let funcionario of dataSource.filteredData">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>{{ funcionario.nome }}</mat-card-title>
+          <mat-card-subtitle>{{ funcionario.email }}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>CPF: {{ funcionario.cpf }}</p>
+          <p>Função: {{ funcionario.funcao }}</p>
+          <p>Turno: {{ funcionario.turno }}</p>
+          <p>Telefone: {{ funcionario.telefone }}</p>
+          <p>Email: {{ funcionario.email }}</p>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-icon-button (click)="viewFuncionario(funcionario.id)" aria-label="Visualizar">
+            <mat-icon>visibility</mat-icon>
+          </button>
+          <button mat-icon-button (click)="updateFuncionario(funcionario)" *ngIf="isAdmin" aria-label="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button (click)="deleteFuncionario(funcionario.id)" *ngIf="isAdmin" aria-label="Deletar" color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-grid-tile>
+  </mat-grid-list>
+  <!-- Botão Adicionar Funcionário -->
+  <button mat-raised-button color="primary" (click)="addFuncionario()" *ngIf="isAdmin">Adicionar Funcionário</button>
+</div>

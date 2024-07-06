@@ -49,7 +49,9 @@ export class AuthService {
       catchError(this.handleError)
     );
   }
-
+  get isAdmin(): boolean {
+    return localStorage.getItem('role') === 'admin';
+  }
   refreshToken(): Observable<any> {
     const refreshToken = localStorage.getItem('newToken');
     if (!refreshToken) {

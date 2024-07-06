@@ -1,0 +1,38 @@
+<form [formGroup]="funcionarioForm" (ngSubmit)="onSubmit()">
+  <mat-form-field appearance="fill">
+    <mat-label>Nome</mat-label>
+    <input matInput formControlName="nome">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>CPF</mat-label>
+    <input matInput formControlName="cpf">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Função</mat-label>
+    <input matInput formControlName="funcao">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Turno</mat-label>
+    <input matInput formControlName="turno">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Telefone</mat-label>
+    <input matInput formControlName="telefone">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input matInput formControlName="email">
+  </mat-form-field>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Usuário ID</mat-label>
+    <input matInput formControlName="UsuarioId">
+  </mat-form-field>
+
+  <button mat-raised-button color="primary" type="submit" [disabled]="!funcionarioForm.valid">Adicionar Funcionário</button>
+</form>

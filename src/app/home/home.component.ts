@@ -13,11 +13,14 @@ import { CommonModule } from '@angular/common'; // Importar CommonModule
 })
 export class HomeComponent implements OnInit {
   role: string = '';
+  nome: string = '';
+
 
   ngOnInit() {
     // Verificar se está executando no navegador
     if (typeof localStorage !== 'undefined') {
       this.role = localStorage.getItem('role') || 'funcionário';
+      this.nome = localStorage.getItem('nome') || 'Usuário';
     } else {
       // Definir um valor padrão ou realizar alguma ação alternativa se não estiver no navegador
       this.role = 'funcionário';

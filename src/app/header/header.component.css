@@ -1,3 +1,56 @@
-i{
-  color:#000000E6;
+/* Mobile First - estilos padrão para dispositivos móveis */
+.navbar-brand img {
+  height: auto;
+  block-size: auto;
+  object-fit: contain;
+  width: 100%; /* Define a largura da imagem para 100% do container */
+  max-width: 60px; /* Limita a largura máxima da imagem */
+}
+
+/* Tablet e acima */
+@media (min-width: 600px) {
+  .navbar-brand img {
+    max-width: 80px; /* Aumenta a largura máxima da imagem */
+  }
+}
+
+/* Desktop e acima */
+@media (min-width: 992px) {
+  .navbar-brand img {
+    max-width: 100px; /* Aumenta ainda mais a largura máxima da imagem */
+  }
+}
+
+/* Estilos para a barra de navegação */
+.navbar-nav {
+  list-style: none; /* Remove os marcadores da lista */
+  padding: 0; /* Remove o padding padrão */
+  margin: 0; /* Remove a margem padrão */
+  display: flex; /* Usa flexbox para alinhar os itens */
+  flex-direction: column; /* Alinha os itens verticalmente por padrão */
+}
+
+/* Tablet e acima */
+@media (min-width: 600px) {
+  .navbar-nav {
+    flex-direction: row; /* Alinha os itens horizontalmente em telas maiores */
+  }
+}
+
+/* Estiliza os itens da lista */
+.nav-item {
+  margin-bottom: 10px; /* Adiciona espaço entre os itens da lista em dispositivos móveis */
+}
+
+/* Tablet e acima */
+@media (min-width: 600px) {
+  .nav-item {
+    margin-bottom: 0; /* Remove o espaço entre os itens da lista em telas maiores */
+    margin-right: 20px; /* Adiciona espaço entre os itens da lista em telas maiores */
+  }
+}
+
+/* Opcional: Remove o espaço extra no último item */
+.nav-item:last-child {
+  margin-right: 0;
 }
