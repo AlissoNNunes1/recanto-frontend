@@ -14,10 +14,10 @@ export class HeaderComponent implements OnInit {
   imageUrl: string;
   role: string = '';
   nome: string = '';
+  sidebarOpen: boolean = false;
 
   constructor(@Inject(IMAGE_LOADER) private imageLoader: (config: ImageLoaderConfig) => string) {
-    // Substitua '6.png' pelo caminho correto da imagem conforme necessário
-    this.imageUrl = this.imageLoader({ src: '6.png' });
+    this.imageUrl = this.imageLoader({ src: 'https://github.com/AlissoNNunes1/recanto-frontend/blob/main/src/assets/6.png?raw=true' });
   }
 
   ngOnInit(): void {
@@ -28,6 +28,8 @@ export class HeaderComponent implements OnInit {
       this.role = 'funcionário';
     }
   }
+
+  toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
+  }
 }
-
-

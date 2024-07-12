@@ -1,0 +1,48 @@
+/* Estilos Mobile First (padrão) */
+form {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+}
+
+mat-form-field {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+button {
+  align-self: center;
+  width: 100%;
+}
+
+/* Tablet e acima */
+@media (min-width: 600px) {
+  form {
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  button {
+    width: 50%;
+  }
+}
+
+/* Desktop e acima */
+@media (min-width: 992px) {
+  form {
+    max-width: 700px;
+  }
+
+  mat-form-field {
+    width: 48%;
+    margin-right: 2%;
+  }
+
+  mat-form-field:nth-child(even) {
+    margin-right: 0;
+  }
+
+  button {
+    width: 30%;
+  }
+}

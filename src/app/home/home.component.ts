@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit {
     if (typeof localStorage !== 'undefined') {
       this.role = localStorage.getItem('role') || 'funcionário';
       this.nome = localStorage.getItem('nome') || 'Usuário';
+      this.nome = this.nome.split(' ')[0];
     } else {
       // Definir um valor padrão ou realizar alguma ação alternativa se não estiver no navegador
       this.role = 'funcionário';

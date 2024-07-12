@@ -9,11 +9,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { CommonModule } from '@angular/common';
 import { trigger, transition, style, animate } from '@angular/animations';
 
-
 @Component({
   selector: 'app-add-resident-form',
   standalone: true,
-  imports: [ReactiveFormsModule, MatInputModule, MatButtonModule, MatSelectModule, MatFormFieldModule, ],
+  imports: [
+    ReactiveFormsModule,
+    MatInputModule,
+    MatButtonModule,
+    MatSelectModule,
+    MatFormFieldModule,
+    CommonModule
+  ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './add-resident-form.component.html',
   styleUrls: ['./add-resident-form.component.css'],
@@ -46,14 +52,13 @@ export class AddResidentFormComponent implements OnInit {
     this.residentForm = this.fb.group({
       nome: ['', Validators.required],
       sexo: ['', Validators.required],
-      cpf: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],   
+      cpf: ['', [Validators.required, Validators.minLength(11), Validators.maxLength(11)]],
       email: ['', [Validators.required, Validators.email]],
-      telefone: ['', ],
+      telefone: [''],
       contatoEmergencia: ['', Validators.required],
       dataNascimento: ['', Validators.required],
       historicoMedico: [''],
       foto: ['']
-      
     });
   }
 
@@ -67,10 +72,10 @@ export class AddResidentFormComponent implements OnInit {
   }
 
   onSubmit(): void {
-    console.log('Form Submitted', this.residentForm.value);
-    if (this.residentForm.valid && this.selectedFile) {
-      console.log('Form is valid, closing dialog with result:', this.residentForm.value);
-      this.dialogRef.close(this.residentForm.value);
+    if (this.residentForm.valid) {
+      const formData = { ...this.residentForm.value, foto: this.selectedFile };
+      console.log('Form Submitted', formData);
+      this.dialogRef.close(formData);
     } else {
       console.log('Formulário inválido');
     }

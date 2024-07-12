@@ -1,7 +1,7 @@
 <div class="residents-container">
   <h1>Residentes</h1>
   <!-- Botão Adicionar Residente -->
-  
+
   <input matInput (keyup)="applyFilter($event)" placeholder="Filtrar">
   <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
 
@@ -23,7 +23,16 @@
 
     <ng-container matColumnDef="contatoEmergencia">
       <mat-header-cell *matHeaderCellDef> Contato de Emergência </mat-header-cell>
-      <mat-cell *matCellDef="let resident"> {{resident.contatoEmergencia}} </mat-cell>
+      <mat-cell *matCellDef="let resident">
+        <!-- Ícone WhatsApp -->
+        <a href="https://wa.me/{{resident.contatoEmergencia}}" target="_blank">
+          <i class="material-icons" style="cursor:pointer;">chat</i>
+        </a>
+        <!-- Ícone Chamada Telefônica -->
+        <a href="tel:{{resident.contatoEmergencia}}">
+          <i class="material-icons" style="cursor:pointer;">phone</i>
+        </a>
+      </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="historicoMedico">

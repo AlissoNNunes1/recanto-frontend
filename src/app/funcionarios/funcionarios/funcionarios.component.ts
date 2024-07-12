@@ -2,20 +2,19 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FuncionariosService } from '../funcionarios.service';
 import { Funcionario } from '../funcionario';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatTableDataSource } from '@angular/material/table';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { DatePipe, CommonModule } from '@angular/common';
 import { ContentService } from '../../services/content.service';
 import { Router } from '@angular/router';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-import {MatCardModule} from '@angular/material/card';
-import {MatGridListModule} from '@angular/material/grid-list';
-import {MatIconModule} from '@angular/material/icon';
+
+
 @Component({
   selector: 'app-funcionarios',
   standalone: true,
-  imports: [DatePipe, CommonModule, MatDialogModule, MatSortModule, MatCardModule, MatGridListModule, MatIconModule],
+  imports: [DatePipe, CommonModule, MatDialogModule, MatSortModule, MatTableModule  ],
   templateUrl: './funcionarios.component.html',
   styleUrls: ['./funcionarios.component.css']
 })
@@ -74,7 +73,7 @@ export class FuncionariosComponent implements OnInit {
   }
 
   addFuncionario(): void {
-    this.router.navigate(['/funcionarios/create']);
+    this.router.navigate(['/funcionarios/add']);
   }
 
   viewFuncionario(id: number): void {
@@ -88,4 +87,6 @@ export class FuncionariosComponent implements OnInit {
   deleteFuncionario(id: number): void {
     // Implementar a função de deleção de funcionário
   }
+
+  displayedColumns: string[] = [ 'nome', 'cpf', 'funcao', 'turno', 'telefone', 'email',  'acoes'];
 }

@@ -1,10 +1,9 @@
 /* Mobile First - estilos padrão para dispositivos móveis */
 .navbar-brand img {
-  height: auto;
-  block-size: auto;
-  object-fit: contain;
   width: 100%; /* Define a largura da imagem para 100% do container */
   max-width: 60px; /* Limita a largura máxima da imagem */
+  height: auto;
+  object-fit: contain;
 }
 
 /* Tablet e acima */
