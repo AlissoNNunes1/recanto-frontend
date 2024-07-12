@@ -1,5 +1,22 @@
 <!-- login.component.html -->
-<div class="loading-container">
+
+<div *ngIf="!ipNaoAutorizado" class="loading-container">
   <div class="spinner"></div>
   <p>Fazendo login, por favor aguarde...</p>
 </div>
+
+<div *ngIf="ipNaoAutorizado" class="login-container">
+  <h2>Login</h2>
+  <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
+    <div class="form-group">
+      <label for="username">Username</label>
+      <input type="text" id="username" name="username" [(ngModel)]="username" required>
+    </div>
+    <div class="form-group">
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" [(ngModel)]="senha" required>
+    </div>
+    <button type="submit" [disabled]="!loginForm.form.valid">Login</button>
+  </form>
+</div>
+

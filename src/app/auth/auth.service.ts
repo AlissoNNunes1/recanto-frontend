@@ -1,9 +1,10 @@
+// src/app/auth/auth.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, switchMap, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
-import jsonp from 'jsonp';
 
 @Injectable({
   providedIn: 'root'
@@ -28,30 +29,51 @@ export class AuthService {
       .then(data => data.ip));
   }
 
-  login(): Observable<any> {
-    return this.getPublicIp().pipe(
-      switchMap(ip => {
-        const body = { identificadorDispositivo: ip };
-        const headers = new HttpHeaders({
-          'Content-Type': 'application/json',
-        });
+  login(ip?: string, username?: string, senha?: string): Observable<any> {
+    if (ip) {
+      const body = { identificadorDispositivo: ip };
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+      });
 
-        return this.http.post<any>('http://192.168.0.169:3000/api/login', body, { headers }).pipe(
-          tap(response => {
-            localStorage.setItem('token', response.token);
-            if (response.newToken) {
-              localStorage.setItem('newToken', response.newToken);
-            }
-          }),
-          catchError(this.handleError)
-        );
-      }),
-      catchError(this.handleError)
-    );
+      return this.http.post<any>('http://192.168.0.169:3000/api/login', body, { headers }).pipe(
+        tap(response => {
+          localStorage.setItem('token', response.token);
+          if (response.newToken) {
+            localStorage.setItem('newToken', response.newToken);
+          }
+        }),
+        catchError(error => {
+          if (error.status) {  // IP não autorizado
+            return throwError('IP não autorizado');
+          }
+          return this.handleError(error);
+        })
+      );
+    } else if (username && senha) {
+      const body = { username, senha };
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+      });
+
+      return this.http.post<any>('http://192.168.0.169:3000/api/login', body, { headers }).pipe(
+        tap(response => {
+          localStorage.setItem('token', response.token);
+          if (response.newToken) {
+            localStorage.setItem('newToken', response.newToken);
+          }
+        }),
+        catchError(this.handleError)
+      );
+    } else {
+      return throwError('username e senha são necessários para login');
+    }
   }
+
   get isAdmin(): boolean {
     return localStorage.getItem('role') === 'admin';
   }
+
   refreshToken(): Observable<any> {
     const refreshToken = localStorage.getItem('newToken');
     if (!refreshToken) {

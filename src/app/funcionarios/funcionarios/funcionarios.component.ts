@@ -8,6 +8,7 @@ import { DatePipe, CommonModule } from '@angular/common';
 import { ContentService } from '../../services/content.service';
 import { Router } from '@angular/router';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { AtribuirusuarioComponent } from '../atribuirusuario/atribuirusuario.component';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 
 
@@ -48,6 +49,37 @@ export class FuncionariosComponent implements OnInit {
       this._liveAnnouncer.announce(`Sorting removed`);
     }
   }
+
+  atribuirUsuario(funcionario: Funcionario): void {
+    const senhaGerada = funcionario.nome.split(' ')[1].toLowerCase() + funcionario.cpf.substring(0, 3)+'@'+funcionario.cpf.substring(3, 6);
+    const novoUsuario = {
+      nome: funcionario.nome,
+      username: funcionario.nome.split(' ')[0].toLowerCase() + '.' + funcionario.nome.split(' ')[1].toLowerCase(),
+      email: funcionario.email,
+      senha: senhaGerada,
+      cargo: 'funcionario'  // Ou o cargo adequado
+    };
+    this.funcionariosService.atribuirUsuario(funcionario.id, novoUsuario).subscribe(response => {
+      funcionario.UsuarioId = response.usuario.id;
+      this.dialog.open(AtribuirusuarioComponent, {
+        data: { nome: funcionario.nome, email: funcionario.email, senha: senhaGerada, role: funcionario.funcao, username: novoUsuario.username }
+      });
+    },error => {
+      console.error('Erro ao atribuir usuário', error);
+    });
+    }
+    verCredenciais(funcionario: Funcionario): void {
+      this.funcionariosService.getUsuarioByFuncionarioId(funcionario.id).subscribe(response => {
+          const usuario = response;
+          this.dialog.open(AtribuirusuarioComponent, {
+            data: { nome: funcionario.nome, email: funcionario.email, senha: usuario.senha, role: funcionario.funcao, username: usuario.username }
+          });
+      }, error => {
+          console.error('Erro ao buscar usuário', error);
+      });
+  }
+
+
 
   getFuncionarios(): void {
     const cacheKey = 'funcionarios';

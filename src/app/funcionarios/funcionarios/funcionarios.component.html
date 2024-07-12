@@ -59,6 +59,10 @@
         <i class="material-icons" style="cursor:pointer;" (click)="updateFuncionario(funcionario)" *ngIf="isAdmin">edit</i>
         <!-- Ícone Deletar -->
         <i class="material-icons" style="cursor:pointer; color: red;" (click)="deleteFuncionario(funcionario.id)" *ngIf="isAdmin">delete</i>
+        <!-- Ícone Atribuir Usuário -->
+       <i class="material-icons" style="cursor:pointer; color: green;" (click)="atribuirUsuario(funcionario)" *ngIf="isAdmin && !funcionario.UsuarioId">person_add</i>
+      <!-- Ícone Visualizar Credenciais -->
+    <i class="material-icons" style="cursor:pointer; color: blue;" (click)="verCredenciais(funcionario)" *ngIf="isAdmin && funcionario.UsuarioId">vpn_key</i>
       </td>
     </ng-container>
 

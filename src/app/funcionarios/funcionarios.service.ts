@@ -19,10 +19,19 @@ export class FuncionariosService {
     });
     return { headers };
   }
+  atribuirUsuario(funcionarioId: number, usuario: any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/${funcionarioId}/atribuirusuario`, usuario, this.getHttpOptions());
+  }
+
 
   getFuncionarios(): Observable<Funcionario[]> {
     return this.http.get<Funcionario[]>(this.apiUrl, this.getHttpOptions());
   }
+
+  getUsuarioByFuncionarioId(id: number): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/${id}/usuario`, this.getHttpOptions());
+}
+
 
   getFuncionario(id: number): Observable<Funcionario> {
     return this.http.get<Funcionario>(`${this.apiUrl}/${id}`, this.getHttpOptions());
