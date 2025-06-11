@@ -1,19 +1,17 @@
 // app.component.ts
 
-import { Component, } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterOutlet,Router,NavigationEnd } from '@angular/router';
+import { Component } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
-import { MdbCollapseModule } from 'mdb-angular-ui-kit/collapse';
-import { AuthInterceptor } from './auth/auth-inteceptor.service';
-
+import { CollapseComponent } from './shared/collapse/collapse.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, MdbCollapseModule, CommonModule, ],
+  imports: [RouterOutlet, HeaderComponent, CollapseComponent, CommonModule],
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrl: './app.component.css',
 })
 export class AppComponent {
   title = 'recanto';

@@ -10,39 +10,62 @@
         fetchpriority="high"
       />
     </a>
-
     <!-- Toggle button -->
     <button
       class="navbar-toggler btn btn-light"
       type="button"
-      (click)="basicNavbar.toggle()"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
+      (click)="toggleNavbar()"
+      [attr.aria-expanded]="sidebarOpen"
+      aria-label="Alternar navegação"
     >
       <i class="fas fa-bars"></i>
     </button>
-
     <!-- Collapsible wrapper -->
-    <div
-      class="collapse navbar-collapse"
-      id="navbarSupportedContent"
+    <app-collapse
+      [isOpen]="sidebarOpen"
       mdbCollapse
       #basicNavbar="mdbCollapse"
+      id="navbarSupportedContent"
     >
       <!-- Left links -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="residents">Residentes</a>
+          <a
+            class="nav-link active"
+            aria-current="page"
+            href="residents"
+            role="menuitem"
+            tabindex="0"
+          >
+            <i class="fas fa-users me-2" aria-hidden="true"></i>
+            Residentes
+          </a>
         </li>
         <li class="nav-item" *ngIf="role === 'admin'">
-          <a class="nav-link active" aria-current="page" href="funcionarios">Funcionários</a>
+          <a class="nav-link" href="funcionarios" role="menuitem" tabindex="0">
+            <i class="fas fa-user-tie me-2" aria-hidden="true"></i>
+            Funcionários
+          </a>
         </li>
         <li class="nav-item" *ngIf="role === 'admin'">
-          
+          <a class="nav-link" href="relatorios" role="menuitem" tabindex="0">
+            <i class="fas fa-chart-bar me-2" aria-hidden="true"></i>
+            Relatórios
+          </a>
         </li>
       </ul>
-      <!-- Left links -->
-    </div>
+
+      <!-- Informações do usuário -->
+      <div class="navbar-nav ms-auto">
+        <div class="nav-item">
+          <span class="navbar-text me-3">
+            <i class="fas fa-user-circle me-1" aria-hidden="true"></i>
+            Olá, {{ nome }}
+          </span>
+          <small class="badge bg-primary">{{ role }}</small>
+        </div>
+      </div>
+    </app-collapse>
     <!-- Collapsible wrapper -->
   </div>
   <!-- Container wrapper -->
