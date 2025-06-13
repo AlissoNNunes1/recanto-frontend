@@ -53,3 +53,64 @@
 .nav-item:last-child {
   margin-right: 0;
 }
+
+/* Estilização para o collapse personalizado */
+app-collapse {
+  width: 100%;
+  display: block;
+}
+
+/* Melhorias de acessibilidade para foco */
+.navbar-toggler:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+.nav-link:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+/* Melhor contraste para badges */
+.badge {
+  font-weight: 600;
+  font-size: 0.75em;
+}
+
+/* Responsividade para navbar collapse */
+@media (max-width: 991.98px) {
+  app-collapse {
+    margin-top: 1rem;
+  }
+
+  .navbar-nav {
+    padding: 0.5rem 0;
+  }
+
+  .nav-item {
+    margin-bottom: 0.5rem;
+  }
+
+  .navbar-text {
+    padding: 0.5rem 0;
+    border-top: 1px solid #dee2e6;
+    margin-top: 0.5rem;
+  }
+}
+
+/* Desktop - navbar horizontal */
+@media (min-width: 992px) {
+  app-collapse {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+  }
+}
+
+/* CSS Responsivo Mobile-First - RECANTO */
+/*    __  ____ ____ _  _  */
+/*  / _\/ ___) ___) )( \ */
+/* /    \___ \___ ) \/ ( */
+/* \_/\_(____(____|____/ */
