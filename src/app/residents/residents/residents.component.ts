@@ -1,24 +1,23 @@
-import { Component, OnInit, AfterViewInit,ViewChild } from '@angular/core';
-import { ResidentsService } from '../residents.service';
-import { Resident } from '../resident';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
-import { MatTableModule, MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
-import { AddResidentFormComponent } from '../add-resident-form/add-resident-form.component';
-import { CommonModule } from '@angular/common';
-import { ContentService } from '../../services/content.service';
-import { UpdateResidentDialogComponent } from '../update-resident-dialog/update-resident-dialog.component';
-import { Router } from '@angular/router';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatSort, Sort,MatSortModule } from '@angular/material/sort';
-
+import { SelectionModel } from '@angular/cdk/collections';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { Router } from '@angular/router';
+import { ContentService } from '../../services/content.service';
+import { AddResidentFormComponent } from '../add-resident-form/add-resident-form.component';
+import { Resident } from '../resident';
+import { ResidentsService } from '../residents.service';
+import { UpdateResidentDialogComponent } from '../update-resident-dialog/update-resident-dialog.component';
 
 @Component({
   selector: 'app-residents',
   standalone: true,
   imports: [CommonModule, MatDialogModule, MatTableModule, MatSortModule],
   templateUrl: './residents.component.html',
-  styleUrls: ['./residents.component.css']
+  styleUrls: ['./residents.component.css'],
 })
 export class ResidentsComponent implements OnInit {
   residents: Resident[] = [];
@@ -26,10 +25,15 @@ export class ResidentsComponent implements OnInit {
   selection = new SelectionModel<Resident>(true, []);
   isAdmin: boolean = false;
 
- @ViewChild(MatSort, { static: true }) sort!: MatSort;
-  constructor(private residentsService: ResidentsService,private _liveAnnoucer: LiveAnnouncer, public dialog: MatDialog, private contentService: ContentService, private router: Router) { }
+  @ViewChild(MatSort, { static: true }) sort!: MatSort;
+  constructor(
+    private residentsService: ResidentsService,
+    private _liveAnnoucer: LiveAnnouncer,
+    public dialog: MatDialog,
+    private contentService: ContentService,
+    private router: Router
+  ) {}
 
-  
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
     this.getResidents();
@@ -38,7 +42,9 @@ export class ResidentsComponent implements OnInit {
 
   announceSortChange(sortState: Sort) {
     if (sortState.direction) {
-      this._liveAnnoucer.announce(`Sorted by ${sortState.active} ${sortState.direction}`);
+      this._liveAnnoucer.announce(
+        `Sorted by ${sortState.active} ${sortState.direction}`
+      );
     } else {
       this._liveAnnoucer.announce(`Sorting removed`);
     }
@@ -47,14 +53,16 @@ export class ResidentsComponent implements OnInit {
   getResidents(): void {
     const cacheKey = 'residents';
     if (this.contentService.has(cacheKey)) {
-      this.contentService.get<Resident[]>(cacheKey).subscribe(cachedResidents => {
-        if (cachedResidents) {
-          this.residents = cachedResidents;
-          this.dataSource.data = this.residents;
-        }
-      });
+      this.contentService
+        .get<Resident[]>(cacheKey)
+        .subscribe((cachedResidents) => {
+          if (cachedResidents) {
+            this.residents = cachedResidents;
+            this.dataSource.data = this.residents;
+          }
+        });
     } else {
-      this.residentsService.getResidents().subscribe(residents => {
+      this.residentsService.getResidents().subscribe((residents) => {
         this.residents = residents;
         this.dataSource.data = this.residents;
         this.contentService.set(cacheKey, residents); // Armazena os dados no cache
@@ -77,7 +85,7 @@ export class ResidentsComponent implements OnInit {
       height: '73%',
     });
 
-    dialogRef.afterClosed().subscribe(result => {
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('Dialog closed with result:', result);
       if (result) {
         this.residentsService.createResident(result).subscribe(() => {
@@ -102,25 +110,26 @@ export class ResidentsComponent implements OnInit {
     const dialogRef = this.dialog.open(UpdateResidentDialogComponent, {
       width: '73%',
       height: '73%',
-      data: selectedResident
+      data: selectedResident,
     });
-  
-    dialogRef.afterClosed().subscribe(result => {
+
+    dialogRef.afterClosed().subscribe((result) => {
       console.log('The dialog was closed');
       if (result) {
-        this.residentsService.updateResident(selectedResident.id, result).subscribe(() => {
-          this.getResidents();
-          this.refresh();
-        });
+        this.residentsService
+          .updateResident(selectedResident.id, result)
+          .subscribe(() => {
+            this.getResidents();
+            this.refresh();
+          });
       }
     });
   }
-  
-  //função para atualizar a pagina 
+
+  //função para atualizar a pagina
   refresh(): void {
     window.location.reload();
   }
-
 
   // Métodos para seleção (se necessário)
   isAllSelected() {
@@ -130,10 +139,18 @@ export class ResidentsComponent implements OnInit {
   }
 
   toggleAllRows() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.dataSource.data.forEach(row => this.selection.select(row));
+    this.isAllSelected()
+      ? this.selection.clear()
+      : this.dataSource.data.forEach((row) => this.selection.select(row));
   }
 
-  displayedColumns: string[] = ['nome', 'email', 'cpf', 'contatoEmergencia', 'historicoMedico', 'dataNascimento', 'acoes'];
+  displayedColumns: string[] = [
+    'nome',
+    'email',
+    'cpf',
+    'contatoEmergencia',
+    'historicoMedico',
+    'dataNascimento',
+    'acoes',
+  ];
 }

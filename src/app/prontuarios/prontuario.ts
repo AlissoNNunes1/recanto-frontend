@@ -42,7 +42,7 @@ export interface ProntuarioUpdate {
 export enum StatusProntuario {
   ATIVO = 'ATIVO',
   INATIVO = 'INATIVO',
-  ARQUIVADO = 'ARQUIVADO'
+  ARQUIVADO = 'ARQUIVADO',
 }
 
 // ========== CONSULTAS ==========
@@ -96,14 +96,14 @@ export enum TipoConsulta {
   CONSULTA_INICIAL = 'CONSULTA_INICIAL',
   RETORNO = 'RETORNO',
   EMERGENCIA = 'EMERGENCIA',
-  TELEMEDICINA = 'TELEMEDICINA'
+  TELEMEDICINA = 'TELEMEDICINA',
 }
 
 export enum StatusConsulta {
   AGENDADA = 'AGENDADA',
   REALIZADA = 'REALIZADA',
   CANCELADA = 'CANCELADA',
-  AUSENTE = 'AUSENTE'
+  AUSENTE = 'AUSENTE',
 }
 
 // ========== EXAMES ==========
@@ -154,13 +154,13 @@ export enum TipoExame {
   RESSONANCIA = 'RESSONANCIA',
   ENDOSCOPIA = 'ENDOSCOPIA',
   COLONOSCOPIA = 'COLONOSCOPIA',
-  OUTROS = 'OUTROS'
+  OUTROS = 'OUTROS',
 }
 
 export enum StatusExame {
   SOLICITADO = 'SOLICITADO',
   REALIZADO = 'REALIZADO',
-  CANCELADO = 'CANCELADO'
+  CANCELADO = 'CANCELADO',
 }
 
 // ========== MEDICAÇÕES ==========
@@ -204,7 +204,7 @@ export interface MedicamentoCreate {
 export enum StatusPrescricao {
   ATIVA = 'ATIVA',
   SUSPENSA = 'SUSPENSA',
-  FINALIZADA = 'FINALIZADA'
+  FINALIZADA = 'FINALIZADA',
 }
 
 // ========== TIPOS AUXILIARES ==========

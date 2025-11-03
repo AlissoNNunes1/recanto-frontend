@@ -4,7 +4,6 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from './header/header.component';
-import { CollapseComponent } from './shared/collapse/collapse.component';
 
 @Component({
   selector: 'app-root',

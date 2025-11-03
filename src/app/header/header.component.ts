@@ -1,8 +1,4 @@
-import {
-  CommonModule,
-  IMAGE_LOADER,
-  ImageLoaderConfig,
-} from '@angular/common';
+import { CommonModule, IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { CollapseComponent } from '../shared/collapse/collapse.component';
 
