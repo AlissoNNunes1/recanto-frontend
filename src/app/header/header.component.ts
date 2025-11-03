@@ -2,7 +2,6 @@ import {
   CommonModule,
   IMAGE_LOADER,
   ImageLoaderConfig,
-  NgOptimizedImage,
 } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { CollapseComponent } from '../shared/collapse/collapse.component';
@@ -10,7 +9,7 @@ import { CollapseComponent } from '../shared/collapse/collapse.component';
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [CollapseComponent, NgOptimizedImage, CommonModule],
+  imports: [CollapseComponent, CommonModule],
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css'],
 })

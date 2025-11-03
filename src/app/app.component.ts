@@ -9,7 +9,7 @@ import { CollapseComponent } from './shared/collapse/collapse.component';
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, CollapseComponent, CommonModule],
+  imports: [RouterOutlet, HeaderComponent, CommonModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
 })

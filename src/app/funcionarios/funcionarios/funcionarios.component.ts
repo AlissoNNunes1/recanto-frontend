@@ -4,7 +4,7 @@ import { Funcionario } from '../funcionario';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
-import { DatePipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ContentService } from '../../services/content.service';
 import { Router } from '@angular/router';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
@@ -15,7 +15,7 @@ import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 @Component({
   selector: 'app-funcionarios',
   standalone: true,
-  imports: [DatePipe, CommonModule, MatDialogModule, MatSortModule, MatTableModule  ],
+  imports: [CommonModule, MatDialogModule, MatSortModule, MatTableModule  ],
   templateUrl: './funcionarios.component.html',
   styleUrls: ['./funcionarios.component.css']
 })

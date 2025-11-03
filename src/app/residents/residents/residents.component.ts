@@ -5,7 +5,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { SelectionModel } from '@angular/cdk/collections';
 import { AddResidentFormComponent } from '../add-resident-form/add-resident-form.component';
-import { DatePipe, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { ContentService } from '../../services/content.service';
 import { UpdateResidentDialogComponent } from '../update-resident-dialog/update-resident-dialog.component';
 import { Router } from '@angular/router';
@@ -16,7 +16,7 @@ import { MatSort, Sort,MatSortModule } from '@angular/material/sort';
 @Component({
   selector: 'app-residents',
   standalone: true,
-  imports: [DatePipe, CommonModule, MatDialogModule, MatTableModule, MatSortModule],
+  imports: [CommonModule, MatDialogModule, MatTableModule, MatSortModule],
   templateUrl: './residents.component.html',
   styleUrls: ['./residents.component.css']
 })
