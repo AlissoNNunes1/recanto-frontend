@@ -1,11 +1,12 @@
-<!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<!-- Navbar responsiva mobile-first -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light" role="navigation">
   <!-- Container wrapper -->
   <div class="container-fluid">
     <!-- Navbar brand -->
-    <a class="navbar-brand" href="/home">
+    <a class="navbar-brand" href="/home" aria-label="Ir para página inicial">
       <img
         src="https://raw.githubusercontent.com/AlissoNNunes1/recanto-frontend/main/src/assets/6.png"
+        alt="Logo do Recanto"
         loading="eager"
         fetchpriority="high"
       />
@@ -17,14 +18,16 @@
       (click)="toggleNavbar()"
       [attr.aria-expanded]="sidebarOpen"
       aria-label="Alternar navegação"
+      aria-controls="navbarSupportedContent"
     >
-      <i class="fas fa-bars"></i>
+      <i class="fas fa-bars" aria-hidden="true"></i>
     </button>
     <!-- Collapsible wrapper -->
     <app-collapse [isOpen]="sidebarOpen" id="navbarSupportedContent">
+
       <!-- Left links -->
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" role="menubar">
+        <li class="nav-item" role="none">
           <a
             class="nav-link active"
             aria-current="page"
@@ -48,7 +51,7 @@
             Funcionários
           </a>
         </li>
-        <li class="nav-item" *ngIf="role === 'admin'">
+        <li class="nav-item" *ngIf="role === 'admin'" role="none">
           <a class="nav-link" href="relatorios" role="menuitem" tabindex="0">
             <i class="fas fa-chart-bar me-2" aria-hidden="true"></i>
             Relatórios
@@ -63,7 +66,11 @@
             <i class="fas fa-user-circle me-1" aria-hidden="true"></i>
             Olá, {{ nome }}
           </span>
-          <small class="badge bg-primary">{{ role }}</small>
+          <small
+            class="badge bg-primary"
+            [attr.aria-label]="'Função: ' + role"
+            >{{ role }}</small
+          >
         </div>
       </div>
     </app-collapse>
@@ -71,4 +78,8 @@
   </div>
   <!-- Container wrapper -->
 </nav>
-<!-- Navbar -->
+<!-- Navbar Mobile-First Responsiva - RECANTO -->
+<!--    __  ____ ____ _  _  -->
+<!--  / _\/ ___) ___) )( \ -->
+<!-- /    \___ \___ ) \/ ( -->
+<!-- \_/\_(____(____|____/ -->

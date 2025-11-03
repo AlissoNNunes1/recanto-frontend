@@ -1,37 +1,92 @@
-<div class="resident-detail-container" *ngIf="resident">
-    <h2>{{resident.nome}}</h2>
-    
+<div class="resident-detail-container" *ngIf="resident" role="main">
+  <header class="detail-header">
+    <h1>{{ resident.nome }}</h1>
+    <button
+      mat-icon-button
+      (click)="goBack()"
+      aria-label="Voltar para lista de residentes"
+      title="Voltar"
+      class="back-button"
+    >
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+  </header>
+
+  <div class="detail-content">
     <div class="gender-and-photo">
-      <div class="gender">
-        
-        <span class="gender-symbol">{{resident.sexo === 'M' ? '♂' : '♀'}}</span>
+      <div
+        class="gender"
+        [attr.aria-label]="
+          'Sexo: ' + (resident.sexo === 'M' ? 'Masculino' : 'Feminino')
+        "
+      >
+        <span class="gender-symbol">{{
+          resident.sexo === "M" ? "♂" : "♀"
+        }}</span>
+        <span class="gender-text">{{
+          resident.sexo === "M" ? "Masculino" : "Feminino"
+        }}</span>
       </div>
-      <div class="photo">
-        <strong>Foto:</strong>
-        <img [src]="resident.foto" alt="Foto do Residente" *ngIf="resident.foto">
+      <div class="photo" *ngIf="resident.foto">
+        <img
+          [src]="resident.foto"
+          [alt]="'Foto de ' + resident.nome"
+          class="resident-photo"
+          loading="lazy"
+        />
       </div>
     </div>
-  
-    <div>
-      <strong>CPF:</strong> {{resident.cpf}}
+
+    <div class="info-grid">
+      <div class="info-item">
+        <mat-icon aria-hidden="true">badge</mat-icon>
+        <strong>CPF:</strong>
+        <span>{{ formatCpf(resident.cpf) }}</span>
+      </div>
+
+      <div class="info-item">
+        <mat-icon aria-hidden="true">email</mat-icon>
+        <strong>Email:</strong>
+        <span>{{ resident.email }}</span>
+      </div>
+
+      <div class="info-item">
+        <mat-icon aria-hidden="true">phone</mat-icon>
+        <strong>Contato de Emergência:</strong>
+        <span>{{ formatPhone(resident.contatoEmergencia) }}</span>
+      </div>
+
+      <div class="info-item">
+        <mat-icon aria-hidden="true">cake</mat-icon>
+        <strong>Data de Nascimento:</strong>
+        <span>{{ resident.dataNascimento | date : "dd/MM/yyyy" }}</span>
+      </div>
+
+      <div class="info-item medical-history" *ngIf="resident.historicoMedico">
+        <mat-icon aria-hidden="true">medical_services</mat-icon>
+        <strong>Histórico Médico:</strong>
+        <span>{{ resident.historicoMedico }}</span>
+      </div>
     </div>
-    
-    <div>
-      <strong>Email:</strong> {{resident.email}}
-    </div>
-    
-    <div>
-      <strong>Contato de Emergência:</strong> {{resident.contatoEmergencia}}
-    </div>
-    
-    <div>
-      <strong>Data de Nascimento:</strong> {{resident.dataNascimento | date:'dd/MM/yyyy'}}
-    </div>
-    
-    <div>
-      <strong>Histórico Médico:</strong> {{resident.historicoMedico}}
-    </div>
-    
-    <button mat-button color="green" (click)="goBack()">Voltar</button>
   </div>
-  
+
+  <div class="actions">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="goBack()"
+      aria-label="Voltar para lista de residentes"
+    >
+      <mat-icon>arrow_back</mat-icon>
+      Voltar
+    </button>
+  </div>
+</div>
+
+<div class="error-container" *ngIf="!resident" role="alert">
+  <mat-icon color="warn">error</mat-icon>
+  <p>Residente não encontrado.</p>
+  <button mat-raised-button color="primary" (click)="goBack()">
+    Voltar para lista
+  </button>
+</div>

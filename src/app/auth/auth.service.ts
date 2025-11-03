@@ -1,16 +1,15 @@
 // src/app/auth/auth.service.ts
 
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { from, Observable, throwError } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { from, Observable, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-
   constructor(private http: HttpClient, private router: Router) {}
 
   private handleError(error: any) {
@@ -19,14 +18,16 @@ export class AuthService {
   }
 
   getPublicIp(): Observable<string> {
-    return from(fetch('https://api.ipify.org?format=json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => data.ip));
+    return from(
+      fetch('https://api.ipify.org?format=json')
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then((data) => data.ip)
+    );
   }
 
   login(ip?: string, username?: string, senha?: string): Observable<any> {
@@ -36,35 +37,40 @@ export class AuthService {
         'Content-Type': 'application/json',
       });
 
-      return this.http.post<any>('http://192.168.0.169:3000/api/login', body, { headers }).pipe(
-        tap(response => {
-          localStorage.setItem('token', response.token);
-          if (response.newToken) {
-            localStorage.setItem('newToken', response.newToken);
-          }
-        }),
-        catchError(error => {
-          if (error.status) {  // IP não autorizado
-            return throwError('IP não autorizado');
-          }
-          return this.handleError(error);
-        })
-      );
+      return this.http
+        .post<any>('http://localhost:3000/api/v1/auth/login', body, { headers })
+        .pipe(
+          tap((response) => {
+            localStorage.setItem('token', response.token);
+            if (response.newToken) {
+              localStorage.setItem('newToken', response.newToken);
+            }
+          }),
+          catchError((error) => {
+            if (error.status) {
+              // IP não autorizado
+              return throwError('IP não autorizado');
+            }
+            return this.handleError(error);
+          })
+        );
     } else if (username && senha) {
       const body = { username, senha };
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
       });
 
-      return this.http.post<any>('http://192.168.0.169:3000/api/login', body, { headers }).pipe(
-        tap(response => {
-          localStorage.setItem('token', response.token);
-          if (response.newToken) {
-            localStorage.setItem('newToken', response.newToken);
-          }
-        }),
-        catchError(this.handleError)
-      );
+      return this.http
+        .post<any>('http://localhost:3000/api/v1/auth/login', body, { headers })
+        .pipe(
+          tap((response) => {
+            localStorage.setItem('token', response.token);
+            if (response.newToken) {
+              localStorage.setItem('newToken', response.newToken);
+            }
+          }),
+          catchError(this.handleError)
+        );
     } else {
       return throwError('username e senha são necessários para login');
     }
@@ -87,15 +93,23 @@ export class AuthService {
     const body = new URLSearchParams();
     body.set('token', refreshToken);
 
-    return this.http.post<any>('http://192.168.0.169:3000/api/refresh-token', body.toString(), { headers }).pipe(
-      tap(response => {
-        localStorage.setItem('token', response.token);
-        if (response.newToken) {
-          localStorage.setItem('newToken', response.newToken);
+    return this.http
+      .post<any>(
+        'http://localhost:3000/api/v1/auth/refresh-token',
+        body.toString(),
+        {
+          headers,
         }
-      }),
-      catchError(this.handleError)
-    );
+      )
+      .pipe(
+        tap((response) => {
+          localStorage.setItem('token', response.token);
+          if (response.newToken) {
+            localStorage.setItem('newToken', response.newToken);
+          }
+        }),
+        catchError(this.handleError)
+      );
   }
 
   logout(): void {

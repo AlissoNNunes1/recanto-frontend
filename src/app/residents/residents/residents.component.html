@@ -1,64 +1,246 @@
-<div class="residents-container">
-  <h1>Residentes</h1>
-  <!-- Botão Adicionar Residente -->
+<div class="residents-container" role="main">
+  <!-- Cabeçalho com título e controles -->
+  <header class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <mat-icon aria-hidden="true">people</mat-icon>
+        Residentes
+      </h1>
 
-  <input matInput (keyup)="applyFilter($event)" placeholder="Filtrar">
-  <mat-table [dataSource]="dataSource" matSort class="mat-elevation-z8">
+      <!-- Botão de refresh -->
+      <button
+        mat-icon-button
+        (click)="refreshData()"
+        [disabled]="isLoading"
+        aria-label="Atualizar lista de residentes"
+        title="Atualizar dados"
+      >
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </div>
 
-    <!-- Colunas da Tabela -->
-    <ng-container matColumnDef="nome">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Nome </mat-header-cell>
-      <mat-cell *matCellDef="let resident"> {{resident.nome}} </mat-cell>
-    </ng-container>
+    <!-- Indicador de total de residentes -->
+    <p class="total-count" *ngIf="!isLoading && !hasError">
+      Total: {{ totalItems }} residente{{ totalItems !== 1 ? "s" : "" }}
+    </p>
+  </header>
 
-    <ng-container matColumnDef="email">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Email </mat-header-cell>
-      <mat-cell *matCellDef="let resident"> {{resident.email}} </mat-cell>
-    </ng-container>
+  <!-- Barra de ferramentas -->
+  <section class="toolbar" aria-label="Ferramentas de busca e ações">
+    <div class="search-container">
+      <!-- Campo de busca -->
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Buscar residentes</mat-label>
+        <input
+          matInput
+          [formControl]="searchControl"
+          placeholder="Digite nome, email ou CPF"
+          aria-label="Campo de busca"
+          autocomplete="off"
+        />
+        <mat-icon matSuffix aria-hidden="true">search</mat-icon>
+      </mat-form-field>
+    </div>
 
-    <ng-container matColumnDef="cpf">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> CPF </mat-header-cell>
-      <mat-cell *matCellDef="let resident"> {{resident.cpf}} </mat-cell>
-    </ng-container>
+    <!-- Botão adicionar residente (apenas admin) -->
+    <div class="action-buttons">
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="addResident()"
+        *ngIf="isAdmin"
+        [disabled]="isLoading"
+        aria-label="Adicionar novo residente"
+      >
+        <mat-icon>add</mat-icon>
+        <span class="button-text">Adicionar</span>
+      </button>
+    </div>
+  </section>
 
-    <ng-container matColumnDef="contatoEmergencia">
-      <mat-header-cell *matHeaderCellDef> Contato de Emergência </mat-header-cell>
-      <mat-cell *matCellDef="let resident">
-        <!-- Ícone WhatsApp -->
-        <a href="https://wa.me/{{resident.contatoEmergencia}}" target="_blank">
-          <i class="material-icons" style="cursor:pointer;">chat</i>
-        </a>
-        <!-- Ícone Chamada Telefônica -->
-        <a href="tel:{{resident.contatoEmergencia}}">
-          <i class="material-icons" style="cursor:pointer;">phone</i>
-        </a>
-      </mat-cell>
-    </ng-container>
+  <!-- Loading spinner -->
+  <div
+    class="loading-container"
+    *ngIf="isLoading"
+    role="status"
+    aria-live="polite"
+  >
+    <mat-spinner diameter="40"></mat-spinner>
+    <p>Carregando residentes...</p>
+  </div>
 
-    <ng-container matColumnDef="historicoMedico">
-      <mat-header-cell *matHeaderCellDef> Histórico Médico </mat-header-cell>
-      <mat-cell *matCellDef="let resident"> {{resident.historicoMedico}} </mat-cell>
-    </ng-container>
+  <!-- Mensagem de erro -->
+  <div class="error-container" *ngIf="hasError && !isLoading" role="alert">
+    <mat-icon color="warn">error</mat-icon>
+    <p>{{ errorMessage }}</p>
+    <button mat-button color="primary" (click)="refreshData()">
+      Tentar novamente
+    </button>
+  </div>
 
-    <ng-container matColumnDef="dataNascimento">
-      <mat-header-cell *matHeaderCellDef mat-sort-header> Data de Nascimento </mat-header-cell>
-      <mat-cell *matCellDef="let resident"> {{resident.dataNascimento | date}} </mat-cell>
-    </ng-container>
+  <!-- Tabela de residentes -->
+  <section
+    class="table-container"
+    *ngIf="!isLoading && !hasError"
+    aria-label="Lista de residentes"
+  >
+    <div class="table-wrapper">
+      <table
+        mat-table
+        [dataSource]="dataSource"
+        matSort
+        (matSortChange)="announceSortChange($event)"
+        class="residents-table mat-elevation-z2"
+        aria-label="Tabela de residentes"
+      >
+        <!-- Coluna Nome -->
+        <ng-container matColumnDef="nome">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span class="column-header">
+              <mat-icon aria-hidden="true">person</mat-icon>
+              Nome
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let resident" class="name-cell">
+            <button
+              mat-button
+              (click)="viewResident(resident.id)"
+              class="name-button"
+              [title]="'Ver detalhes de ' + resident.nome"
+            >
+              {{ resident.nome }}
+            </button>
+          </td>
+        </ng-container>
 
-    <ng-container matColumnDef="acoes">
-      <mat-header-cell *matHeaderCellDef> Ações </mat-header-cell>
-      <mat-cell *matCellDef="let resident">
-        <!-- Ícone Visualizar -->
-        <i class="material-icons" style="cursor:pointer;" (click)="viewResident(resident.id)">visibility</i>
-        <!-- Ícone Editar -->
-        <i class="material-icons" style="cursor:pointer;" (click)="updateResident(resident)" *ngIf="isAdmin">edit</i>
-        <!-- Ícone Deletar -->
-        <i class="material-icons" style="cursor:pointer; color: red;" (click)="deleteResident(resident.id)" *ngIf="isAdmin">delete</i>
-      </mat-cell>
-    </ng-container>
+        <!-- Coluna Email -->
+        <ng-container matColumnDef="email">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span class="column-header">
+              <mat-icon aria-hidden="true">email</mat-icon>
+              Email
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let resident">{{ resident.email }}</td>
+        </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table>
-  <button mat-raised-button color="primary" (click)="addResident()" *ngIf="isAdmin">Adicionar Residente</button>
+        <!-- Coluna CPF -->
+        <ng-container matColumnDef="cpf">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span class="column-header">
+              <mat-icon aria-hidden="true">badge</mat-icon>
+              CPF
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let resident">
+            {{ formatCpf(resident.cpf) }}
+          </td>
+        </ng-container>
+
+        <!-- Coluna Contato de Emergência -->
+        <ng-container matColumnDef="contatoEmergencia">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="column-header">
+              <mat-icon aria-hidden="true">phone</mat-icon>
+              Contato
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let resident">
+            {{ formatPhone(resident.contatoEmergencia) }}
+          </td>
+        </ng-container>
+
+        <!-- Coluna Histórico Médico -->
+        <ng-container matColumnDef="historicoMedico">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="column-header">
+              <mat-icon aria-hidden="true">medical_services</mat-icon>
+              Histórico
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let resident" class="medical-history-cell">
+            <span
+              [title]="resident.historicoMedico"
+              class="medical-history-text"
+            >
+              {{
+                resident.historicoMedico && resident.historicoMedico.length > 50
+                  ? (resident.historicoMedico | slice : 0 : 50) + "..."
+                  : resident.historicoMedico || "Não informado"
+              }}
+            </span>
+          </td>
+        </ng-container>
+
+        <!-- Coluna Data de Nascimento -->
+        <ng-container matColumnDef="dataNascimento">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            <span class="column-header">
+              <mat-icon aria-hidden="true">cake</mat-icon>
+              Nascimento
+            </span>
+          </th>
+          <td mat-cell *matCellDef="let resident">
+            {{ formatDate(resident.dataNascimento) }}
+          </td>
+        </ng-container>
+
+        <!-- Coluna Ações -->
+        <ng-container matColumnDef="acoes">
+          <th mat-header-cell *matHeaderCellDef>
+            <span class="column-header">Ações</span>
+          </th>
+          <td mat-cell *matCellDef="let resident" class="actions-cell">
+            <button
+              mat-icon-button
+              (click)="viewResident(resident.id)"
+              aria-label="Ver detalhes"
+              title="Ver detalhes do residente"
+            >
+              <mat-icon>visibility</mat-icon>
+            </button>
+
+            <button
+              mat-icon-button
+              (click)="updateResident(resident)"
+              *ngIf="isAdmin"
+              aria-label="Editar residente"
+              title="Editar residente"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+
+            <button
+              mat-icon-button
+              (click)="deleteResident(resident.id)"
+              *ngIf="isAdmin"
+              color="warn"
+              aria-label="Deletar residente"
+              title="Deletar residente"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <!-- Definir header e linhas da tabela -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+
+    <!-- Mensagem quando não há dados -->
+    <div class="no-data-container" *ngIf="dataSource.data.length === 0">
+      <mat-icon>info</mat-icon>
+      <p>Nenhum residente encontrado.</p>
+      <button
+        mat-raised-button
+        color="primary"
+        (click)="addResident()"
+        *ngIf="isAdmin"
+      >
+        Adicionar primeiro residente
+      </button>
+    </div>
+  </section>
 </div>
