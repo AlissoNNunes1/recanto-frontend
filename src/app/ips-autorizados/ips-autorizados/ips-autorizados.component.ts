@@ -1,20 +1,26 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, OnInit, ViewChild, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { IPAutorizado } from '../ip-autorizado';
-import { IpsAutorizadosService } from '../ips-autorizados.service';
 import { AddIpDialogComponent } from '../add-ip-dialog/add-ip-dialog.component';
 import { EditIpDialogComponent } from '../edit-ip-dialog/edit-ip-dialog.component';
+import { IPAutorizado } from '../ip-autorizado';
+import { IpsAutorizadosService } from '../ips-autorizados.service';
 
 @Component({
   selector: 'app-ips-autorizados',

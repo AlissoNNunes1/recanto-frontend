@@ -1,10 +1,16 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpErrorResponse,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+} from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { Router } from '@angular/router';
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -18,7 +24,10 @@ export class AuthInterceptor implements HttpInterceptor {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  intercept(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     let authReq = req;
     // Check if running in a browser environment
     if (this.isBrowser) {
@@ -26,7 +35,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
       if (token) {
         authReq = req.clone({
-          headers: req.headers.set('Authorization', `Bearer ${token}`)
+          headers: req.headers.set('Authorization', `Bearer ${token}`),
         });
       }
     }
@@ -34,7 +43,10 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         // Verifica se o erro é devido a um token expirado ou acesso proibido
-        if ((error.status === 401 || error.status === 403) && !authReq.url.includes('/refresh-token')) {
+        if (
+          (error.status === 401 || error.status === 403) &&
+          !authReq.url.includes('/refresh-token')
+        ) {
           // Tenta obter um novo token
           return this.tryRefreshingTokens(authReq, next);
         }
@@ -43,7 +55,10 @@ export class AuthInterceptor implements HttpInterceptor {
     );
   }
 
-  private tryRefreshingTokens(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  private tryRefreshingTokens(
+    req: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
     return this.authService.refreshToken().pipe(
       switchMap((response: any) => {
         if (this.isBrowser) {
@@ -51,7 +66,7 @@ export class AuthInterceptor implements HttpInterceptor {
         }
         // Repete a requisição original com o novo token
         const authReqRepeat = req.clone({
-          headers: req.headers.set('Authorization', `Bearer ${response.token}`)
+          headers: req.headers.set('Authorization', `Bearer ${response.token}`),
         });
         return next.handle(authReqRepeat);
       }),

@@ -1,8 +1,13 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Usuario, UsuarioCreate, UsuarioUpdate, PaginatedResponse } from './usuario';
+import {
+  PaginatedResponse,
+  Usuario,
+  UsuarioCreate,
+  UsuarioUpdate,
+} from './usuario';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +35,10 @@ export class UsuariosService {
   }
 
   // Listar usuarios com paginacao
-  listarUsuarios(page: number = 1, limit: number = 50): Observable<PaginatedResponse<Usuario>> {
+  listarUsuarios(
+    page: number = 1,
+    limit: number = 50
+  ): Observable<PaginatedResponse<Usuario>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
@@ -51,11 +59,7 @@ export class UsuariosService {
 
   // Criar novo usuario
   createUsuario(usuario: UsuarioCreate): Observable<Usuario> {
-    return this.http.post<Usuario>(
-      this.apiUrl,
-      usuario,
-      this.getHttpOptions()
-    );
+    return this.http.post<Usuario>(this.apiUrl, usuario, this.getHttpOptions());
   }
 
   // Atualizar usuario

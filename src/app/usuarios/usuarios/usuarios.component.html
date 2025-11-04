@@ -10,11 +10,21 @@
   <div class="actions-bar">
     <mat-form-field appearance="outline" class="search-field">
       <mat-label>Buscar usuario</mat-label>
-      <input matInput (keyup)="applyFilter($event)" placeholder="Username, nome ou email" #input />
+      <input
+        matInput
+        (keyup)="applyFilter($event)"
+        placeholder="Username, nome ou email"
+        #input
+      />
       <mat-icon matSuffix>search</mat-icon>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" (click)="addUsuario()" class="add-button">
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="addUsuario()"
+      class="add-button"
+    >
       <mat-icon>add</mat-icon>
       Novo Usuario
     </button>
@@ -47,7 +57,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Cargo</th>
         <td mat-cell *matCellDef="let usuario">
           <mat-chip [class]="getCargoClass(usuario.cargo)">
-            {{ usuario.cargo === 'admin' ? 'Administrador' : 'Funcionario' }}
+            {{ usuario.cargo === "admin" ? "Administrador" : "Funcionario" }}
           </mat-chip>
         </td>
       </ng-container>
@@ -57,7 +67,7 @@
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
         <td mat-cell *matCellDef="let usuario">
           <mat-chip [class]="getStatusClass(usuario.ativo)">
-            {{ usuario.ativo ? 'Ativo' : 'Inativo' }}
+            {{ usuario.ativo ? "Ativo" : "Inativo" }}
           </mat-chip>
         </td>
       </ng-container>
@@ -65,14 +75,20 @@
       <!-- Data Criacao Column -->
       <ng-container matColumnDef="createdAt">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>Criado em</th>
-        <td mat-cell *matCellDef="let usuario">{{ formatDate(usuario.createdAt) }}</td>
+        <td mat-cell *matCellDef="let usuario">
+          {{ formatDate(usuario.createdAt) }}
+        </td>
       </ng-container>
 
       <!-- Acoes Column -->
       <ng-container matColumnDef="acoes">
         <th mat-header-cell *matHeaderCellDef>Acoes</th>
         <td mat-cell *matCellDef="let usuario">
-          <button mat-icon-button (click)="editUsuario(usuario)" matTooltip="Editar usuario">
+          <button
+            mat-icon-button
+            (click)="editUsuario(usuario)"
+            matTooltip="Editar usuario"
+          >
             <mat-icon>edit</mat-icon>
           </button>
           <button

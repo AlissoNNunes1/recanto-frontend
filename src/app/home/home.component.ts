@@ -1,17 +1,20 @@
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
-import { MatChipsModule } from '@angular/material/chips';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router } from '@angular/router';
+import {
+  AtividadeRecente,
+  CardStats,
+  DashboardStats,
+} from '../services/dashboard/dashboard';
 import { DashboardService } from '../services/dashboard/dashboard.service';
-import { DashboardStats, CardStats, AtividadeRecente } from '../services/dashboard/dashboard';
 
 @Component({
   selector: 'app-home',
@@ -28,14 +31,14 @@ import { DashboardStats, CardStats, AtividadeRecente } from '../services/dashboa
     MatTooltipModule,
   ],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.css'],
 })
 export class HomeComponent implements OnInit {
   role: string = '';
   nome: string = '';
   private isBrowser: boolean;
   loading = false;
-  
+
   // Dashboard data
   dashboardStats: DashboardStats | null = null;
   cards: CardStats[] = [];
@@ -54,7 +57,7 @@ export class HomeComponent implements OnInit {
       this.role = localStorage.getItem('role') || 'funcionario';
       this.nome = localStorage.getItem('nome') || 'Usuario';
       this.nome = this.nome.split(' ')[0];
-      
+
       // Carregar dashboard apenas para admin
       if (this.role === 'admin') {
         this.loadDashboard();
@@ -193,14 +196,14 @@ export class HomeComponent implements OnInit {
     const now = new Date().getTime();
     const past = new Date(date).getTime();
     const diff = now - past;
-    
+
     const minutes = Math.floor(diff / 60000);
     if (minutes < 1) return 'Agora';
     if (minutes < 60) return `${minutes}m atras`;
-    
+
     const hours = Math.floor(minutes / 60);
     if (hours < 24) return `${hours}h atras`;
-    
+
     const days = Math.floor(hours / 24);
     return `${days}d atras`;
   }

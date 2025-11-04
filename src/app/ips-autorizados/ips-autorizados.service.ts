@@ -1,8 +1,13 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Observable } from 'rxjs';
-import { IPAutorizado, IPAutorizadoCreate, IPAutorizadoUpdate, PaginatedResponse } from './ip-autorizado';
+import {
+  IPAutorizado,
+  IPAutorizadoCreate,
+  IPAutorizadoUpdate,
+  PaginatedResponse,
+} from './ip-autorizado';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +35,10 @@ export class IpsAutorizadosService {
   }
 
   // Listar IPs autorizados com paginacao
-  listarIPs(page: number = 1, limit: number = 50): Observable<PaginatedResponse<IPAutorizado>> {
+  listarIPs(
+    page: number = 1,
+    limit: number = 50
+  ): Observable<PaginatedResponse<IPAutorizado>> {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
@@ -51,11 +59,7 @@ export class IpsAutorizadosService {
 
   // Criar novo IP autorizado
   createIP(ip: IPAutorizadoCreate): Observable<IPAutorizado> {
-    return this.http.post<IPAutorizado>(
-      this.apiUrl,
-      ip,
-      this.getHttpOptions()
-    );
+    return this.http.post<IPAutorizado>(this.apiUrl, ip, this.getHttpOptions());
   }
 
   // Atualizar IP autorizado

@@ -5,7 +5,12 @@
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Username</mat-label>
-        <input matInput formControlName="username" placeholder="nome.sobrenome" required />
+        <input
+          matInput
+          formControlName="username"
+          placeholder="nome.sobrenome"
+          required
+        />
         <mat-error *ngIf="usuarioForm.get('username')?.hasError('required')">
           Username e obrigatorio
         </mat-error>
@@ -18,7 +23,12 @@
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Nome Completo</mat-label>
-        <input matInput formControlName="nome" placeholder="Nome completo do usuario" required />
+        <input
+          matInput
+          formControlName="nome"
+          placeholder="Nome completo do usuario"
+          required
+        />
         <mat-error *ngIf="usuarioForm.get('nome')?.hasError('required')">
           Nome e obrigatorio
         </mat-error>
@@ -28,7 +38,13 @@
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" placeholder="usuario@exemplo.com" required />
+        <input
+          matInput
+          type="email"
+          formControlName="email"
+          placeholder="usuario@exemplo.com"
+          required
+        />
         <mat-error *ngIf="usuarioForm.get('email')?.hasError('required')">
           Email e obrigatorio
         </mat-error>
@@ -41,7 +57,13 @@
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Senha</mat-label>
-        <input matInput type="password" formControlName="senha" placeholder="Minimo 8 caracteres" required />
+        <input
+          matInput
+          type="password"
+          formControlName="senha"
+          placeholder="Minimo 8 caracteres"
+          required
+        />
         <mat-error *ngIf="usuarioForm.get('senha')?.hasError('required')">
           Senha e obrigatoria
         </mat-error>
@@ -68,7 +90,12 @@
 
   <mat-dialog-actions align="end">
     <button mat-button type="button" (click)="onCancel()">Cancelar</button>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!usuarioForm.valid">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!usuarioForm.valid"
+    >
       Salvar
     </button>
   </mat-dialog-actions>

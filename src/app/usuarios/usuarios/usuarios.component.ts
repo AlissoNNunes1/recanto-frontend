@@ -1,19 +1,25 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, OnInit, ViewChild, Inject, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+  ViewChild,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatChipsModule } from '@angular/material/chips';
+import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { Usuario } from '../usuario';
-import { UsuariosService } from '../usuarios.service';
 import { AddUsuarioDialogComponent } from '../add-usuario-dialog/add-usuario-dialog.component';
 import { EditUsuarioDialogComponent } from '../edit-usuario-dialog/edit-usuario-dialog.component';
+import { Usuario } from '../usuario';
+import { UsuariosService } from '../usuarios.service';
 
 @Component({
   selector: 'app-usuarios',

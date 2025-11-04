@@ -28,7 +28,12 @@
     <div class="form-row">
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Nova Senha (deixe em branco para manter a atual)</mat-label>
-        <input matInput type="password" formControlName="senha" placeholder="Minimo 8 caracteres" />
+        <input
+          matInput
+          type="password"
+          formControlName="senha"
+          placeholder="Minimo 8 caracteres"
+        />
         <mat-hint>Apenas preencha se desejar alterar a senha</mat-hint>
       </mat-form-field>
     </div>
@@ -50,7 +55,12 @@
 
   <mat-dialog-actions align="end">
     <button mat-button type="button" (click)="onCancel()">Cancelar</button>
-    <button mat-raised-button color="primary" type="submit" [disabled]="!usuarioForm.valid">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!usuarioForm.valid"
+    >
       Salvar Alteracoes
     </button>
   </mat-dialog-actions>
