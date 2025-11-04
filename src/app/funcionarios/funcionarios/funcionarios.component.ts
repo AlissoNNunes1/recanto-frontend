@@ -1,17 +1,33 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { SelectionModel } from '@angular/cdk/collections';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, OnInit, ViewChild, Inject, PLATFORM_ID } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { ContentService } from '../../services/content.service';
 import { AtribuirusuarioComponent } from '../atribuirusuario/atribuirusuario.component';
-import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
-
+import { Funcionario } from '../funcionario';
+import { FuncionariosService } from '../funcionarios.service';
 
 @Component({
   selector: 'app-funcionarios',
   standalone: true,
-  imports: [DatePipe, CommonModule, MatDialogModule, MatSortModule, MatTableModule  ],
+  imports: [
+    CommonModule,
+    MatDialogModule,
+    MatSortModule,
+    MatTableModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+  ],
   templateUrl: './funcionarios.component.html',
   styleUrls: ['./funcionarios.component.css'],
 })
@@ -19,7 +35,8 @@ export class FuncionariosComponent implements OnInit {
   funcionarios: Funcionario[] = [];
   dataSource = new MatTableDataSource<Funcionario>(this.funcionarios);
   selection = new SelectionModel<Funcionario>(true, []);
-  isAdmin: boolean = false;
+  isAdmin = false;
+  private isBrowser: boolean;
 
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
@@ -28,13 +45,18 @@ export class FuncionariosComponent implements OnInit {
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
     private contentService: ContentService,
-    private router: Router
-  ) {}
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
     this.getFuncionarios();
-    this.isAdmin = localStorage.getItem('role') === 'admin';
+    if (this.isBrowser) {
+      this.isAdmin = localStorage.getItem('role') === 'admin';
+    }
   }
 
   announceSortChange(sortState: Sort) {
@@ -43,55 +65,82 @@ export class FuncionariosComponent implements OnInit {
         `Sorted by ${sortState.active} ${sortState.direction}`
       );
     } else {
-      this._liveAnnouncer.announce(`Sorting removed`);
+      this._liveAnnouncer.announce('Sorting removed');
     }
   }
 
   atribuirUsuario(funcionario: Funcionario): void {
-    const senhaGerada = funcionario.nome.split(' ')[1].toLowerCase() + funcionario.cpf.substring(0, 3)+'@'+funcionario.cpf.substring(3, 6);
+    const partes = funcionario.nome.split(' ');
+    const sobrenome =
+      partes.length > 1 ? partes[1].toLowerCase() : partes[0].toLowerCase();
+    const senhaGerada = `${sobrenome}${funcionario.cpf.substring(
+      0,
+      3
+    )}@${funcionario.cpf.substring(3, 6)}`;
     const novoUsuario = {
       nome: funcionario.nome,
-      username: funcionario.nome.split(' ')[0].toLowerCase() + '.' + funcionario.nome.split(' ')[1].toLowerCase(),
+      username: `${partes[0].toLowerCase()}.${sobrenome}`,
       email: funcionario.email,
       senha: senhaGerada,
-      cargo: 'funcionario'  // Ou o cargo adequado
+      cargo: 'funcionario',
     };
-    this.funcionariosService.atribuirUsuario(funcionario.id, novoUsuario).subscribe(response => {
-      funcionario.UsuarioId = response.usuario.id;
-      this.dialog.open(AtribuirusuarioComponent, {
-        data: { nome: funcionario.nome, email: funcionario.email, senha: senhaGerada, role: funcionario.funcao, username: novoUsuario.username }
-      });
-    },error => {
-      console.error('Erro ao atribuir usuário', error);
-    });
-    }
-    verCredenciais(funcionario: Funcionario): void {
-      this.funcionariosService.getUsuarioByFuncionarioId(funcionario.id).subscribe(response => {
-          const usuario = response;
+
+    this.funcionariosService
+      .atribuirUsuario(funcionario.id, novoUsuario)
+      .subscribe({
+        next: (response) => {
+          // response provavelmente ja eh o usuario criado/retornado
+          funcionario.usuarioId =
+            (response as any).id ?? (response as any).usuario?.id;
           this.dialog.open(AtribuirusuarioComponent, {
-            data: { nome: funcionario.nome, email: funcionario.email, senha: usuario.senha, role: funcionario.funcao, username: usuario.username }
+            data: {
+              nome: funcionario.nome,
+              email: funcionario.email,
+              senha: senhaGerada,
+              role: funcionario.funcao,
+              username: novoUsuario.username,
+            },
           });
-      }, error => {
-          console.error('Erro ao buscar usuário', error);
+        },
+        error: (error) => console.error('Erro ao atribuir usuário', error),
+      });
+  }
+
+  verCredenciais(funcionario: Funcionario): void {
+    this.funcionariosService
+      .getUsuarioByFuncionarioId(funcionario.id)
+      .subscribe({
+        next: (usuario) => {
+          this.dialog.open(AtribuirusuarioComponent, {
+            data: {
+              nome: funcionario.nome,
+              email: funcionario.email,
+              senha: usuario.senha,
+              role: funcionario.funcao,
+              username: usuario.username,
+            },
+          });
+        },
+        error: (error) => console.error('Erro ao buscar usuário', error),
       });
   }
 
   getFuncionarios(): void {
     const cacheKey = 'funcionarios';
     if (this.contentService.has(cacheKey)) {
-      this.contentService
-        .get<Funcionario[]>(cacheKey)
-        .subscribe((cachedFuncionarios) => {
+      this.contentService.get<Funcionario[]>(cacheKey).subscribe({
+        next: (cachedFuncionarios) => {
           if (cachedFuncionarios) {
             this.funcionarios = cachedFuncionarios;
             this.dataSource.data = this.funcionarios;
           }
-        });
+        },
+      });
     } else {
-      this.funcionariosService.getFuncionarios().subscribe(funcionarios => {
+      this.funcionariosService.getFuncionarios().subscribe((funcionarios) => {
         this.funcionarios = funcionarios;
         this.dataSource.data = this.funcionarios;
-        this.contentService.set(cacheKey, funcionarios); // Armazena os dados no cache
+        this.contentService.set(cacheKey, funcionarios);
       });
     }
   }
@@ -116,20 +165,14 @@ export class FuncionariosComponent implements OnInit {
   deleteFuncionario(id: number): void {
     if (confirm('Tem certeza que deseja excluir este funcionário?')) {
       this.funcionariosService.deleteFuncionario(id).subscribe({
-        next: () => {
-          console.log('Funcionário excluído com sucesso');
-          this.getFuncionarios(); // Recarregar lista
-        },
-        error: (error) => {
-          console.error('Erro ao excluir funcionário:', error);
-        },
+        next: () => this.getFuncionarios(),
+        error: (error) => console.error('Erro ao excluir funcionário:', error),
       });
     }
   }
 
-  // Método auxiliar para verificar se funcionário tem usuário
   temUsuario(funcionario: Funcionario): boolean {
-    return !!funcionario.usuarioId && funcionario.usuarioId > 0; // Corrigido: usuarioId
+    return !!funcionario.usuarioId && funcionario.usuarioId > 0;
   }
 
   displayedColumns: string[] = [
@@ -142,11 +185,3 @@ export class FuncionariosComponent implements OnInit {
     'acoes',
   ];
 }
-
-// Componente atualizado para adequação ao backend
-// Corrigidas propriedades e métodos para compatibilidade
-// Implementadas funções de CRUD e gestão de usuários
-//    __  ____ ____ _  _
-//  / _\/ ___) ___) )( \
-// /    \___ \___ ) \/ (
-// \_/\_(____(____|____/

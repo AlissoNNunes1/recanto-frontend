@@ -24,7 +24,7 @@
     "@angular/platform-browser-dynamic": "latest",
     "@angular/platform-server": "latest",
     "@angular/router": "latest",
-    "@angular/ssr": "latest",
+    "@angular/ssr": "20.3.8",
     "bootstrap": "latest",
     "device-uuid": "latest",
     "express": "latest",
@@ -35,8 +35,8 @@
     "zone.js": "latest"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "latest",
-    "@angular/cli": "20.0.1",
+    "@angular-devkit/build-angular": "20.3.8",
+    "@angular/cli": "20.3.8",
     "@angular/compiler-cli": "latest",
     "@types/device-uuid": "latest",
     "@types/express": "latest",

@@ -1,4 +1,10 @@
 {
+  "/api": {
+    "target": "http://192.168.0.169:3000",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug"
+  },
   "/api-ip": {
     "target": "http://ipv4.myexternalip.com/json",
     "secure": false,

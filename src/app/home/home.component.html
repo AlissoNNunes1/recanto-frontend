@@ -1,10 +1,178 @@
 <!-- src/app/home/home.component.html -->
 
 <div class="home-container">
-  <h2 *ngIf="nome">Bem-vindo {{nome}}</h2>
-  <p *ngIf="role === 'admin'">Você está logado como administrador.</p>
-  <p *ngIf="role === 'funcionario'">Você está logado como usuário.</p>
-  <p *ngIf="!role">Você está logado, mas seu tipo de usuário não é identificado.</p>
+  <!-- Mensagem de boas-vindas -->
+  <div class="welcome-section">
+    <h1 *ngIf="nome">
+      <mat-icon>waving_hand</mat-icon>
+      Bem-vindo, {{ nome }}!
+    </h1>
+    <p class="role-badge" *ngIf="role === 'admin'">
+      <mat-icon>admin_panel_settings</mat-icon>
+      Administrador
+    </p>
+    <p class="role-badge funcionario" *ngIf="role === 'funcionario'">
+      <mat-icon>badge</mat-icon>
+      Funcionario
+    </p>
+  </div>
 
-  
+  <!-- Dashboard Admin -->
+  <div *ngIf="role === 'admin'" class="dashboard-admin">
+    <!-- Loading Spinner -->
+    <div *ngIf="loading" class="loading-spinner">
+      <mat-spinner></mat-spinner>
+      <p>Carregando estatisticas...</p>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div *ngIf="!loading && dashboardStats" class="dashboard-content">
+      <!-- Cards de Estatisticas -->
+      <div class="stats-grid">
+        <mat-card
+          *ngFor="let card of cards"
+          class="stat-card"
+          [style.border-left-color]="card.color"
+          (click)="navigateTo(getCardRoute(card.title))"
+        >
+          <mat-card-content>
+            <div class="card-header">
+              <div class="card-icon" [style.background-color]="card.color">
+                <mat-icon>{{ card.icon }}</mat-icon>
+              </div>
+              <div class="card-info">
+                <h3>{{ card.value }}</h3>
+                <p>{{ card.title }}</p>
+              </div>
+            </div>
+            <div class="card-footer">
+              <span class="subtitle">{{ card.subtitle }}</span>
+              <span *ngIf="card.trend" class="trend">
+                <mat-icon>{{ card.trend.isPositive ? 'trending_up' : 'trending_down' }}</mat-icon>
+                +{{ card.trend.value }} (30d)
+              </span>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+
+      <!-- Atalhos Rapidos -->
+      <div class="quick-actions-section">
+        <h2>
+          <mat-icon>bolt</mat-icon>
+          Acoes Rapidas
+        </h2>
+        <div class="quick-actions-grid">
+          <button mat-raised-button color="primary" (click)="navigateTo('/residents')">
+            <mat-icon>people</mat-icon>
+            Ver Residentes
+          </button>
+          <button mat-raised-button color="primary" (click)="navigateTo('/funcionarios')">
+            <mat-icon>badge</mat-icon>
+            Ver Funcionarios
+          </button>
+          <button mat-raised-button color="accent" (click)="navigateTo('/usuarios')">
+            <mat-icon>account_circle</mat-icon>
+            Gerenciar Usuarios
+          </button>
+          <button mat-raised-button color="accent" (click)="navigateTo('/ips-autorizados')">
+            <mat-icon>router</mat-icon>
+            IPs Autorizados
+          </button>
+          <button mat-raised-button (click)="navigateTo('/auditoria')">
+            <mat-icon>history</mat-icon>
+            Logs de Auditoria
+          </button>
+          <button mat-raised-button (click)="navigateTo('/prontuarios')">
+            <mat-icon>medical_services</mat-icon>
+            Prontuarios
+          </button>
+        </div>
+      </div>
+
+      <!-- Atividades Recentes -->
+      <div class="recent-activities-section">
+        <h2>
+          <mat-icon>notifications_active</mat-icon>
+          Atividades Recentes
+        </h2>
+        <mat-card class="activities-card">
+          <mat-card-content>
+            <div *ngIf="atividadesRecentes.length === 0" class="no-activities">
+              <mat-icon>inbox</mat-icon>
+              <p>Nenhuma atividade recente</p>
+            </div>
+            <div *ngIf="atividadesRecentes.length > 0" class="activities-list">
+              <div
+                *ngFor="let atividade of atividadesRecentes"
+                class="activity-item"
+              >
+                <div class="activity-icon">
+                  <mat-chip [class]="getAcaoClass(atividade.acao)">
+                    <mat-icon>{{ getAcaoIcon(atividade.acao) }}</mat-icon>
+                  </mat-chip>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-main">
+                    <strong>{{ atividade.usuario }}</strong>
+                    <span class="activity-action">{{ atividade.acao }}</span>
+                    <span class="activity-resource">{{ atividade.recurso }}</span>
+                  </div>
+                  <div class="activity-meta">
+                    <span class="activity-time">
+                      <mat-icon>access_time</mat-icon>
+                      {{ getTimeAgo(atividade.timestamp) }}
+                    </span>
+                    <span class="activity-ip">
+                      <mat-icon>router</mat-icon>
+                      {{ atividade.ip }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="view-all-link">
+              <button mat-button color="primary" (click)="navigateTo('/auditoria')">
+                Ver todos os logs
+                <mat-icon>arrow_forward</mat-icon>
+              </button>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+
+  <!-- View Funcionario Simples -->
+  <div *ngIf="role === 'funcionario'" class="funcionario-view">
+    <div class="info-card">
+      <mat-icon>info</mat-icon>
+      <div>
+        <h3>Bem-vindo ao sistema Recanto da Vovo</h3>
+        <p>Utilize o menu acima para acessar as funcionalidades disponiveis.</p>
+      </div>
+    </div>
+
+    <div class="quick-links">
+      <h2>Acesso Rapido</h2>
+      <div class="links-grid">
+        <button mat-raised-button color="primary" (click)="navigateTo('/residents')">
+          <mat-icon>people</mat-icon>
+          Ver Residentes
+        </button>
+        <button mat-raised-button color="primary" (click)="navigateTo('/prontuarios')">
+          <mat-icon>medical_services</mat-icon>
+          Prontuarios
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
+
+<!--
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+-->
+

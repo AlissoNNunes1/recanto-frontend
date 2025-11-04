@@ -1,0 +1,216 @@
+<!-- Botao toggle sidebar mobile -->
+<button
+  *ngIf="isMobile"
+  class="sidebar-toggle-btn"
+  (click)="toggleSidebar()"
+  [attr.aria-label]="isSidebarCollapsed ? 'Abrir menu' : 'Fechar menu'"
+  [attr.aria-expanded]="!isSidebarCollapsed"
+>
+  <i class="fas" [ngClass]="isSidebarCollapsed ? 'fa-bars' : 'fa-times'"></i>
+</button>
+
+<!-- Overlay para mobile -->
+<div
+  *ngIf="isMobile && !isSidebarCollapsed"
+  class="sidebar-overlay"
+  (click)="closeSidebarOnMobile()"
+  aria-hidden="true"
+></div>
+
+<!-- Sidebar -->
+<aside
+  class="sidebar"
+  [class.collapsed]="isSidebarCollapsed"
+  [class.mobile]="isMobile"
+  role="navigation"
+  aria-label="Menu lateral de navegacao"
+>
+  <!-- Logo e informacoes do usuario -->
+  <div class="sidebar-header">
+    <div class="logo-container" *ngIf="!isSidebarCollapsed">
+      <img
+        src="https://raw.githubusercontent.com/AlissoNNunes1/recanto-frontend/main/src/assets/6.png"
+        alt="Logo Recanto"
+        class="sidebar-logo"
+        loading="lazy"
+      />
+    </div>
+    
+    <div class="user-info" *ngIf="!isSidebarCollapsed">
+      <div class="user-avatar">
+        <i class="fas fa-user-circle"></i>
+      </div>
+      <div class="user-details">
+        <p class="user-name">{{ nome }}</p>
+        <span class="user-role badge" [ngClass]="isAdmin() ? 'bg-danger' : 'bg-primary'">
+          {{ role }}
+        </span>
+      </div>
+    </div>
+
+    <!-- Botao toggle desktop -->
+    <button
+      *ngIf="!isMobile"
+      class="sidebar-collapse-btn"
+      (click)="toggleSidebar()"
+      [attr.aria-label]="isSidebarCollapsed ? 'Expandir menu' : 'Recolher menu'"
+      [attr.aria-expanded]="!isSidebarCollapsed"
+    >
+      <i class="fas" [ngClass]="isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+    </button>
+  </div>
+
+  <!-- Menu de navegacao -->
+  <nav class="sidebar-nav">
+    <ul class="nav-list" role="menu">
+      <!-- Home/Dashboard -->
+      <li class="nav-item" role="none">
+        <a
+          routerLink="/home"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Dashboard' : null"
+        >
+          <i class="fas fa-home nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">Dashboard</span>
+        </a>
+      </li>
+
+      <!-- Residentes -->
+      <li class="nav-item" role="none">
+        <a
+          routerLink="/residents"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Residentes' : null"
+        >
+          <i class="fas fa-users nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">Residentes</span>
+        </a>
+      </li>
+
+      <!-- Prontuarios -->
+      <li class="nav-item" role="none">
+        <a
+          routerLink="/prontuarios"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Prontuarios' : null"
+        >
+          <i class="fas fa-notes-medical nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">Prontuarios</span>
+        </a>
+      </li>
+
+      <!-- Divisor Admin -->
+      <li class="nav-divider" *ngIf="isAdmin()" role="separator">
+        <span *ngIf="!isSidebarCollapsed">Administracao</span>
+      </li>
+
+      <!-- Funcionarios (Admin) -->
+      <li class="nav-item" *ngIf="isAdmin()" role="none">
+        <a
+          routerLink="/funcionarios"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Funcionarios' : null"
+        >
+          <i class="fas fa-user-tie nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">Funcionarios</span>
+        </a>
+      </li>
+
+      <!-- Usuarios (Admin) -->
+      <li class="nav-item" *ngIf="isAdmin()" role="none">
+        <a
+          routerLink="/usuarios"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Usuarios' : null"
+        >
+          <i class="fas fa-user-cog nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">Usuarios</span>
+        </a>
+      </li>
+
+      <!-- IPs Autorizados (Admin) -->
+      <li class="nav-item" *ngIf="isAdmin()" role="none">
+        <a
+          routerLink="/ips-autorizados"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'IPs Autorizados' : null"
+        >
+          <i class="fas fa-network-wired nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">IPs Autorizados</span>
+        </a>
+      </li>
+
+      <!-- Auditoria (Admin) -->
+      <li class="nav-item" *ngIf="isAdmin()" role="none">
+        <a
+          routerLink="/auditoria"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Auditoria' : null"
+        >
+          <i class="fas fa-history nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">Auditoria</span>
+        </a>
+      </li>
+
+      <!-- Relatorios (Admin) -->
+      <li class="nav-item" *ngIf="isAdmin()" role="none">
+        <a
+          routerLink="/relatorios"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Relatorios' : null"
+        >
+          <i class="fas fa-chart-bar nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">Relatorios</span>
+        </a>
+      </li>
+
+      <!-- Divisor -->
+      <li class="nav-divider" role="separator">
+        <span *ngIf="!isSidebarCollapsed">Sistema</span>
+      </li>
+
+      <!-- Logout -->
+      <li class="nav-item" role="none">
+        <a
+          class="nav-link logout-link"
+          (click)="logout()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Sair' : null"
+        >
+          <i class="fas fa-sign-out-alt nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">Sair</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+</aside>
+
+<!-- Sidebar lateral com colapso -->
+<!--    __  ____ ____ _  _  -->
+<!--  / _\/ ___) ___) )( \ -->
+<!-- /    \___ \___ ) \/ ( -->
+<!-- \_/\_(____(____|____/ -->

@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpInterceptor, HttpRequest, HttpHandler, HttpEvent, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
@@ -7,12 +8,20 @@ import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private authService: AuthService, private router: Router) {}
+  private isBrowser: boolean;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     let authReq = req;
     // Check if running in a browser environment
-    if (typeof window !== 'undefined') {
+    if (this.isBrowser) {
       const token = localStorage.getItem('token');
 
       if (token) {
@@ -37,7 +46,9 @@ export class AuthInterceptor implements HttpInterceptor {
   private tryRefreshingTokens(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return this.authService.refreshToken().pipe(
       switchMap((response: any) => {
-        localStorage.setItem('token', response.token);
+        if (this.isBrowser) {
+          localStorage.setItem('token', response.token);
+        }
         // Repete a requisição original com o novo token
         const authReqRepeat = req.clone({
           headers: req.headers.set('Authorization', `Bearer ${response.token}`)

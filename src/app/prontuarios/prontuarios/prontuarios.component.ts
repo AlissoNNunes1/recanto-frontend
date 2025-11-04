@@ -1,7 +1,7 @@
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { SelectionModel } from '@angular/cdk/collections';
-import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { AfterViewInit, Component, OnInit, ViewChild, Inject, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -47,6 +47,7 @@ export class ProntuariosComponent implements OnInit, AfterViewInit {
   dataSource = new MatTableDataSource<ProntuarioEletronico>(this.prontuarios);
   selection = new SelectionModel<ProntuarioEletronico>(true, []);
   isAdmin: boolean = false;
+  private isBrowser: boolean;
 
   // Filtros
   filtroNome: string = '';
@@ -67,11 +68,16 @@ export class ProntuariosComponent implements OnInit, AfterViewInit {
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
     private contentService: ContentService,
-    private router: Router
-  ) {}
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit(): void {
-    this.isAdmin = localStorage.getItem('role') === 'admin';
+    if (this.isBrowser) {
+      this.isAdmin = localStorage.getItem('role') === 'admin';
+    }
     this.loadProntuarios();
   }
 

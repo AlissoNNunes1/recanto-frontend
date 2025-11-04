@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import {
   Consulta,
@@ -24,10 +25,19 @@ import {
 })
 export class ProntuariosService {
   private apiUrl = 'http://192.168.0.169:3000/api/prontuarios';
+  private isBrowser: boolean;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   private getHttpOptions() {
+    if (!this.isBrowser) {
+      return { headers: new HttpHeaders() };
+    }
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,

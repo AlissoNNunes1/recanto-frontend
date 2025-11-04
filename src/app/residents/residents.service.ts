@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
@@ -14,12 +15,21 @@ import {
   providedIn: 'root',
 })
 export class ResidentsService {
-  private apiUrl = 'http://localhost:3000/api/v1/residentes';
+  private apiUrl = '/api/v1/residentes';
+  private isBrowser: boolean;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   private getHttpOptions() {
     console.log('Chamando getHttpOptions');
+    if (!this.isBrowser) {
+      return { headers: new HttpHeaders() };
+    }
     const token = localStorage.getItem('token');
     console.log(`Token: ${token}`);
     const headers = new HttpHeaders({

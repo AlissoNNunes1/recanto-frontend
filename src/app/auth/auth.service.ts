@@ -1,7 +1,8 @@
 // src/app/auth/auth.service.ts
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -10,7 +11,15 @@ import { catchError, tap } from 'rxjs/operators';
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private http: HttpClient, private router: Router) {}
+  private isBrowser: boolean;
+
+  constructor(
+    private http: HttpClient,
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   private handleError(error: any) {
     console.error('An error occurred:', error);
@@ -38,12 +47,14 @@ export class AuthService {
       });
 
       return this.http
-        .post<any>('http://localhost:3000/api/v1/auth/login', body, { headers })
+        .post<any>('/api/v1/auth/login', body, { headers })
         .pipe(
           tap((response) => {
-            localStorage.setItem('token', response.token);
-            if (response.newToken) {
-              localStorage.setItem('newToken', response.newToken);
+            if (this.isBrowser) {
+              localStorage.setItem('token', response.token);
+              if (response.newToken) {
+                localStorage.setItem('newToken', response.newToken);
+              }
             }
           }),
           catchError((error) => {
@@ -61,12 +72,14 @@ export class AuthService {
       });
 
       return this.http
-        .post<any>('http://localhost:3000/api/v1/auth/login', body, { headers })
+        .post<any>('/api/v1/auth/login', body, { headers })
         .pipe(
           tap((response) => {
-            localStorage.setItem('token', response.token);
-            if (response.newToken) {
-              localStorage.setItem('newToken', response.newToken);
+            if (this.isBrowser) {
+              localStorage.setItem('token', response.token);
+              if (response.newToken) {
+                localStorage.setItem('newToken', response.newToken);
+              }
             }
           }),
           catchError(this.handleError)
@@ -77,10 +90,14 @@ export class AuthService {
   }
 
   get isAdmin(): boolean {
+    if (!this.isBrowser) return false;
     return localStorage.getItem('role') === 'admin';
   }
 
   refreshToken(): Observable<any> {
+    if (!this.isBrowser) {
+      return throwError('localStorage not available in SSR');
+    }
     const refreshToken = localStorage.getItem('newToken');
     if (!refreshToken) {
       return throwError('No refresh token available');
@@ -95,7 +112,7 @@ export class AuthService {
 
     return this.http
       .post<any>(
-        'http://localhost:3000/api/v1/auth/refresh-token',
+        '/api/v1/auth/refresh-token',
         body.toString(),
         {
           headers,
@@ -103,9 +120,11 @@ export class AuthService {
       )
       .pipe(
         tap((response) => {
-          localStorage.setItem('token', response.token);
-          if (response.newToken) {
-            localStorage.setItem('newToken', response.newToken);
+          if (this.isBrowser) {
+            localStorage.setItem('token', response.token);
+            if (response.newToken) {
+              localStorage.setItem('newToken', response.newToken);
+            }
           }
         }),
         catchError(this.handleError)
@@ -113,12 +132,15 @@ export class AuthService {
   }
 
   logout(): void {
-    localStorage.removeItem('token');
-    localStorage.removeItem('newToken');
+    if (this.isBrowser) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('newToken');
+    }
     this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
+    if (!this.isBrowser) return null;
     return localStorage.getItem('token');
   }
 

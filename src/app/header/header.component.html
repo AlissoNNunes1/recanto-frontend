@@ -51,6 +51,24 @@
             Funcionários
           </a>
         </li>
+        <li class="nav-item" *ngIf="role === 'admin'">
+          <a class="nav-link" href="usuarios" role="menuitem" tabindex="0">
+            <i class="fas fa-user-cog me-2" aria-hidden="true"></i>
+            Usuarios
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="role === 'admin'">
+          <a class="nav-link" href="ips-autorizados" role="menuitem" tabindex="0">
+            <i class="fas fa-network-wired me-2" aria-hidden="true"></i>
+            IPs Autorizados
+          </a>
+        </li>
+        <li class="nav-item" *ngIf="role === 'admin'">
+          <a class="nav-link" href="auditoria" role="menuitem" tabindex="0">
+            <i class="fas fa-history me-2" aria-hidden="true"></i>
+            Auditoria
+          </a>
+        </li>
         <li class="nav-item" *ngIf="role === 'admin'" role="none">
           <a class="nav-link" href="relatorios" role="menuitem" tabindex="0">
             <i class="fas fa-chart-bar me-2" aria-hidden="true"></i>

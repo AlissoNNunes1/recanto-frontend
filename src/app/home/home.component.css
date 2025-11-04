@@ -1,35 +1,505 @@
 .home-container {
-    max-width: 800px;
-    margin: 2rem auto;
+  max-width: 1600px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  min-height: calc(100vh - 80px);
+}
+
+/* Welcome Section */
+.welcome-section {
+  margin-bottom: 2rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.welcome-section h1 {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-size: 2rem;
+  color: #333;
+  margin: 0 0 1rem 0;
+}
+
+.welcome-section h1 mat-icon {
+  font-size: 2.5rem;
+  width: 2.5rem;
+  height: 2.5rem;
+  color: #ff9800;
+}
+
+.role-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #f44336;
+  color: white;
+  border-radius: 20px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.role-badge.funcionario {
+  background-color: #4caf50;
+}
+
+.role-badge mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+/* Loading Spinner */
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem;
+  gap: 1rem;
+}
+
+.loading-spinner p {
+  color: #666;
+  font-size: 1rem;
+}
+
+/* Dashboard Admin */
+.dashboard-admin {
+  width: 100%;
+}
+
+.dashboard-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Stats Grid */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.stat-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border-left: 4px solid transparent;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.card-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.card-icon mat-icon {
+  font-size: 32px;
+  width: 32px;
+  height: 32px;
+}
+
+.card-info h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+.card-info p {
+  font-size: 0.875rem;
+  color: #666;
+  margin: 0;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.card-footer .subtitle {
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.card-footer .trend {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.875rem;
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.card-footer .trend mat-icon {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+}
+
+/* Quick Actions Section */
+.quick-actions-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quick-actions-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem 0;
+  color: #333;
+}
+
+.quick-actions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.quick-actions-grid button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  font-size: 0.95rem;
+}
+
+/* Recent Activities Section */
+.recent-activities-section {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.recent-activities-section h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.5rem;
+  margin: 0 0 1.5rem 0;
+  color: #333;
+}
+
+.activities-card {
+  box-shadow: none;
+  border: 1px solid #e0e0e0;
+}
+
+.no-activities {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.no-activities mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #bbb;
+  margin-bottom: 1rem;
+}
+
+.activities-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.activity-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  transition: background-color 0.2s;
+}
+
+.activity-item:hover {
+  background-color: #f0f0f0;
+}
+
+.activity-icon mat-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.activity-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.activity-main {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.activity-main strong {
+  color: #333;
+}
+
+.activity-action {
+  padding: 0.25rem 0.5rem;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #1976d2;
+}
+
+.activity-resource {
+  color: #666;
+  font-size: 0.875rem;
+}
+
+.activity-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.875rem;
+  color: #999;
+}
+
+.activity-meta span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.activity-meta mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.view-all-link {
+  margin-top: 1.5rem;
+  text-align: center;
+  padding-top: 1rem;
+  border-top: 1px solid #eee;
+}
+
+.view-all-link button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 auto;
+}
+
+/* Chips de Acao */
+mat-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+mat-chip mat-icon {
+  font-size: 16px;
+  width: 16px;
+  height: 16px;
+}
+
+.acao-create {
+  background-color: #4caf50;
+  color: white;
+}
+
+.acao-read {
+  background-color: #2196f3;
+  color: white;
+}
+
+.acao-update {
+  background-color: #ff9800;
+  color: white;
+}
+
+.acao-delete {
+  background-color: #f44336;
+  color: white;
+}
+
+.acao-login {
+  background-color: #9c27b0;
+  color: white;
+}
+
+.acao-logout {
+  background-color: #607d8b;
+  color: white;
+}
+
+.acao-failed {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.acao-export {
+  background-color: #00bcd4;
+  color: white;
+}
+
+/* Funcionario View */
+.funcionario-view {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.info-card {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.info-card mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #2196f3;
+}
+
+.info-card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.info-card p {
+  margin: 0;
+  color: #666;
+}
+
+.quick-links {
+  background: white;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.quick-links h2 {
+  margin: 0 0 1.5rem 0;
+  color: #333;
+}
+
+.links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.links-grid button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem;
+  font-size: 1rem;
+}
+
+/* Responsividade mobile-first */
+@media (max-width: 768px) {
+  .home-container {
     padding: 1rem;
-    
-    border-radius: 5px;
-    background-color: #f9f9f9;
   }
-  
-  .home-container h2 {
-    color: #333;
+
+  .welcome-section {
+    padding: 1.5rem;
   }
-  
-  .home-container p {
-    margin-bottom: 1rem;
+
+  .welcome-section h1 {
+    font-size: 1.5rem;
   }
-  
-  .home-container ul {
-    list-style-type: none;
-    padding-left: 0;
+
+  .welcome-section h1 mat-icon {
+    font-size: 2rem;
+    width: 2rem;
+    height: 2rem;
   }
-  
-  .home-container ul li {
-    margin-bottom: 0.5rem;
+
+  .stats-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .home-container ul li a {
-    color: #007bff;
-    text-decoration: none;
+
+  .quick-actions-grid {
+    grid-template-columns: 1fr;
   }
-  
-  .home-container ul li a:hover {
-    text-decoration: underline;
+
+  .quick-actions-section,
+  .recent-activities-section {
+    padding: 1.5rem;
   }
+
+  .activity-item {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .links-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .card-header {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .card-footer {
+    flex-direction: column;
+    gap: 0.5rem;
+    align-items: flex-start;
+  }
+
+  .activity-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+
+/*
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+*/
+
   

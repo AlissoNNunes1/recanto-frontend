@@ -1,6 +1,7 @@
 // src/app/auth/login/login.component.ts
 
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../auth.service';
 import { Subject } from 'rxjs';
@@ -17,11 +18,18 @@ import { FormsModule } from '@angular/forms';
 })
 export class LoginComponent implements OnInit, OnDestroy {
   private unsubscribe$ = new Subject<void>();
+  private isBrowser: boolean;
   ipNaoAutorizado: boolean = false;
   username: string = '';
   senha: string = '';
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
 
   ngOnInit() {
     this.loginAutomatico();
@@ -42,9 +50,11 @@ export class LoginComponent implements OnInit, OnDestroy {
         ).subscribe({
           next: (response: any) => {
             console.log('Login successful');
-            localStorage.setItem('token', response.token);
-            localStorage.setItem('role', response.role);
-            localStorage.setItem('nome', response.nome);
+            if (this.isBrowser) {
+              localStorage.setItem('token', response.token);
+              localStorage.setItem('role', response.role);
+              localStorage.setItem('nome', response.nome);
+            }
             this.router.navigate(['/home']);
           },
           error: (err: any) => {
@@ -69,9 +79,11 @@ export class LoginComponent implements OnInit, OnDestroy {
       ).subscribe({
         next: (response: any) => {
           console.log('Login successful');
-          localStorage.setItem('token', response.token);
-          localStorage.setItem('role', response.role);
-          localStorage.setItem('nome', response.nome);
+          if (this.isBrowser) {
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('role', response.role);
+            localStorage.setItem('nome', response.nome);
+          }
           this.router.navigate(['/home']);
         },
         error: (err: any) => {

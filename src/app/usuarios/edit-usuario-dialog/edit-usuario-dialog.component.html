@@ -1,0 +1,64 @@
+<h2 mat-dialog-title>Editar Usuario: {{ data.username }}</h2>
+
+<form [formGroup]="usuarioForm" (ngSubmit)="onSubmit()">
+  <mat-dialog-content>
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nome Completo</mat-label>
+        <input matInput formControlName="nome" required />
+        <mat-error *ngIf="usuarioForm.get('nome')?.hasError('required')">
+          Nome e obrigatorio
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" required />
+        <mat-error *ngIf="usuarioForm.get('email')?.hasError('required')">
+          Email e obrigatorio
+        </mat-error>
+        <mat-error *ngIf="usuarioForm.get('email')?.hasError('email')">
+          Email invalido
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Nova Senha (deixe em branco para manter a atual)</mat-label>
+        <input matInput type="password" formControlName="senha" placeholder="Minimo 8 caracteres" />
+        <mat-hint>Apenas preencha se desejar alterar a senha</mat-hint>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Cargo</mat-label>
+        <mat-select formControlName="cargo" required>
+          <mat-option value="funcionario">Funcionario</mat-option>
+          <mat-option value="admin">Administrador</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+
+    <div class="form-row">
+      <mat-checkbox formControlName="ativo">Usuario Ativo</mat-checkbox>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button type="button" (click)="onCancel()">Cancelar</button>
+    <button mat-raised-button color="primary" type="submit" [disabled]="!usuarioForm.valid">
+      Salvar Alteracoes
+    </button>
+  </mat-dialog-actions>
+</form>
+
+<!--
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+-->

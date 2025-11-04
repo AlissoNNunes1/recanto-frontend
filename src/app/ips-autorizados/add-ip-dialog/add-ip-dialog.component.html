@@ -1,0 +1,86 @@
+<div class="dialog-container">
+  <h2 mat-dialog-title>
+    <mat-icon>add_circle</mat-icon>
+    Adicionar IP Autorizado
+  </h2>
+
+  <mat-dialog-content>
+    <form [formGroup]="ipForm" class="ip-form">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Endereco IP</mat-label>
+        <input
+          matInput
+          formControlName="ip"
+          placeholder="Ex: 192.168.0.1"
+          maxlength="15"
+        />
+        <mat-icon matPrefix>router</mat-icon>
+        <mat-error *ngIf="ipForm.get('ip')?.invalid">
+          {{ getIPErrorMessage() }}
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Descricao</mat-label>
+        <textarea
+          matInput
+          formControlName="descricao"
+          placeholder="Ex: Computador da recepção"
+          rows="3"
+          maxlength="200"
+        ></textarea>
+        <mat-icon matPrefix>description</mat-icon>
+        <mat-error *ngIf="ipForm.get('descricao')?.invalid">
+          {{ getDescricaoErrorMessage() }}
+        </mat-error>
+        <mat-hint align="end">
+          {{ ipForm.get('descricao')?.value?.length || 0 }}/200
+        </mat-hint>
+      </mat-form-field>
+
+      <div class="toggle-field">
+        <mat-slide-toggle formControlName="ativo" color="primary">
+          <span class="toggle-label">
+            <mat-icon>{{ ipForm.get('ativo')?.value ? 'check_circle' : 'cancel' }}</mat-icon>
+            {{ ipForm.get('ativo')?.value ? 'Ativo' : 'Inativo' }}
+          </span>
+        </mat-slide-toggle>
+        <p class="toggle-hint">
+          IPs ativos podem fazer login automaticamente no sistema
+        </p>
+      </div>
+    </form>
+
+    <div class="info-box">
+      <mat-icon>info</mat-icon>
+      <p>
+        O IP autorizado permitira acesso automatico ao sistema sem necessidade de
+        credenciais. Certifique-se de autorizar apenas IPs confiaveis.
+      </p>
+    </div>
+  </mat-dialog-content>
+
+  <mat-dialog-actions align="end">
+    <button mat-button (click)="onCancel()" type="button">
+      <mat-icon>close</mat-icon>
+      Cancelar
+    </button>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="onSubmit()"
+      [disabled]="!ipForm.valid"
+      type="submit"
+    >
+      <mat-icon>save</mat-icon>
+      Salvar
+    </button>
+  </mat-dialog-actions>
+</div>
+
+<!--
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+-->

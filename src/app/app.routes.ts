@@ -8,6 +8,9 @@ import { HomeComponent } from './home/home.component';
 import { ProntuariosComponent } from './prontuarios/prontuarios/prontuarios.component';
 import { ResidentDetailComponent } from './residents/resident-detail/resident-detail.component';
 import { ResidentsComponent } from './residents/residents/residents.component';
+import { UsuariosComponent } from './usuarios/usuarios/usuarios.component';
+import { IpsAutorizadosComponent } from './ips-autorizados/ips-autorizados/ips-autorizados.component';
+import { AuditoriaComponent } from './auditoria/auditoria/auditoria.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
@@ -37,5 +40,20 @@ export const routes: Routes = [
     path: 'prontuarios',
     component: ProntuariosComponent,
     canActivate: [AuthGuard],
+  },
+  {
+    path: 'usuarios',
+    component: UsuariosComponent,
+    canActivate: [AuthGuard, AdminAuthGuard],
+  },
+  {
+    path: 'ips-autorizados',
+    component: IpsAutorizadosComponent,
+    canActivate: [AuthGuard, AdminAuthGuard],
+  },
+  {
+    path: 'auditoria',
+    component: AuditoriaComponent,
+    canActivate: [AuthGuard, AdminAuthGuard],
   },
 ];

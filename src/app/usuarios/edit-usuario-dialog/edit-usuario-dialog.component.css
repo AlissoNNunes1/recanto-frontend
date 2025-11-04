@@ -1,0 +1,25 @@
+.full-width {
+  width: 100%;
+}
+
+.form-row {
+  margin-bottom: 1rem;
+}
+
+mat-dialog-content {
+  min-width: 500px;
+  padding: 20px;
+}
+
+@media (max-width: 768px) {
+  mat-dialog-content {
+    min-width: 300px;
+  }
+}
+
+/*
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+*/
