@@ -34,15 +34,17 @@
           {{ getDescricaoErrorMessage() }}
         </mat-error>
         <mat-hint align="end">
-          {{ ipForm.get('descricao')?.value?.length || 0 }}/200
+          {{ ipForm.get("descricao")?.value?.length || 0 }}/200
         </mat-hint>
       </mat-form-field>
 
       <div class="toggle-field">
         <mat-slide-toggle formControlName="ativo" color="primary">
           <span class="toggle-label">
-            <mat-icon>{{ ipForm.get('ativo')?.value ? 'check_circle' : 'cancel' }}</mat-icon>
-            {{ ipForm.get('ativo')?.value ? 'Ativo' : 'Inativo' }}
+            <mat-icon>{{
+              ipForm.get("ativo")?.value ? "check_circle" : "cancel"
+            }}</mat-icon>
+            {{ ipForm.get("ativo")?.value ? "Ativo" : "Inativo" }}
           </span>
         </mat-slide-toggle>
         <p class="toggle-hint">
@@ -54,8 +56,8 @@
     <div class="info-box">
       <mat-icon>info</mat-icon>
       <p>
-        O IP autorizado permitira acesso automatico ao sistema sem necessidade de
-        credenciais. Certifique-se de autorizar apenas IPs confiaveis.
+        O IP autorizado permitira acesso automatico ao sistema sem necessidade
+        de credenciais. Certifique-se de autorizar apenas IPs confiaveis.
       </p>
     </div>
   </mat-dialog-content>

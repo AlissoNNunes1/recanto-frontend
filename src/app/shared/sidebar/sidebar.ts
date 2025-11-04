@@ -1,5 +1,5 @@
-import { Component, OnInit, PLATFORM_ID, Inject } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
 @Component({
@@ -7,7 +7,7 @@ import { Router, RouterModule } from '@angular/router';
   imports: [CommonModule, RouterModule],
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.css',
-  standalone: true
+  standalone: true,
 })
 export class SidebarComponent implements OnInit {
   isSidebarCollapsed = false;
@@ -16,10 +16,7 @@ export class SidebarComponent implements OnInit {
   nome: string = '';
   private isBrowser: boolean;
 
-  constructor(
-    private router: Router,
-    @Inject(PLATFORM_ID) platformId: Object
-  ) {
+  constructor(private router: Router, @Inject(PLATFORM_ID) platformId: Object) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 

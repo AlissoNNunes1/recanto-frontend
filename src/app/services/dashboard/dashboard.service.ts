@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Observable, forkJoin, map } from 'rxjs';
-import { DashboardStats, AtividadeRecente } from './dashboard';
+import { AtividadeRecente, DashboardStats } from './dashboard';
 
 @Injectable({
   providedIn: 'root',
@@ -31,41 +31,53 @@ export class DashboardService {
   // Obter estatisticas do dashboard
   getDashboardStats(): Observable<DashboardStats> {
     const options = this.getHttpOptions();
-    
+
     // Criar parametros de query para cada endpoint
     // Usar 50 itens para evitar problemas com limite do backend (max 100)
     const limiteAlto = new HttpParams().set('limit', '50');
     const limiteBaixo = new HttpParams().set('limit', '20');
-    
+
     // Fazer chamadas paralelas para todas as APIs
     return forkJoin({
       residentes: this.http.get<any>('/api/v1/residentes', {
         ...options,
-        params: limiteAlto
+        params: limiteAlto,
       }),
       funcionarios: this.http.get<any>('/api/v1/funcionarios', {
         ...options,
-        params: limiteAlto
+        params: limiteAlto,
       }),
       usuarios: this.http.get<any>('/api/v1/usuarios', {
         ...options,
-        params: limiteAlto
+        params: limiteAlto,
       }),
       ips: this.http.get<any>('/api/v1/ips-autorizados', {
         ...options,
-        params: limiteAlto
+        params: limiteAlto,
       }),
       auditoria: this.http.get<any>('/api/v1/logs/auditoria', {
         ...options,
-        params: limiteBaixo
+        params: limiteBaixo,
       }),
     }).pipe(
       map((responses) => {
         const stats: DashboardStats = {
-          totalResidentes: responses.residentes.pageInfo?.totalItems || responses.residentes.data?.length || 0,
-          totalFuncionarios: responses.funcionarios.pageInfo?.totalItems || responses.funcionarios.data?.length || 0,
-          totalUsuarios: responses.usuarios.pageInfo?.totalItems || responses.usuarios.data?.length || 0,
-          totalIPsAutorizados: responses.ips.pageInfo?.totalItems || responses.ips.data?.length || 0,
+          totalResidentes:
+            responses.residentes.pageInfo?.totalItems ||
+            responses.residentes.data?.length ||
+            0,
+          totalFuncionarios:
+            responses.funcionarios.pageInfo?.totalItems ||
+            responses.funcionarios.data?.length ||
+            0,
+          totalUsuarios:
+            responses.usuarios.pageInfo?.totalItems ||
+            responses.usuarios.data?.length ||
+            0,
+          totalIPsAutorizados:
+            responses.ips.pageInfo?.totalItems ||
+            responses.ips.data?.length ||
+            0,
           residentes: {
             ativos: this.contarAtivos(responses.residentes.data),
             inativos: this.contarInativos(responses.residentes.data),
@@ -101,9 +113,8 @@ export class DashboardService {
     if (!items) return 0;
     const dataLimite = new Date();
     dataLimite.setDate(dataLimite.getDate() - 30);
-    return items.filter(
-      (item) => new Date(item.createdAt) >= dataLimite
-    ).length;
+    return items.filter((item) => new Date(item.createdAt) >= dataLimite)
+      .length;
   }
 
   private contarLogsPorAcao(logs: any[]): { [key: string]: number } {

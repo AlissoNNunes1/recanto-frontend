@@ -4,9 +4,7 @@
       <mat-icon>history</mat-icon>
       Logs de Auditoria
     </h1>
-    <p class="subtitle">
-      Visualize todas as acoes realizadas no sistema
-    </p>
+    <p class="subtitle">Visualize todas as acoes realizadas no sistema</p>
   </div>
 
   <!-- Filtros Avancados -->
@@ -36,7 +34,11 @@
 
         <mat-form-field appearance="outline">
           <mat-label>Recurso</mat-label>
-          <input matInput formControlName="recurso" placeholder="Ex: usuarios" />
+          <input
+            matInput
+            formControlName="recurso"
+            placeholder="Ex: usuarios"
+          />
           <mat-icon matPrefix>folder</mat-icon>
         </mat-form-field>
 
@@ -155,7 +157,9 @@
           <div class="usuario-cell" *ngIf="log.usuario || log.username">
             <mat-icon>person</mat-icon>
             <div>
-              <strong>{{ log.usuario?.nome || log.username || 'Sistema' }}</strong>
+              <strong>{{
+                log.usuario?.nome || log.username || "Sistema"
+              }}</strong>
               <small *ngIf="log.usuario">{{ log.usuario.username }}</small>
             </div>
           </div>
@@ -180,7 +184,7 @@
         <td mat-cell *matCellDef="let log">
           <div class="recurso-cell">
             <mat-icon>folder_open</mat-icon>
-            <span>{{ log.recurso || '-' }}</span>
+            <span>{{ log.recurso || "-" }}</span>
           </div>
         </td>
       </ng-container>
@@ -189,7 +193,7 @@
       <ng-container matColumnDef="ip">
         <th mat-header-cell *matHeaderCellDef>IP</th>
         <td mat-cell *matCellDef="let log">
-          <span class="ip-address">{{ log.detalhes?.ipOrigem || 'N/A' }}</span>
+          <span class="ip-address">{{ log.detalhes?.ipOrigem || "N/A" }}</span>
         </td>
       </ng-container>
 
@@ -201,7 +205,7 @@
             class="detalhes-text"
             [matTooltip]="log.detalhes?.motivo || 'Sem detalhes'"
           >
-            {{ truncateText(log.detalhes?.motivo, 30) || '-' }}
+            {{ truncateText(log.detalhes?.motivo, 30) || "-" }}
           </span>
         </td>
       </ng-container>

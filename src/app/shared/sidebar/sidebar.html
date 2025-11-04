@@ -35,14 +35,17 @@
         loading="lazy"
       />
     </div>
-    
+
     <div class="user-info" *ngIf="!isSidebarCollapsed">
       <div class="user-avatar">
         <i class="fas fa-user-circle"></i>
       </div>
       <div class="user-details">
         <p class="user-name">{{ nome }}</p>
-        <span class="user-role badge" [ngClass]="isAdmin() ? 'bg-danger' : 'bg-primary'">
+        <span
+          class="user-role badge"
+          [ngClass]="isAdmin() ? 'bg-danger' : 'bg-primary'"
+        >
           {{ role }}
         </span>
       </div>
@@ -56,7 +59,10 @@
       [attr.aria-label]="isSidebarCollapsed ? 'Expandir menu' : 'Recolher menu'"
       [attr.aria-expanded]="!isSidebarCollapsed"
     >
-      <i class="fas" [ngClass]="isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"></i>
+      <i
+        class="fas"
+        [ngClass]="isSidebarCollapsed ? 'fa-chevron-right' : 'fa-chevron-left'"
+      ></i>
     </button>
   </div>
 
@@ -154,7 +160,9 @@
           [attr.aria-label]="isSidebarCollapsed ? 'IPs Autorizados' : null"
         >
           <i class="fas fa-network-wired nav-icon"></i>
-          <span class="nav-text" *ngIf="!isSidebarCollapsed">IPs Autorizados</span>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed"
+            >IPs Autorizados</span
+          >
         </a>
       </li>
 

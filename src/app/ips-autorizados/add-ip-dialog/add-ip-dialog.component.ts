@@ -1,12 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-add-ip-dialog',
@@ -36,9 +41,7 @@ export class AddIpDialogComponent {
         '',
         [
           Validators.required,
-          Validators.pattern(
-            /^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/
-          ),
+          Validators.pattern(/^((25[0-5]|(2[0-4]|1\d|[1-9]|)\d)\.?\b){4}$/),
         ],
       ],
       descricao: ['', [Validators.required, Validators.minLength(3)]],

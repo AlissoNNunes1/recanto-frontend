@@ -48,7 +48,9 @@
             <div class="card-footer">
               <span class="subtitle">{{ card.subtitle }}</span>
               <span *ngIf="card.trend" class="trend">
-                <mat-icon>{{ card.trend.isPositive ? 'trending_up' : 'trending_down' }}</mat-icon>
+                <mat-icon>{{
+                  card.trend.isPositive ? "trending_up" : "trending_down"
+                }}</mat-icon>
                 +{{ card.trend.value }} (30d)
               </span>
             </div>
@@ -63,19 +65,35 @@
           Acoes Rapidas
         </h2>
         <div class="quick-actions-grid">
-          <button mat-raised-button color="primary" (click)="navigateTo('/residents')">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="navigateTo('/residents')"
+          >
             <mat-icon>people</mat-icon>
             Ver Residentes
           </button>
-          <button mat-raised-button color="primary" (click)="navigateTo('/funcionarios')">
+          <button
+            mat-raised-button
+            color="primary"
+            (click)="navigateTo('/funcionarios')"
+          >
             <mat-icon>badge</mat-icon>
             Ver Funcionarios
           </button>
-          <button mat-raised-button color="accent" (click)="navigateTo('/usuarios')">
+          <button
+            mat-raised-button
+            color="accent"
+            (click)="navigateTo('/usuarios')"
+          >
             <mat-icon>account_circle</mat-icon>
             Gerenciar Usuarios
           </button>
-          <button mat-raised-button color="accent" (click)="navigateTo('/ips-autorizados')">
+          <button
+            mat-raised-button
+            color="accent"
+            (click)="navigateTo('/ips-autorizados')"
+          >
             <mat-icon>router</mat-icon>
             IPs Autorizados
           </button>
@@ -116,7 +134,9 @@
                   <div class="activity-main">
                     <strong>{{ atividade.usuario }}</strong>
                     <span class="activity-action">{{ atividade.acao }}</span>
-                    <span class="activity-resource">{{ atividade.recurso }}</span>
+                    <span class="activity-resource">{{
+                      atividade.recurso
+                    }}</span>
                   </div>
                   <div class="activity-meta">
                     <span class="activity-time">
@@ -132,7 +152,11 @@
               </div>
             </div>
             <div class="view-all-link">
-              <button mat-button color="primary" (click)="navigateTo('/auditoria')">
+              <button
+                mat-button
+                color="primary"
+                (click)="navigateTo('/auditoria')"
+              >
                 Ver todos os logs
                 <mat-icon>arrow_forward</mat-icon>
               </button>
@@ -156,11 +180,19 @@
     <div class="quick-links">
       <h2>Acesso Rapido</h2>
       <div class="links-grid">
-        <button mat-raised-button color="primary" (click)="navigateTo('/residents')">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="navigateTo('/residents')"
+        >
           <mat-icon>people</mat-icon>
           Ver Residentes
         </button>
-        <button mat-raised-button color="primary" (click)="navigateTo('/prontuarios')">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="navigateTo('/prontuarios')"
+        >
           <mat-icon>medical_services</mat-icon>
           Prontuarios
         </button>
@@ -175,4 +207,3 @@
 /    \___ \___ ) \/ (
 \_/\_(____(____|____/
 -->
-

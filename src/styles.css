@@ -1,113 +1,113 @@
 /* Estilos globais - Mobile-first */
 
 * {
-    font-family: 'Roboto', sans-serif;
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  font-family: "Roboto", sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-    background: #f5f7fa;
-    overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: #f5f7fa;
+  overflow-x: hidden;
 }
 
 footer {
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
 
 main {
-    flex: 1;
-    padding: 1.25rem;
-    min-height: calc(100vh - 60px);
+  flex: 1;
+  padding: 1.25rem;
+  min-height: calc(100vh - 60px);
 }
 
 /* Container principal com padding ajustado para sidebar */
 .container,
 .container-fluid {
-    width: 100%;
-    padding-right: 1rem;
-    padding-left: 1rem;
-    margin-right: auto;
-    margin-left: auto;
+  width: 100%;
+  padding-right: 1rem;
+  padding-left: 1rem;
+  margin-right: auto;
+  margin-left: auto;
 }
 
 /* Responsividade mobile */
 @media (max-width: 767px) {
-    main {
-        padding: 1rem;
-    }
+  main {
+    padding: 1rem;
+  }
 
-    .login-container {
-        width: 100%;
-        padding: 1rem;
-        margin: 1rem;
-    }
+  .login-container {
+    width: 100%;
+    padding: 1rem;
+    margin: 1rem;
+  }
 }
 
 /* Responsividade tablet e desktop */
 @media screen and (min-width: 768px) {
-    main {
-        padding: 2rem;
-    }
+  main {
+    padding: 2rem;
+  }
 
-    .container {
-        max-width: 1200px;
-    }
+  .container {
+    max-width: 1200px;
+  }
 
-    .login-container {
-        max-width: 400px;
-        margin: 50px auto;
-    }
-  
-    .form-group {
-        margin-bottom: 15px;
-    }
-  
-    .form-group label {
-        margin-bottom: 5px;
-    }
-  
-    .form-group input[type="text"],
-    .form-group input[type="senha"] {
-        width: 100%;
-        padding: 10px;
-    }
-  
-    button[type="submit"] {
-        width: 100%;
-        padding: 10px;
-        font-size: 16px;
-    }
+  .login-container {
+    max-width: 400px;
+    margin: 50px auto;
+  }
+
+  .form-group {
+    margin-bottom: 15px;
+  }
+
+  .form-group label {
+    margin-bottom: 5px;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="senha"] {
+    width: 100%;
+    padding: 10px;
+  }
+
+  button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+  }
 }
 
 /* Ajustes para conteudo com sidebar */
 @media (min-width: 768px) {
-    main {
-        margin-left: 280px;
-    }
+  main {
+    margin-left: 280px;
+  }
 }
 
 /* Scrollbar customizada global */
 ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+  width: 8px;
+  height: 8px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+  background: #f1f1f1;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
+  background: #888;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+  background: #555;
 }
 
 /* Estilos globais mobile-first */

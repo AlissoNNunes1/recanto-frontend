@@ -1,8 +1,12 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Observable } from 'rxjs';
-import { LogAuditoria, FiltrosAuditoria, PaginatedResponse } from './log-auditoria';
+import {
+  FiltrosAuditoria,
+  LogAuditoria,
+  PaginatedResponse,
+} from './log-auditoria';
 
 @Injectable({
   providedIn: 'root',
@@ -30,7 +34,9 @@ export class AuditoriaService {
   }
 
   // Listar logs de auditoria com filtros e paginacao
-  listarLogs(filtros: FiltrosAuditoria = {}): Observable<PaginatedResponse<LogAuditoria>> {
+  listarLogs(
+    filtros: FiltrosAuditoria = {}
+  ): Observable<PaginatedResponse<LogAuditoria>> {
     let params = new HttpParams();
 
     if (filtros.usuarioId) {
