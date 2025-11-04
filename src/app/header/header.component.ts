@@ -1,4 +1,9 @@
-import { CommonModule, IMAGE_LOADER, ImageLoaderConfig, isPlatformBrowser } from '@angular/common';
+import {
+  CommonModule,
+  IMAGE_LOADER,
+  ImageLoaderConfig,
+  isPlatformBrowser,
+} from '@angular/common';
 import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { CollapseComponent } from '../shared/collapse/collapse.component';
 

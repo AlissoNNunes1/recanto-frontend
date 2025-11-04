@@ -1,8 +1,8 @@
 // src/app/auth/auth.service.ts
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
 import { from, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
@@ -46,44 +46,40 @@ export class AuthService {
         'Content-Type': 'application/json',
       });
 
-      return this.http
-        .post<any>('/api/v1/auth/login', body, { headers })
-        .pipe(
-          tap((response) => {
-            if (this.isBrowser) {
-              localStorage.setItem('token', response.token);
-              if (response.newToken) {
-                localStorage.setItem('newToken', response.newToken);
-              }
+      return this.http.post<any>('/api/v1/auth/login', body, { headers }).pipe(
+        tap((response) => {
+          if (this.isBrowser) {
+            localStorage.setItem('token', response.token);
+            if (response.newToken) {
+              localStorage.setItem('newToken', response.newToken);
             }
-          }),
-          catchError((error) => {
-            if (error.status) {
-              // IP não autorizado
-              return throwError('IP não autorizado');
-            }
-            return this.handleError(error);
-          })
-        );
+          }
+        }),
+        catchError((error) => {
+          if (error.status) {
+            // IP não autorizado
+            return throwError('IP não autorizado');
+          }
+          return this.handleError(error);
+        })
+      );
     } else if (username && senha) {
       const body = { username, senha };
       const headers = new HttpHeaders({
         'Content-Type': 'application/json',
       });
 
-      return this.http
-        .post<any>('/api/v1/auth/login', body, { headers })
-        .pipe(
-          tap((response) => {
-            if (this.isBrowser) {
-              localStorage.setItem('token', response.token);
-              if (response.newToken) {
-                localStorage.setItem('newToken', response.newToken);
-              }
+      return this.http.post<any>('/api/v1/auth/login', body, { headers }).pipe(
+        tap((response) => {
+          if (this.isBrowser) {
+            localStorage.setItem('token', response.token);
+            if (response.newToken) {
+              localStorage.setItem('newToken', response.newToken);
             }
-          }),
-          catchError(this.handleError)
-        );
+          }
+        }),
+        catchError(this.handleError)
+      );
     } else {
       return throwError('username e senha são necessários para login');
     }
@@ -111,13 +107,9 @@ export class AuthService {
     body.set('token', refreshToken);
 
     return this.http
-      .post<any>(
-        '/api/v1/auth/refresh-token',
-        body.toString(),
-        {
-          headers,
-        }
-      )
+      .post<any>('/api/v1/auth/refresh-token', body.toString(), {
+        headers,
+      })
       .pipe(
         tap((response) => {
           if (this.isBrowser) {

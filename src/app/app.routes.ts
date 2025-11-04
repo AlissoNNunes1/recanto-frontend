@@ -1,16 +1,16 @@
 import { Routes } from '@angular/router';
+import { AuditoriaComponent } from './auditoria/auditoria/auditoria.component';
 import { AdminAuthGuard } from './auth/auth-admin.guard';
 import { AuthGuard } from './auth/auth-guard.service';
 import { LoginComponent } from './auth/login/login.component';
 import { AddFuncionarioFormComponent } from './funcionarios/add-funcionario-form/add-funcionario-form.component';
 import { FuncionariosComponent } from './funcionarios/funcionarios/funcionarios.component';
 import { HomeComponent } from './home/home.component';
+import { IpsAutorizadosComponent } from './ips-autorizados/ips-autorizados/ips-autorizados.component';
 import { ProntuariosComponent } from './prontuarios/prontuarios/prontuarios.component';
 import { ResidentDetailComponent } from './residents/resident-detail/resident-detail.component';
 import { ResidentsComponent } from './residents/residents/residents.component';
 import { UsuariosComponent } from './usuarios/usuarios/usuarios.component';
-import { IpsAutorizadosComponent } from './ips-autorizados/ips-autorizados/ips-autorizados.component';
-import { AuditoriaComponent } from './auditoria/auditoria/auditoria.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent },
