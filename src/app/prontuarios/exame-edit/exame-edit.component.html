@@ -1,55 +1,110 @@
-<div class='exame-edit-container'>
-  <mat-card class='exame-edit-card'>
-    <mat-card-header class='card-header'>
-      <mat-icon class='header-icon'>assignment</mat-icon>
+<div class="exame-edit-container">
+  <mat-card class="exame-edit-card">
+    <mat-card-header class="card-header">
+      <mat-icon class="header-icon">assignment</mat-icon>
       <mat-card-title>Editar Exame</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <form [formGroup]='exameForm' (ngSubmit)='onSubmit()' *ngIf='!loading'>
-        <mat-form-field appearance='outline' class='full-width'>
+      <form [formGroup]="exameForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Profissional Solicitante</mat-label>
-          <input matInput type='number' formControlName='profissionalSolicitanteId' placeholder='ID do profissional'>
+          <input
+            matInput
+            type="number"
+            formControlName="profissionalSolicitanteId"
+            placeholder="ID do profissional"
+          />
           <mat-icon matSuffix>badge</mat-icon>
-          <mat-error *ngIf='exameForm.get("profissionalSolicitanteId")?.hasError("required")'>Campo obrigatorio</mat-error>
+          <mat-error
+            *ngIf="
+              exameForm.get('profissionalSolicitanteId')?.hasError('required')
+            "
+            >Campo obrigatorio</mat-error
+          >
         </mat-form-field>
-        <mat-form-field appearance='outline' class='full-width'>
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Tipo de Exame</mat-label>
-          <mat-select formControlName='tipoExame'>
-            <mat-option *ngFor='let tipo of tiposExame' [value]='tipo'>{{ tipo }}</mat-option>
+          <mat-select formControlName="tipoExame">
+            <mat-option *ngFor="let tipo of tiposExame" [value]="tipo">{{
+              tipo
+            }}</mat-option>
           </mat-select>
           <mat-icon matSuffix>category</mat-icon>
-          <mat-error *ngIf='exameForm.get("tipoExame")?.hasError("required")'>Campo obrigatorio</mat-error>
+          <mat-error *ngIf="exameForm.get('tipoExame')?.hasError('required')"
+            >Campo obrigatorio</mat-error
+          >
         </mat-form-field>
-        <mat-form-field appearance='outline' class='full-width'>
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Nome do Exame</mat-label>
-          <input matInput formControlName='nomeExame' placeholder='Nome do exame'>
+          <input
+            matInput
+            formControlName="nomeExame"
+            placeholder="Nome do exame"
+          />
           <mat-icon matSuffix>science</mat-icon>
-          <mat-error *ngIf='exameForm.get("nomeExame")?.hasError("required")'>Campo obrigatorio</mat-error>
+          <mat-error *ngIf="exameForm.get('nomeExame')?.hasError('required')"
+            >Campo obrigatorio</mat-error
+          >
         </mat-form-field>
-        <mat-form-field appearance='outline' class='full-width'>
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Descricao</mat-label>
-          <textarea matInput formControlName='descricao' rows='4' placeholder='Descricao do exame'></textarea>
+          <textarea
+            matInput
+            formControlName="descricao"
+            rows="4"
+            placeholder="Descricao do exame"
+          ></textarea>
           <mat-icon matSuffix>description</mat-icon>
         </mat-form-field>
-        <mat-form-field appearance='outline' class='full-width'>
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Data de Solicitacao</mat-label>
-          <input matInput [matDatepicker]='picker' formControlName='dataSolicitacao'>
-          <mat-datepicker-toggle matSuffix [for]='picker'></mat-datepicker-toggle>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="dataSolicitacao"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf='exameForm.get("dataSolicitacao")?.hasError("required")'>Campo obrigatorio</mat-error>
+          <mat-error
+            *ngIf="exameForm.get('dataSolicitacao')?.hasError('required')"
+            >Campo obrigatorio</mat-error
+          >
         </mat-form-field>
-        <mat-form-field appearance='outline' class='full-width'>
+        <mat-form-field appearance="outline" class="full-width">
           <mat-label>Observacoes</mat-label>
-          <textarea matInput formControlName='observacoes' rows='3' placeholder='Observacoes adicionais'></textarea>
+          <textarea
+            matInput
+            formControlName="observacoes"
+            rows="3"
+            placeholder="Observacoes adicionais"
+          ></textarea>
           <mat-icon matSuffix>notes</mat-icon>
         </mat-form-field>
-        <div class='form-actions'>
-          <button mat-raised-button type='button' (click)='goBack()' [disabled]='loading'><mat-icon>arrow_back</mat-icon> Cancelar</button>
-          <button mat-raised-button color='primary' type='submit' [disabled]='loading'><mat-icon>save</mat-icon> {{ loading ? 'Salvando...' : 'Salvar Alteracoes' }}</button>
+        <div class="form-actions">
+          <button
+            mat-raised-button
+            type="button"
+            (click)="goBack()"
+            [disabled]="loading"
+          >
+            <mat-icon>arrow_back</mat-icon> Cancelar
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loading"
+          >
+            <mat-icon>save</mat-icon>
+            {{ loading ? "Salvando..." : "Salvar Alteracoes" }}
+          </button>
         </div>
       </form>
-      <div *ngIf='loading' class='loading-container'>
-        <mat-icon class='loading-icon'>hourglass_empty</mat-icon>
+      <div *ngIf="loading" class="loading-container">
+        <mat-icon class="loading-icon">hourglass_empty</mat-icon>
         <p>Carregando dados do exame...</p>
       </div>
     </mat-card-content>

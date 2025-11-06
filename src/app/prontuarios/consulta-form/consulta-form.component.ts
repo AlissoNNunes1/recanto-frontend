@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -91,17 +96,19 @@ export class ConsultaFormComponent implements OnInit {
       ...this.consultaForm.value,
     };
 
-    this.prontuariosService.createConsulta(this.prontuarioId, consultaData).subscribe({
-      next: () => {
-        this.showSuccess('Consulta registrada com sucesso');
-        this.goBack();
-      },
-      error: (error) => {
-        console.error('Erro ao registrar consulta:', error);
-        this.showError(error.error?.message || 'Erro ao registrar consulta');
-        this.loading = false;
-      },
-    });
+    this.prontuariosService
+      .createConsulta(this.prontuarioId, consultaData)
+      .subscribe({
+        next: () => {
+          this.showSuccess('Consulta registrada com sucesso');
+          this.goBack();
+        },
+        error: (error) => {
+          console.error('Erro ao registrar consulta:', error);
+          this.showError(error.error?.message || 'Erro ao registrar consulta');
+          this.loading = false;
+        },
+      });
   }
 
   goBack(): void {

@@ -10,9 +10,16 @@
         <!-- Profissional Responsavel -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Profissional Responsavel</mat-label>
-          <input matInput type="number" formControlName="profissionalId" placeholder="ID do profissional">
+          <input
+            matInput
+            type="number"
+            formControlName="profissionalId"
+            placeholder="ID do profissional"
+          />
           <mat-icon matSuffix>badge</mat-icon>
-          <mat-error *ngIf="consultaForm.get('profissionalId')?.hasError('required')">
+          <mat-error
+            *ngIf="consultaForm.get('profissionalId')?.hasError('required')"
+          >
             Campo obrigatorio
           </mat-error>
         </mat-form-field>
@@ -26,7 +33,9 @@
             </mat-option>
           </mat-select>
           <mat-icon matSuffix>category</mat-icon>
-          <mat-error *ngIf="consultaForm.get('tipoConsulta')?.hasError('required')">
+          <mat-error
+            *ngIf="consultaForm.get('tipoConsulta')?.hasError('required')"
+          >
             Campo obrigatorio
           </mat-error>
         </mat-form-field>
@@ -34,10 +43,19 @@
         <!-- Data da Consulta -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Data da Consulta</mat-label>
-          <input matInput [matDatepicker]="picker" formControlName="dataConsulta">
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="dataConsulta"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="consultaForm.get('dataConsulta')?.hasError('required')">
+          <mat-error
+            *ngIf="consultaForm.get('dataConsulta')?.hasError('required')"
+          >
             Campo obrigatorio
           </mat-error>
         </mat-form-field>
@@ -45,10 +63,16 @@
         <!-- Queixa Principal -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Queixa Principal</mat-label>
-          <textarea matInput formControlName="queixaPrincipal" rows="3" 
-                    placeholder="Descreva a queixa principal do paciente"></textarea>
+          <textarea
+            matInput
+            formControlName="queixaPrincipal"
+            rows="3"
+            placeholder="Descreva a queixa principal do paciente"
+          ></textarea>
           <mat-icon matSuffix>description</mat-icon>
-          <mat-error *ngIf="consultaForm.get('queixaPrincipal')?.hasError('required')">
+          <mat-error
+            *ngIf="consultaForm.get('queixaPrincipal')?.hasError('required')"
+          >
             Campo obrigatorio
           </mat-error>
         </mat-form-field>
@@ -56,60 +80,94 @@
         <!-- Historia da Doenca Atual -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Historia da Doenca Atual</mat-label>
-          <textarea matInput formControlName="historiaDoencaAtual" rows="4"
-                    placeholder="Descreva a historia da doenca atual"></textarea>
+          <textarea
+            matInput
+            formControlName="historiaDoencaAtual"
+            rows="4"
+            placeholder="Descreva a historia da doenca atual"
+          ></textarea>
           <mat-icon matSuffix>history</mat-icon>
         </mat-form-field>
 
         <!-- Exame Fisico -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Exame Fisico</mat-label>
-          <textarea matInput formControlName="exameFisico" rows="4"
-                    placeholder="Descricao do exame fisico realizado"></textarea>
+          <textarea
+            matInput
+            formControlName="exameFisico"
+            rows="4"
+            placeholder="Descricao do exame fisico realizado"
+          ></textarea>
           <mat-icon matSuffix>health_and_safety</mat-icon>
         </mat-form-field>
 
         <!-- Hipotese Diagnostica -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Hipotese Diagnostica</mat-label>
-          <textarea matInput formControlName="hipoteseDiagnostica" rows="3"
-                    placeholder="Hipotese diagnostica inicial"></textarea>
+          <textarea
+            matInput
+            formControlName="hipoteseDiagnostica"
+            rows="3"
+            placeholder="Hipotese diagnostica inicial"
+          ></textarea>
           <mat-icon matSuffix>lightbulb</mat-icon>
         </mat-form-field>
 
         <!-- Diagnostico -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Diagnostico Final</mat-label>
-          <textarea matInput formControlName="diagnostico" rows="3"
-                    placeholder="Diagnostico confirmado"></textarea>
+          <textarea
+            matInput
+            formControlName="diagnostico"
+            rows="3"
+            placeholder="Diagnostico confirmado"
+          ></textarea>
           <mat-icon matSuffix>check_circle</mat-icon>
         </mat-form-field>
 
         <!-- Tratamento -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Tratamento Proposto</mat-label>
-          <textarea matInput formControlName="tratamento" rows="4"
-                    placeholder="Descricao do tratamento proposto"></textarea>
+          <textarea
+            matInput
+            formControlName="tratamento"
+            rows="4"
+            placeholder="Descricao do tratamento proposto"
+          ></textarea>
           <mat-icon matSuffix>medication</mat-icon>
         </mat-form-field>
 
         <!-- Observacoes -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Observacoes</mat-label>
-          <textarea matInput formControlName="observacoes" rows="3"
-                    placeholder="Observacoes adicionais"></textarea>
+          <textarea
+            matInput
+            formControlName="observacoes"
+            rows="3"
+            placeholder="Observacoes adicionais"
+          ></textarea>
           <mat-icon matSuffix>notes</mat-icon>
         </mat-form-field>
 
         <!-- Botoes de Acao -->
         <div class="form-actions">
-          <button mat-raised-button type="button" (click)="goBack()" [disabled]="loading">
+          <button
+            mat-raised-button
+            type="button"
+            (click)="goBack()"
+            [disabled]="loading"
+          >
             <mat-icon>arrow_back</mat-icon>
             Cancelar
           </button>
-          <button mat-raised-button color="primary" type="submit" [disabled]="loading">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loading"
+          >
             <mat-icon>save</mat-icon>
-            {{ loading ? 'Salvando...' : 'Salvar Alteracoes' }}
+            {{ loading ? "Salvando..." : "Salvar Alteracoes" }}
           </button>
         </div>
       </form>

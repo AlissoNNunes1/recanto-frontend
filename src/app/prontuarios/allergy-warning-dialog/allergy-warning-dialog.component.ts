@@ -1,7 +1,11 @@
-import { Component, Inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import {
+  MAT_DIALOG_DATA,
+  MatDialogModule,
+  MatDialogRef,
+} from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 
 export interface AllergyWarningData {
@@ -12,12 +16,7 @@ export interface AllergyWarningData {
 @Component({
   selector: 'app-allergy-warning-dialog',
   standalone: true,
-  imports: [
-    CommonModule,
-    MatDialogModule,
-    MatButtonModule,
-    MatIconModule
-  ],
+  imports: [CommonModule, MatDialogModule, MatButtonModule, MatIconModule],
   template: `
     <div class="allergy-dialog">
       <h2 mat-dialog-title class="warning-title">
@@ -30,7 +29,8 @@ export interface AllergyWarningData {
             <strong>Medicamento:</strong> {{ data.medicamentoNome }}
           </p>
           <p class="alert-message">
-            O paciente possui alergia(s) registrada(s) que podem estar relacionadas:
+            O paciente possui alergia(s) registrada(s) que podem estar
+            relacionadas:
           </p>
           <ul class="allergy-list">
             <li *ngFor="let alergia of data.alergias">{{ alergia }}</li>
@@ -52,69 +52,71 @@ export interface AllergyWarningData {
       </mat-dialog-actions>
     </div>
   `,
-  styles: [`
-    .allergy-dialog {
-      max-width: 500px;
-    }
+  styles: [
+    `
+      .allergy-dialog {
+        max-width: 500px;
+      }
 
-    .warning-title {
-      color: #f44336;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 20px;
-      margin: 0;
-    }
+      .warning-title {
+        color: #f44336;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 20px;
+        margin: 0;
+      }
 
-    .warning-content {
-      padding: 20px 0;
-    }
+      .warning-content {
+        padding: 20px 0;
+      }
 
-    .medication-name {
-      font-size: 16px;
-      margin-bottom: 15px;
-      padding: 10px;
-      background-color: #fff3e0;
-      border-left: 4px solid #ff9800;
-    }
+      .medication-name {
+        font-size: 16px;
+        margin-bottom: 15px;
+        padding: 10px;
+        background-color: #fff3e0;
+        border-left: 4px solid #ff9800;
+      }
 
-    .alert-message {
-      font-weight: 500;
-      margin-bottom: 10px;
-      color: #d32f2f;
-    }
+      .alert-message {
+        font-weight: 500;
+        margin-bottom: 10px;
+        color: #d32f2f;
+      }
 
-    .allergy-list {
-      background-color: #ffebee;
-      padding: 15px 15px 15px 35px;
-      border-radius: 4px;
-      margin: 15px 0;
-    }
+      .allergy-list {
+        background-color: #ffebee;
+        padding: 15px 15px 15px 35px;
+        border-radius: 4px;
+        margin: 15px 0;
+      }
 
-    .allergy-list li {
-      margin: 8px 0;
-      font-size: 15px;
-      color: #c62828;
-      font-weight: 500;
-    }
+      .allergy-list li {
+        margin: 8px 0;
+        font-size: 15px;
+        color: #c62828;
+        font-weight: 500;
+      }
 
-    .confirmation-message {
-      font-weight: 500;
-      margin-top: 20px;
-      padding: 10px;
-      background-color: #e3f2fd;
-      border-left: 4px solid #2196f3;
-    }
+      .confirmation-message {
+        font-weight: 500;
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #e3f2fd;
+        border-left: 4px solid #2196f3;
+      }
 
-    mat-dialog-actions {
-      padding: 15px 0 0 0;
-      margin: 0;
-    }
+      mat-dialog-actions {
+        padding: 15px 0 0 0;
+        margin: 0;
+      }
 
-    button {
-      margin-left: 10px;
-    }
-  `]
+      button {
+        margin-left: 10px;
+      }
+    `,
+  ],
 })
 export class AllergyWarningDialogComponent {
   constructor(

@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
-import { ProntuarioEletronico, Consulta, Exame, MedicamentoPrescrito } from './prontuario';
+import {
+  Consulta,
+  Exame,
+  MedicamentoPrescrito,
+  ProntuarioEletronico,
+} from './prontuario';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportService {
-
   generateProntuarioReport(
     prontuario: ProntuarioEletronico,
     consultas: Consulta[],
@@ -39,7 +43,11 @@ export class ReportService {
     yPosition += 6;
     doc.text(`Status: ${prontuario.status}`, 20, yPosition);
     yPosition += 6;
-    doc.text(`Criado em: ${this.formatDate(prontuario.createdAt)}`, 20, yPosition);
+    doc.text(
+      `Criado em: ${this.formatDate(prontuario.createdAt)}`,
+      20,
+      yPosition
+    );
     yPosition += 10;
 
     // Historico Medico
@@ -51,20 +59,24 @@ export class ReportService {
 
       doc.setFontSize(9);
       doc.setFont('helvetica', 'normal');
-      const historicoLines = doc.splitTextToSize(prontuario.historicoMedico, 170);
+      const historicoLines = doc.splitTextToSize(
+        prontuario.historicoMedico,
+        170
+      );
       doc.text(historicoLines, 20, yPosition);
-      yPosition += (historicoLines.length * 5) + 5;
+      yPosition += historicoLines.length * 5 + 5;
     }
 
     // Alergias
     if (prontuario.alergias) {
-      const alergiasArray = typeof prontuario.alergias === 'string' 
-        ? prontuario.alergias.split(',').map(a => a.trim()) 
-        : prontuario.alergias;
+      const alergiasArray =
+        typeof prontuario.alergias === 'string'
+          ? prontuario.alergias.split(',').map((a) => a.trim())
+          : prontuario.alergias;
 
       if (alergiasArray && alergiasArray.length > 0) {
         this.checkPageBreak(doc, yPosition, 20);
-        
+
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.setTextColor(220, 38, 38); // Vermelho
@@ -84,13 +96,14 @@ export class ReportService {
 
     // Medicamentos de Uso Continuo
     if (prontuario.medicamentosContinuos) {
-      const medicamentosArray = typeof prontuario.medicamentosContinuos === 'string'
-        ? prontuario.medicamentosContinuos.split(',').map(m => m.trim())
-        : prontuario.medicamentosContinuos;
+      const medicamentosArray =
+        typeof prontuario.medicamentosContinuos === 'string'
+          ? prontuario.medicamentosContinuos.split(',').map((m) => m.trim())
+          : prontuario.medicamentosContinuos;
 
       if (medicamentosArray && medicamentosArray.length > 0) {
         this.checkPageBreak(doc, yPosition, 20);
-        
+
         doc.setFontSize(12);
         doc.setFont('helvetica', 'bold');
         doc.text('MEDICAMENTOS DE USO CONTINUO', 20, yPosition);
@@ -132,7 +145,11 @@ export class ReportService {
 
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
-        doc.text(`Data: ${this.formatDate(consulta.dataConsulta)}`, 20, yPosition);
+        doc.text(
+          `Data: ${this.formatDate(consulta.dataConsulta)}`,
+          20,
+          yPosition
+        );
         yPosition += 5;
         doc.text(`Tipo: ${consulta.tipoConsulta}`, 20, yPosition);
         yPosition += 5;
@@ -181,7 +198,11 @@ export class ReportService {
         yPosition += 5;
         doc.text(`Tipo: ${exame.tipoExame}`, 20, yPosition);
         yPosition += 5;
-        doc.text(`Solicitado em: ${this.formatDate(exame.dataSolicitacao)}`, 20, yPosition);
+        doc.text(
+          `Solicitado em: ${this.formatDate(exame.dataSolicitacao)}`,
+          20,
+          yPosition
+        );
         yPosition += 5;
 
         if (exame.resultado) {
@@ -224,13 +245,25 @@ export class ReportService {
         yPosition += 5;
         doc.text(`Via: ${medicamento.viaAdministracao}`, 20, yPosition);
         yPosition += 5;
-        doc.text(`Frequencia: ${medicamento.frequenciaAdministracao}`, 20, yPosition);
+        doc.text(
+          `Frequencia: ${medicamento.frequenciaAdministracao}`,
+          20,
+          yPosition
+        );
         yPosition += 5;
-        doc.text(`Inicio: ${this.formatDate(medicamento.dataInicio)}`, 20, yPosition);
+        doc.text(
+          `Inicio: ${this.formatDate(medicamento.dataInicio)}`,
+          20,
+          yPosition
+        );
         yPosition += 5;
 
         if (medicamento.dataFim) {
-          doc.text(`Fim: ${this.formatDate(medicamento.dataFim)}`, 20, yPosition);
+          doc.text(
+            `Fim: ${this.formatDate(medicamento.dataFim)}`,
+            20,
+            yPosition
+          );
           yPosition += 5;
         }
 
@@ -249,11 +282,17 @@ export class ReportService {
     }
 
     // Salvar PDF
-    const fileName = `prontuario_${prontuario.residente?.nome || 'paciente'}_${new Date().getTime()}.pdf`;
+    const fileName = `prontuario_${
+      prontuario.residente?.nome || 'paciente'
+    }_${new Date().getTime()}.pdf`;
     doc.save(fileName);
   }
 
-  private checkPageBreak(doc: jsPDF, yPosition: number, requiredSpace: number): number {
+  private checkPageBreak(
+    doc: jsPDF,
+    yPosition: number,
+    requiredSpace: number
+  ): number {
     if (yPosition + requiredSpace > 280) {
       doc.addPage();
       return 20;

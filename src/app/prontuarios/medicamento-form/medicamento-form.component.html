@@ -5,11 +5,17 @@
         <mat-icon>medication</mat-icon>
         Prescrever Medicamento
       </mat-card-title>
-      <mat-card-subtitle>Preencha os dados da prescricao medicamentosa</mat-card-subtitle>
+      <mat-card-subtitle
+        >Preencha os dados da prescricao medicamentosa</mat-card-subtitle
+      >
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="medicamentoForm" (ngSubmit)="onSubmit()" class="medicamento-form">
+      <form
+        [formGroup]="medicamentoForm"
+        (ngSubmit)="onSubmit()"
+        class="medicamento-form"
+      >
         <!-- ID do Profissional -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>ID do Profissional</mat-label>
@@ -20,8 +26,10 @@
             placeholder="Digite o ID do profissional"
           />
           <mat-icon matSuffix>badge</mat-icon>
-          <mat-error *ngIf="medicamentoForm.get('profissionalId')?.hasError('required')">
-            {{ getErrorMessage('profissionalId') }}
+          <mat-error
+            *ngIf="medicamentoForm.get('profissionalId')?.hasError('required')"
+          >
+            {{ getErrorMessage("profissionalId") }}
           </mat-error>
         </mat-form-field>
 
@@ -34,22 +42,22 @@
             placeholder="Ex: Paracetamol 500mg"
           />
           <mat-icon matSuffix>local_pharmacy</mat-icon>
-          <mat-error *ngIf="medicamentoForm.get('medicamentoNome')?.hasError('required')">
-            {{ getErrorMessage('medicamentoNome') }}
+          <mat-error
+            *ngIf="medicamentoForm.get('medicamentoNome')?.hasError('required')"
+          >
+            {{ getErrorMessage("medicamentoNome") }}
           </mat-error>
         </mat-form-field>
 
         <!-- Dosagem -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Dosagem</mat-label>
-          <input
-            matInput
-            formControlName="dosagem"
-            placeholder="Ex: 500mg"
-          />
+          <input matInput formControlName="dosagem" placeholder="Ex: 500mg" />
           <mat-icon matSuffix>straighten</mat-icon>
-          <mat-error *ngIf="medicamentoForm.get('dosagem')?.hasError('required')">
-            {{ getErrorMessage('dosagem') }}
+          <mat-error
+            *ngIf="medicamentoForm.get('dosagem')?.hasError('required')"
+          >
+            {{ getErrorMessage("dosagem") }}
           </mat-error>
         </mat-form-field>
 
@@ -62,8 +70,12 @@
             placeholder="Ex: Oral, Intravenosa, Intramuscular"
           />
           <mat-icon matSuffix>route</mat-icon>
-          <mat-error *ngIf="medicamentoForm.get('viaAdministracao')?.hasError('required')">
-            {{ getErrorMessage('viaAdministracao') }}
+          <mat-error
+            *ngIf="
+              medicamentoForm.get('viaAdministracao')?.hasError('required')
+            "
+          >
+            {{ getErrorMessage("viaAdministracao") }}
           </mat-error>
         </mat-form-field>
 
@@ -76,8 +88,14 @@
             placeholder="Ex: 8/8h, 12/12h, 1x ao dia"
           />
           <mat-icon matSuffix>schedule</mat-icon>
-          <mat-error *ngIf="medicamentoForm.get('frequenciaAdministracao')?.hasError('required')">
-            {{ getErrorMessage('frequenciaAdministracao') }}
+          <mat-error
+            *ngIf="
+              medicamentoForm
+                .get('frequenciaAdministracao')
+                ?.hasError('required')
+            "
+          >
+            {{ getErrorMessage("frequenciaAdministracao") }}
           </mat-error>
         </mat-form-field>
 
@@ -91,8 +109,12 @@
             placeholder="Ex: Dor, febre, hipertensao"
           ></textarea>
           <mat-icon matSuffix>assignment</mat-icon>
-          <mat-error *ngIf="medicamentoForm.get('indicacaoClinica')?.hasError('required')">
-            {{ getErrorMessage('indicacaoClinica') }}
+          <mat-error
+            *ngIf="
+              medicamentoForm.get('indicacaoClinica')?.hasError('required')
+            "
+          >
+            {{ getErrorMessage("indicacaoClinica") }}
           </mat-error>
         </mat-form-field>
 
@@ -105,10 +127,15 @@
             formControlName="dataInicio"
             placeholder="Selecione a data"
           />
-          <mat-datepicker-toggle matSuffix [for]="pickerInicio"></mat-datepicker-toggle>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerInicio"
+          ></mat-datepicker-toggle>
           <mat-datepicker #pickerInicio></mat-datepicker>
-          <mat-error *ngIf="medicamentoForm.get('dataInicio')?.hasError('required')">
-            {{ getErrorMessage('dataInicio') }}
+          <mat-error
+            *ngIf="medicamentoForm.get('dataInicio')?.hasError('required')"
+          >
+            {{ getErrorMessage("dataInicio") }}
           </mat-error>
         </mat-form-field>
 
@@ -121,7 +148,10 @@
             formControlName="dataFim"
             placeholder="Selecione a data"
           />
-          <mat-datepicker-toggle matSuffix [for]="pickerFim"></mat-datepicker-toggle>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerFim"
+          ></mat-datepicker-toggle>
           <mat-datepicker #pickerFim></mat-datepicker>
         </mat-form-field>
 
@@ -178,7 +208,7 @@
             [disabled]="loading"
           >
             <mat-icon>save</mat-icon>
-            {{ loading ? 'Salvando...' : 'Prescrever Medicamento' }}
+            {{ loading ? "Salvando..." : "Prescrever Medicamento" }}
           </button>
         </div>
       </form>
@@ -186,7 +216,7 @@
   </mat-card>
 </div>
 
-<!-- 
+<!--
    __  ____ ____ _  _
  / _\/ ___) ___) )( \
 /    \___ \___ ) \/ (

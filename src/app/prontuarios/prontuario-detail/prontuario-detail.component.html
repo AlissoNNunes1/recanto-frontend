@@ -27,7 +27,7 @@
           Prontuario Eletronico
         </mat-card-title>
         <mat-card-subtitle>
-          {{ prontuario.residente?.nome || 'Residente nao identificado' }}
+          {{ prontuario.residente?.nome || "Residente nao identificado" }}
         </mat-card-subtitle>
       </mat-card-header>
       <mat-card-actions align="end">
@@ -39,7 +39,12 @@
           <mat-icon>picture_as_pdf</mat-icon>
           Gerar Relatorio PDF
         </button>
-        <button mat-raised-button color="primary" (click)="editProntuario()" *ngIf="isAdmin">
+        <button
+          mat-raised-button
+          color="primary"
+          (click)="editProntuario()"
+          *ngIf="isAdmin"
+        >
           <mat-icon>edit</mat-icon>
           Editar
         </button>
@@ -59,23 +64,30 @@
               <div class="info-grid">
                 <div class="info-item">
                   <strong>Nome:</strong>
-                  <span>{{ prontuario.residente?.nome || 'N/A' }}</span>
+                  <span>{{ prontuario.residente?.nome || "N/A" }}</span>
                 </div>
                 <div class="info-item">
                   <strong>Status:</strong>
                   <mat-chip-set>
-                    <mat-chip [color]="getStatusChipColor(prontuario.status)" highlighted>
+                    <mat-chip
+                      [color]="getStatusChipColor(prontuario.status)"
+                      highlighted
+                    >
                       {{ prontuario.status }}
                     </mat-chip>
                   </mat-chip-set>
                 </div>
                 <div class="info-item">
                   <strong>Criado em:</strong>
-                  <span>{{ prontuario.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                  <span>{{
+                    prontuario.createdAt | date : "dd/MM/yyyy HH:mm"
+                  }}</span>
                 </div>
                 <div class="info-item">
                   <strong>Ultima atualizacao:</strong>
-                  <span>{{ prontuario.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                  <span>{{
+                    prontuario.updatedAt | date : "dd/MM/yyyy HH:mm"
+                  }}</span>
                 </div>
               </div>
             </mat-card-content>
@@ -96,7 +108,11 @@
                     Historico Medico
                   </mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>{{ prontuario.historicoMedico || 'Nenhum historico registrado' }}</p>
+                <p>
+                  {{
+                    prontuario.historicoMedico || "Nenhum historico registrado"
+                  }}
+                </p>
               </mat-expansion-panel>
 
               <mat-expansion-panel>
@@ -106,7 +122,7 @@
                     Alergias
                   </mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>{{ prontuario.alergias || 'Nenhuma alergia registrada' }}</p>
+                <p>{{ prontuario.alergias || "Nenhuma alergia registrada" }}</p>
               </mat-expansion-panel>
 
               <mat-expansion-panel>
@@ -116,7 +132,12 @@
                     Medicamentos Continuos
                   </mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>{{ prontuario.medicamentosContinuos || 'Nenhum medicamento continuo' }}</p>
+                <p>
+                  {{
+                    prontuario.medicamentosContinuos ||
+                      "Nenhum medicamento continuo"
+                  }}
+                </p>
               </mat-expansion-panel>
 
               <mat-expansion-panel>
@@ -126,7 +147,12 @@
                     Restricoes Alimentares
                   </mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>{{ prontuario.restricoesAlimentares || 'Nenhuma restricao alimentar' }}</p>
+                <p>
+                  {{
+                    prontuario.restricoesAlimentares ||
+                      "Nenhuma restricao alimentar"
+                  }}
+                </p>
               </mat-expansion-panel>
 
               <mat-expansion-panel>
@@ -136,7 +162,12 @@
                     Historico Familiar
                   </mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>{{ prontuario.historicoFamiliar || 'Nenhum historico familiar registrado' }}</p>
+                <p>
+                  {{
+                    prontuario.historicoFamiliar ||
+                      "Nenhum historico familiar registrado"
+                  }}
+                </p>
               </mat-expansion-panel>
 
               <mat-expansion-panel>
@@ -146,7 +177,7 @@
                     Observacoes
                   </mat-panel-title>
                 </mat-expansion-panel-header>
-                <p>{{ prontuario.observacoes || 'Nenhuma observacao' }}</p>
+                <p>{{ prontuario.observacoes || "Nenhuma observacao" }}</p>
               </mat-expansion-panel>
             </mat-card-content>
           </mat-card>
@@ -170,18 +201,22 @@
                 <mat-card-title>
                   {{ consulta.tipoConsulta }}
                   <mat-chip-set>
-                    <mat-chip [color]="getStatusChipColor(consulta.status)" highlighted>
+                    <mat-chip
+                      [color]="getStatusChipColor(consulta.status)"
+                      highlighted
+                    >
                       {{ consulta.status }}
                     </mat-chip>
                   </mat-chip-set>
                 </mat-card-title>
                 <mat-card-subtitle>
-                  {{ consulta.dataConsulta | date: 'dd/MM/yyyy HH:mm' }}
+                  {{ consulta.dataConsulta | date : "dd/MM/yyyy HH:mm" }}
                 </mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
                 <p *ngIf="consulta.queixaPrincipal">
-                  <strong>Queixa Principal:</strong> {{ consulta.queixaPrincipal }}
+                  <strong>Queixa Principal:</strong>
+                  {{ consulta.queixaPrincipal }}
                 </p>
                 <p *ngIf="consulta.diagnostico">
                   <strong>Diagnostico:</strong> {{ consulta.diagnostico }}
@@ -191,7 +226,11 @@
                 </p>
               </mat-card-content>
               <mat-card-actions align="end">
-                <button mat-button color="primary" (click)="editConsulta(consulta.id)">
+                <button
+                  mat-button
+                  color="primary"
+                  (click)="editConsulta(consulta.id)"
+                >
                   <mat-icon>edit</mat-icon>
                   Editar
                 </button>
@@ -223,13 +262,17 @@
                 <mat-card-title>
                   {{ exame.nomeExame }}
                   <mat-chip-set>
-                    <mat-chip [color]="getStatusChipColor(exame.status)" highlighted>
+                    <mat-chip
+                      [color]="getStatusChipColor(exame.status)"
+                      highlighted
+                    >
                       {{ exame.status }}
                     </mat-chip>
                   </mat-chip-set>
                 </mat-card-title>
                 <mat-card-subtitle>
-                  Tipo: {{ exame.tipoExame }} | Solicitado em: {{ exame.dataSolicitacao | date: 'dd/MM/yyyy' }}
+                  Tipo: {{ exame.tipoExame }} | Solicitado em:
+                  {{ exame.dataSolicitacao | date : "dd/MM/yyyy" }}
                 </mat-card-subtitle>
               </mat-card-header>
               <mat-card-content>
@@ -240,11 +283,16 @@
                   <strong>Resultado:</strong> {{ exame.resultado }}
                 </p>
                 <p *ngIf="exame.dataRealizacao">
-                  <strong>Realizado em:</strong> {{ exame.dataRealizacao | date: 'dd/MM/yyyy' }}
+                  <strong>Realizado em:</strong>
+                  {{ exame.dataRealizacao | date : "dd/MM/yyyy" }}
                 </p>
               </mat-card-content>
               <mat-card-actions align="end">
-                <button mat-button color="primary" (click)="editExame(exame.id)">
+                <button
+                  mat-button
+                  color="primary"
+                  (click)="editExame(exame.id)"
+                >
                   <mat-icon>edit</mat-icon>
                   Editar
                 </button>
@@ -264,19 +312,29 @@
         <div class="tab-content">
           <div class="tab-header">
             <h3>Medicamentos Prescritos</h3>
-            <button mat-raised-button color="primary" (click)="addMedicamento()">
+            <button
+              mat-raised-button
+              color="primary"
+              (click)="addMedicamento()"
+            >
               <mat-icon>add</mat-icon>
               Nova Prescricao
             </button>
           </div>
 
           <div class="medicamentos-list" *ngIf="medicamentos.length > 0">
-            <mat-card *ngFor="let medicamento of medicamentos" class="medicamento-card">
+            <mat-card
+              *ngFor="let medicamento of medicamentos"
+              class="medicamento-card"
+            >
               <mat-card-header>
                 <mat-card-title>
                   {{ medicamento.medicamentoNome }}
                   <mat-chip-set>
-                    <mat-chip [color]="getStatusChipColor(medicamento.status)" highlighted>
+                    <mat-chip
+                      [color]="getStatusChipColor(medicamento.status)"
+                      highlighted
+                    >
                       {{ medicamento.status }}
                     </mat-chip>
                   </mat-chip-set>
@@ -287,15 +345,18 @@
               </mat-card-header>
               <mat-card-content>
                 <p>
-                  <strong>Frequencia:</strong> {{ medicamento.frequenciaAdministracao }}
+                  <strong>Frequencia:</strong>
+                  {{ medicamento.frequenciaAdministracao }}
                 </p>
                 <p>
                   <strong>Indicacao:</strong> {{ medicamento.indicacaoClinica }}
                 </p>
                 <p>
-                  <strong>Inicio:</strong> {{ medicamento.dataInicio | date: 'dd/MM/yyyy' }}
+                  <strong>Inicio:</strong>
+                  {{ medicamento.dataInicio | date : "dd/MM/yyyy" }}
                   <span *ngIf="medicamento.dataFim">
-                    | <strong>Fim:</strong> {{ medicamento.dataFim | date: 'dd/MM/yyyy' }}
+                    | <strong>Fim:</strong>
+                    {{ medicamento.dataFim | date : "dd/MM/yyyy" }}
                   </span>
                 </p>
                 <p *ngIf="medicamento.instrucoesUso">
@@ -303,7 +364,11 @@
                 </p>
               </mat-card-content>
               <mat-card-actions align="end">
-                <button mat-button color="primary" (click)="editMedicamento(medicamento.id)">
+                <button
+                  mat-button
+                  color="primary"
+                  (click)="editMedicamento(medicamento.id)"
+                >
                   <mat-icon>edit</mat-icon>
                   Editar
                 </button>
@@ -321,7 +386,7 @@
   </div>
 </div>
 
-<!-- 
+<!--
    __  ____ ____ _  _
  / _\/ ___) ___) )( \
 /    \___ \___ ) \/ (

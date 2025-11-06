@@ -1,16 +1,21 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { Component, OnInit, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProntuariosService } from '../prontuarios.service';
 
 @Component({
@@ -27,10 +32,10 @@ import { ProntuariosService } from '../prontuarios.service';
     MatNativeDateModule,
     MatCardModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   templateUrl: './consulta-edit.component.html',
-  styleUrls: ['./consulta-edit.component.css']
+  styleUrls: ['./consulta-edit.component.css'],
 })
 export class ConsultaEditComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -49,13 +54,15 @@ export class ConsultaEditComponent implements OnInit {
     'Emergencia',
     'Retorno',
     'Avaliacao Inicial',
-    'Acompanhamento'
+    'Acompanhamento',
   ];
 
   ngOnInit(): void {
     // Obter IDs da rota
     this.consultaId = Number(this.route.snapshot.paramMap.get('consultaId'));
-    this.prontuarioId = Number(this.route.snapshot.paramMap.get('prontuarioId'));
+    this.prontuarioId = Number(
+      this.route.snapshot.paramMap.get('prontuarioId')
+    );
 
     this.initForm();
     this.loadConsulta();
@@ -72,7 +79,7 @@ export class ConsultaEditComponent implements OnInit {
       hipoteseDiagnostica: [''],
       diagnostico: [''],
       tratamento: [''],
-      observacoes: ['']
+      observacoes: [''],
     });
   }
 
@@ -90,7 +97,7 @@ export class ConsultaEditComponent implements OnInit {
           hipoteseDiagnostica: consulta.hipoteseDiagnostica,
           diagnostico: consulta.diagnostico,
           tratamento: consulta.tratamento,
-          observacoes: consulta.observacoes
+          observacoes: consulta.observacoes,
         });
         this.loading = false;
       },
@@ -98,7 +105,7 @@ export class ConsultaEditComponent implements OnInit {
         console.error('Erro ao carregar consulta:', error);
         this.showError('Erro ao carregar dados da consulta');
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -107,20 +114,22 @@ export class ConsultaEditComponent implements OnInit {
       this.loading = true;
       const formData = {
         ...this.consultaForm.value,
-        prontuarioId: this.prontuarioId
+        prontuarioId: this.prontuarioId,
       };
 
-      this.prontuariosService.updateConsulta(this.consultaId, formData).subscribe({
-        next: () => {
-          this.showSuccess('Consulta atualizada com sucesso!');
-          this.router.navigate(['/prontuario-detail', this.prontuarioId]);
-        },
-        error: (error) => {
-          console.error('Erro ao atualizar consulta:', error);
-          this.showError('Erro ao atualizar consulta. Tente novamente.');
-          this.loading = false;
-        }
-      });
+      this.prontuariosService
+        .updateConsulta(this.consultaId, formData)
+        .subscribe({
+          next: () => {
+            this.showSuccess('Consulta atualizada com sucesso!');
+            this.router.navigate(['/prontuario-detail', this.prontuarioId]);
+          },
+          error: (error) => {
+            console.error('Erro ao atualizar consulta:', error);
+            this.showError('Erro ao atualizar consulta. Tente novamente.');
+            this.loading = false;
+          },
+        });
     } else {
       this.markFormGroupTouched(this.consultaForm);
       this.showError('Por favor, preencha todos os campos obrigatorios.');
@@ -128,7 +137,7 @@ export class ConsultaEditComponent implements OnInit {
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
+    Object.keys(formGroup.controls).forEach((key) => {
       const control = formGroup.get(key);
       control?.markAsTouched();
 
@@ -147,7 +156,7 @@ export class ConsultaEditComponent implements OnInit {
       duration: 3000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['snackbar-success']
+      panelClass: ['snackbar-success'],
     });
   }
 
@@ -156,7 +165,7 @@ export class ConsultaEditComponent implements OnInit {
       duration: 5000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['snackbar-error']
+      panelClass: ['snackbar-error'],
     });
   }
 }

@@ -5,7 +5,9 @@
         <mat-icon>science</mat-icon>
         Solicitar Novo Exame
       </mat-card-title>
-      <mat-card-subtitle>Preencha os dados da solicitacao de exame</mat-card-subtitle>
+      <mat-card-subtitle
+        >Preencha os dados da solicitacao de exame</mat-card-subtitle
+      >
     </mat-card-header>
 
     <mat-card-content>
@@ -20,8 +22,12 @@
             placeholder="Digite o ID do profissional"
           />
           <mat-icon matSuffix>badge</mat-icon>
-          <mat-error *ngIf="exameForm.get('profissionalSolicitanteId')?.hasError('required')">
-            {{ getErrorMessage('profissionalSolicitanteId') }}
+          <mat-error
+            *ngIf="
+              exameForm.get('profissionalSolicitanteId')?.hasError('required')
+            "
+          >
+            {{ getErrorMessage("profissionalSolicitanteId") }}
           </mat-error>
         </mat-form-field>
 
@@ -35,7 +41,7 @@
           </mat-select>
           <mat-icon matSuffix>category</mat-icon>
           <mat-error *ngIf="exameForm.get('tipoExame')?.hasError('required')">
-            {{ getErrorMessage('tipoExame') }}
+            {{ getErrorMessage("tipoExame") }}
           </mat-error>
         </mat-form-field>
 
@@ -49,7 +55,7 @@
           />
           <mat-icon matSuffix>text_fields</mat-icon>
           <mat-error *ngIf="exameForm.get('nomeExame')?.hasError('required')">
-            {{ getErrorMessage('nomeExame') }}
+            {{ getErrorMessage("nomeExame") }}
           </mat-error>
         </mat-form-field>
 
@@ -62,10 +68,15 @@
             formControlName="dataSolicitacao"
             placeholder="Selecione a data"
           />
-          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="picker"
+          ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
-          <mat-error *ngIf="exameForm.get('dataSolicitacao')?.hasError('required')">
-            {{ getErrorMessage('dataSolicitacao') }}
+          <mat-error
+            *ngIf="exameForm.get('dataSolicitacao')?.hasError('required')"
+          >
+            {{ getErrorMessage("dataSolicitacao") }}
           </mat-error>
         </mat-form-field>
 
@@ -111,7 +122,7 @@
             [disabled]="loading"
           >
             <mat-icon>save</mat-icon>
-            {{ loading ? 'Salvando...' : 'Solicitar Exame' }}
+            {{ loading ? "Salvando..." : "Solicitar Exame" }}
           </button>
         </div>
       </form>
@@ -119,7 +130,7 @@
   </mat-card>
 </div>
 
-<!-- 
+<!--
    __  ____ ____ _  _
  / _\/ ___) ___) )( \
 /    \___ \___ ) \/ (

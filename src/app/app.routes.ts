@@ -7,12 +7,12 @@ import { AddFuncionarioFormComponent } from './funcionarios/add-funcionario-form
 import { FuncionariosComponent } from './funcionarios/funcionarios/funcionarios.component';
 import { HomeComponent } from './home/home.component';
 import { IpsAutorizadosComponent } from './ips-autorizados/ips-autorizados/ips-autorizados.component';
-import { ConsultaFormComponent } from './prontuarios/consulta-form/consulta-form.component';
 import { ConsultaEditComponent } from './prontuarios/consulta-edit/consulta-edit.component';
-import { ExameFormComponent } from './prontuarios/exame-form/exame-form.component';
+import { ConsultaFormComponent } from './prontuarios/consulta-form/consulta-form.component';
 import { ExameEditComponent } from './prontuarios/exame-edit/exame-edit.component';
-import { MedicamentoFormComponent } from './prontuarios/medicamento-form/medicamento-form.component';
+import { ExameFormComponent } from './prontuarios/exame-form/exame-form.component';
 import { MedicamentoEditComponent } from './prontuarios/medicamento-edit/medicamento-edit.component';
+import { MedicamentoFormComponent } from './prontuarios/medicamento-form/medicamento-form.component';
 import { ProntuarioDetailComponent } from './prontuarios/prontuario-detail/prontuario-detail.component';
 import { ProntuariosComponent } from './prontuarios/prontuarios/prontuarios.component';
 import { ResidentDetailComponent } from './residents/resident-detail/resident-detail.component';

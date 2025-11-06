@@ -1,13 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -86,17 +91,19 @@ export class ExameFormComponent implements OnInit {
       ...this.exameForm.value,
     };
 
-    this.prontuariosService.createExame(this.prontuarioId, exameData).subscribe({
-      next: () => {
-        this.showSuccess('Exame solicitado com sucesso');
-        this.goBack();
-      },
-      error: (error) => {
-        console.error('Erro ao solicitar exame:', error);
-        this.showError(error.error?.message || 'Erro ao solicitar exame');
-        this.loading = false;
-      },
-    });
+    this.prontuariosService
+      .createExame(this.prontuarioId, exameData)
+      .subscribe({
+        next: () => {
+          this.showSuccess('Exame solicitado com sucesso');
+          this.goBack();
+        },
+        error: (error) => {
+          console.error('Erro ao solicitar exame:', error);
+          this.showError(error.error?.message || 'Erro ao solicitar exame');
+          this.loading = false;
+        },
+      });
   }
 
   goBack(): void {

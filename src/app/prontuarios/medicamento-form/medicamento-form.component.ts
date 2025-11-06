@@ -1,19 +1,24 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AllergyWarningDialogComponent } from '../allergy-warning-dialog/allergy-warning-dialog.component';
 import { MedicamentoCreate, ProntuarioEletronico } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
-import { AllergyWarningDialogComponent } from '../allergy-warning-dialog/allergy-warning-dialog.component';
 
 @Component({
   selector: 'app-medicamento-form',
@@ -70,7 +75,7 @@ export class MedicamentoFormComponent implements OnInit {
       },
       error: (error) => {
         console.error('Erro ao carregar prontuario:', error);
-      }
+      },
     });
   }
 
@@ -98,11 +103,11 @@ export class MedicamentoFormComponent implements OnInit {
     }
 
     const medicamentoNome = this.medicamentoForm.get('medicamentoNome')?.value;
-    
+
     // Verificar alergias antes de submeter
     if (this.prontuario?.alergias && this.prontuario.alergias.length > 0) {
       const alergiaDetectada = this.checkAllergies(medicamentoNome);
-      
+
       if (alergiaDetectada.length > 0) {
         this.showAllergyWarning(medicamentoNome, alergiaDetectada);
         return;
@@ -114,21 +119,25 @@ export class MedicamentoFormComponent implements OnInit {
 
   checkAllergies(medicamentoNome: string): string[] {
     if (!this.prontuario?.alergias) return [];
-    
+
     const medicamentoLower = medicamentoNome.toLowerCase();
     const alergiasFiltradas: string[] = [];
 
     for (const alergia of this.prontuario.alergias) {
       const alergiaLower = alergia.toLowerCase();
-      
+
       // Verificar se alguma palavra da alergia esta no nome do medicamento
       const palavrasAlergia = alergiaLower.split(/[\s,;]+/);
       const palavrasMedicamento = medicamentoLower.split(/[\s,;]+/);
-      
+
       for (const palavraAlergia of palavrasAlergia) {
-        if (palavraAlergia.length > 3) { // Ignorar palavras muito curtas
+        if (palavraAlergia.length > 3) {
+          // Ignorar palavras muito curtas
           for (const palavraMed of palavrasMedicamento) {
-            if (palavraMed.includes(palavraAlergia) || palavraAlergia.includes(palavraMed)) {
+            if (
+              palavraMed.includes(palavraAlergia) ||
+              palavraAlergia.includes(palavraMed)
+            ) {
               alergiasFiltradas.push(alergia);
               break;
             }
@@ -145,12 +154,12 @@ export class MedicamentoFormComponent implements OnInit {
       width: '500px',
       data: {
         medicamentoNome,
-        alergias
+        alergias,
       },
-      disableClose: true
+      disableClose: true,
     });
 
-    dialogRef.afterClosed().subscribe(confirmed => {
+    dialogRef.afterClosed().subscribe((confirmed) => {
       if (confirmed) {
         this.submitMedicamento();
       }
@@ -165,17 +174,21 @@ export class MedicamentoFormComponent implements OnInit {
       ...this.medicamentoForm.value,
     };
 
-    this.prontuariosService.createMedicamento(this.prontuarioId, medicamentoData).subscribe({
-      next: () => {
-        this.showSuccess('Medicamento prescrito com sucesso');
-        this.goBack();
-      },
-      error: (error) => {
-        console.error('Erro ao prescrever medicamento:', error);
-        this.showError(error.error?.message || 'Erro ao prescrever medicamento');
-        this.loading = false;
-      },
-    });
+    this.prontuariosService
+      .createMedicamento(this.prontuarioId, medicamentoData)
+      .subscribe({
+        next: () => {
+          this.showSuccess('Medicamento prescrito com sucesso');
+          this.goBack();
+        },
+        error: (error) => {
+          console.error('Erro ao prescrever medicamento:', error);
+          this.showError(
+            error.error?.message || 'Erro ao prescrever medicamento'
+          );
+          this.loading = false;
+        },
+      });
   }
 
   goBack(): void {

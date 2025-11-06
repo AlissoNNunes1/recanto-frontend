@@ -1,10 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import {
-  Component,
-  Inject,
-  OnInit,
-  PLATFORM_ID,
-} from '@angular/core';
+import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -14,7 +9,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Consulta, Exame, MedicamentoPrescrito, ProntuarioEletronico } from '../prontuario';
+import {
+  Consulta,
+  Exame,
+  MedicamentoPrescrito,
+  ProntuarioEletronico,
+} from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
 import { ReportService } from '../report.service';
 
@@ -40,7 +40,7 @@ export class ProntuarioDetailComponent implements OnInit {
   consultas: Consulta[] = [];
   exames: Exame[] = [];
   medicamentos: MedicamentoPrescrito[] = [];
-  
+
   loading = true;
   error: string | null = null;
   isAdmin = false;
@@ -132,7 +132,12 @@ export class ProntuarioDetailComponent implements OnInit {
 
   addConsulta(): void {
     if (this.prontuario) {
-      this.router.navigate(['/prontuario', this.prontuario.id, 'consulta', 'add']);
+      this.router.navigate([
+        '/prontuario',
+        this.prontuario.id,
+        'consulta',
+        'add',
+      ]);
     }
   }
 
@@ -144,25 +149,48 @@ export class ProntuarioDetailComponent implements OnInit {
 
   addMedicamento(): void {
     if (this.prontuario) {
-      this.router.navigate(['/prontuario', this.prontuario.id, 'medicamento', 'add']);
+      this.router.navigate([
+        '/prontuario',
+        this.prontuario.id,
+        'medicamento',
+        'add',
+      ]);
     }
   }
 
   editConsulta(consultaId: number): void {
     if (this.prontuario) {
-      this.router.navigate(['/prontuario', this.prontuario.id, 'consulta', consultaId, 'edit']);
+      this.router.navigate([
+        '/prontuario',
+        this.prontuario.id,
+        'consulta',
+        consultaId,
+        'edit',
+      ]);
     }
   }
 
   editExame(exameId: number): void {
     if (this.prontuario) {
-      this.router.navigate(['/prontuario', this.prontuario.id, 'exame', exameId, 'edit']);
+      this.router.navigate([
+        '/prontuario',
+        this.prontuario.id,
+        'exame',
+        exameId,
+        'edit',
+      ]);
     }
   }
 
   editMedicamento(medicamentoId: number): void {
     if (this.prontuario) {
-      this.router.navigate(['/prontuario', this.prontuario.id, 'medicamento', medicamentoId, 'edit']);
+      this.router.navigate([
+        '/prontuario',
+        this.prontuario.id,
+        'medicamento',
+        medicamentoId,
+        'edit',
+      ]);
     }
   }
 
