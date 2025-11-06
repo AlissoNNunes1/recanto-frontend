@@ -120,12 +120,30 @@ export class ProntuariosService {
     );
   }
 
+  getConsulta(consultaId: number): Observable<Consulta> {
+    return this.http.get<Consulta>(
+      `${this.apiUrl}/consultas/${consultaId}`,
+      this.getHttpOptions()
+    );
+  }
+
   createConsulta(
     prontuarioId: number,
     consulta: ConsultaCreate
   ): Observable<Consulta> {
     return this.http.post<Consulta>(
       `${this.apiUrl}/${prontuarioId}/consultas`,
+      consulta,
+      this.getHttpOptions()
+    );
+  }
+
+  updateConsulta(
+    consultaId: number,
+    consulta: ConsultaUpdate
+  ): Observable<Consulta> {
+    return this.http.put<Consulta>(
+      `${this.apiUrl}/consultas/${consultaId}`,
       consulta,
       this.getHttpOptions()
     );
@@ -156,9 +174,24 @@ export class ProntuariosService {
     });
   }
 
+  getExame(exameId: number): Observable<Exame> {
+    return this.http.get<Exame>(
+      `${this.apiUrl}/exames/${exameId}`,
+      this.getHttpOptions()
+    );
+  }
+
   createExame(prontuarioId: number, exame: ExameCreate): Observable<Exame> {
     return this.http.post<Exame>(
       `${this.apiUrl}/${prontuarioId}/exames`,
+      exame,
+      this.getHttpOptions()
+    );
+  }
+
+  updateExame(exameId: number, exame: Partial<ExameCreate>): Observable<Exame> {
+    return this.http.put<Exame>(
+      `${this.apiUrl}/exames/${exameId}`,
       exame,
       this.getHttpOptions()
     );
@@ -183,12 +216,30 @@ export class ProntuariosService {
     );
   }
 
+  getMedicamento(medicamentoId: number): Observable<MedicamentoPrescrito> {
+    return this.http.get<MedicamentoPrescrito>(
+      `${this.apiUrl}/medicamentos/${medicamentoId}`,
+      this.getHttpOptions()
+    );
+  }
+
   createMedicamento(
     prontuarioId: number,
     medicamento: MedicamentoCreate
   ): Observable<MedicamentoPrescrito> {
     return this.http.post<MedicamentoPrescrito>(
       `${this.apiUrl}/${prontuarioId}/medicamentos`,
+      medicamento,
+      this.getHttpOptions()
+    );
+  }
+
+  updateMedicamento(
+    medicamentoId: number,
+    medicamento: Partial<MedicamentoCreate>
+  ): Observable<MedicamentoPrescrito> {
+    return this.http.put<MedicamentoPrescrito>(
+      `${this.apiUrl}/medicamentos/${medicamentoId}`,
       medicamento,
       this.getHttpOptions()
     );

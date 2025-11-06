@@ -1,0 +1,173 @@
+<div class="consulta-form-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>medical_services</mat-icon>
+        Registrar Nova Consulta
+      </mat-card-title>
+      <mat-card-subtitle>Preencha os dados da consulta medica</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="consultaForm" (ngSubmit)="onSubmit()" class="consulta-form">
+        <!-- ID do Profissional -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>ID do Profissional</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="profissionalId"
+            placeholder="Digite o ID do profissional"
+          />
+          <mat-icon matSuffix>badge</mat-icon>
+          <mat-error *ngIf="consultaForm.get('profissionalId')?.hasError('required')">
+            {{ getErrorMessage('profissionalId') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Tipo de Consulta -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tipo de Consulta</mat-label>
+          <mat-select formControlName="tipoConsulta">
+            <mat-option *ngFor="let tipo of tiposConsulta" [value]="tipo">
+              {{ tipo }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>category</mat-icon>
+          <mat-error *ngIf="consultaForm.get('tipoConsulta')?.hasError('required')">
+            {{ getErrorMessage('tipoConsulta') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Data da Consulta -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Data da Consulta</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="dataConsulta"
+            placeholder="Selecione a data"
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="consultaForm.get('dataConsulta')?.hasError('required')">
+            {{ getErrorMessage('dataConsulta') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Queixa Principal -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Queixa Principal</mat-label>
+          <textarea
+            matInput
+            formControlName="queixaPrincipal"
+            rows="3"
+            placeholder="Descreva a queixa principal do paciente"
+          ></textarea>
+          <mat-icon matSuffix>assignment</mat-icon>
+        </mat-form-field>
+
+        <!-- Historia da Doenca Atual -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Historia da Doenca Atual</mat-label>
+          <textarea
+            matInput
+            formControlName="historiaDoencaAtual"
+            rows="4"
+            placeholder="Descreva o historico da doenca atual"
+          ></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+        </mat-form-field>
+
+        <!-- Exame Fisico -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Exame Fisico</mat-label>
+          <textarea
+            matInput
+            formControlName="exameFisico"
+            rows="4"
+            placeholder="Registre os achados do exame fisico"
+          ></textarea>
+          <mat-icon matSuffix>healing</mat-icon>
+        </mat-form-field>
+
+        <!-- Hipotese Diagnostica -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Hipotese Diagnostica</mat-label>
+          <textarea
+            matInput
+            formControlName="hipoteseDiagnostica"
+            rows="3"
+            placeholder="Indique as hipoteses diagnosticas"
+          ></textarea>
+          <mat-icon matSuffix>fact_check</mat-icon>
+        </mat-form-field>
+
+        <!-- Diagnostico -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Diagnostico</mat-label>
+          <textarea
+            matInput
+            formControlName="diagnostico"
+            rows="3"
+            placeholder="Descreva o diagnostico final"
+          ></textarea>
+          <mat-icon matSuffix>verified</mat-icon>
+        </mat-form-field>
+
+        <!-- Tratamento -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tratamento</mat-label>
+          <textarea
+            matInput
+            formControlName="tratamento"
+            rows="4"
+            placeholder="Descreva o tratamento proposto"
+          ></textarea>
+          <mat-icon matSuffix>medication</mat-icon>
+        </mat-form-field>
+
+        <!-- Observacoes -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Observacoes</mat-label>
+          <textarea
+            matInput
+            formControlName="observacoes"
+            rows="3"
+            placeholder="Observacoes adicionais"
+          ></textarea>
+          <mat-icon matSuffix>note</mat-icon>
+        </mat-form-field>
+
+        <!-- Botoes de Acao -->
+        <div class="form-actions">
+          <button
+            mat-button
+            type="button"
+            (click)="goBack()"
+            [disabled]="loading"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            Cancelar
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loading"
+          >
+            <mat-icon>save</mat-icon>
+            {{ loading ? 'Salvando...' : 'Salvar Consulta' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- 
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+-->

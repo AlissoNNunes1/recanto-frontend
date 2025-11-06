@@ -1,0 +1,127 @@
+<div class="exame-form-container">
+  <mat-card class="form-card">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>science</mat-icon>
+        Solicitar Novo Exame
+      </mat-card-title>
+      <mat-card-subtitle>Preencha os dados da solicitacao de exame</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="exameForm" (ngSubmit)="onSubmit()" class="exame-form">
+        <!-- ID do Profissional Solicitante -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>ID do Profissional Solicitante</mat-label>
+          <input
+            matInput
+            type="number"
+            formControlName="profissionalSolicitanteId"
+            placeholder="Digite o ID do profissional"
+          />
+          <mat-icon matSuffix>badge</mat-icon>
+          <mat-error *ngIf="exameForm.get('profissionalSolicitanteId')?.hasError('required')">
+            {{ getErrorMessage('profissionalSolicitanteId') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Tipo de Exame -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Tipo de Exame</mat-label>
+          <mat-select formControlName="tipoExame">
+            <mat-option *ngFor="let tipo of tiposExame" [value]="tipo">
+              {{ tipo }}
+            </mat-option>
+          </mat-select>
+          <mat-icon matSuffix>category</mat-icon>
+          <mat-error *ngIf="exameForm.get('tipoExame')?.hasError('required')">
+            {{ getErrorMessage('tipoExame') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Nome do Exame -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nome do Exame</mat-label>
+          <input
+            matInput
+            formControlName="nomeExame"
+            placeholder="Ex: Hemograma Completo"
+          />
+          <mat-icon matSuffix>text_fields</mat-icon>
+          <mat-error *ngIf="exameForm.get('nomeExame')?.hasError('required')">
+            {{ getErrorMessage('nomeExame') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Data de Solicitacao -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Data de Solicitacao</mat-label>
+          <input
+            matInput
+            [matDatepicker]="picker"
+            formControlName="dataSolicitacao"
+            placeholder="Selecione a data"
+          />
+          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+          <mat-error *ngIf="exameForm.get('dataSolicitacao')?.hasError('required')">
+            {{ getErrorMessage('dataSolicitacao') }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Descricao -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descricao</mat-label>
+          <textarea
+            matInput
+            formControlName="descricao"
+            rows="4"
+            placeholder="Descreva detalhes ou justificativa do exame"
+          ></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+        </mat-form-field>
+
+        <!-- Observacoes -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Observacoes</mat-label>
+          <textarea
+            matInput
+            formControlName="observacoes"
+            rows="3"
+            placeholder="Observacoes adicionais"
+          ></textarea>
+          <mat-icon matSuffix>note</mat-icon>
+        </mat-form-field>
+
+        <!-- Botoes de Acao -->
+        <div class="form-actions">
+          <button
+            mat-button
+            type="button"
+            (click)="goBack()"
+            [disabled]="loading"
+          >
+            <mat-icon>arrow_back</mat-icon>
+            Cancelar
+          </button>
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="loading"
+          >
+            <mat-icon>save</mat-icon>
+            {{ loading ? 'Salvando...' : 'Solicitar Exame' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- 
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+-->

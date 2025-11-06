@@ -1,0 +1,329 @@
+<div class="prontuario-detail-container">
+  <!-- Loading -->
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner></mat-spinner>
+    <p>Carregando prontuario...</p>
+  </div>
+
+  <!-- Error -->
+  <mat-card class="error-card" *ngIf="error && !loading">
+    <mat-card-content>
+      <mat-icon color="warn">error</mat-icon>
+      <p>{{ error }}</p>
+      <button mat-raised-button color="primary" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar
+      </button>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Conteudo -->
+  <div class="content" *ngIf="prontuario && !loading">
+    <!-- Header -->
+    <mat-card class="header-card">
+      <mat-card-header>
+        <mat-card-title>
+          <mat-icon>assignment</mat-icon>
+          Prontuario Eletronico
+        </mat-card-title>
+        <mat-card-subtitle>
+          {{ prontuario.residente?.nome || 'Residente nao identificado' }}
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-actions align="end">
+        <button mat-button (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+          Voltar
+        </button>
+        <button mat-raised-button color="accent" (click)="generateReport()">
+          <mat-icon>picture_as_pdf</mat-icon>
+          Gerar Relatorio PDF
+        </button>
+        <button mat-raised-button color="primary" (click)="editProntuario()" *ngIf="isAdmin">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </button>
+      </mat-card-actions>
+    </mat-card>
+
+    <!-- Tabs -->
+    <mat-tab-group>
+      <!-- Tab: Informacoes Gerais -->
+      <mat-tab label="Informacoes Gerais">
+        <div class="tab-content">
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Dados do Residente</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="info-grid">
+                <div class="info-item">
+                  <strong>Nome:</strong>
+                  <span>{{ prontuario.residente?.nome || 'N/A' }}</span>
+                </div>
+                <div class="info-item">
+                  <strong>Status:</strong>
+                  <mat-chip-set>
+                    <mat-chip [color]="getStatusChipColor(prontuario.status)" highlighted>
+                      {{ prontuario.status }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </div>
+                <div class="info-item">
+                  <strong>Criado em:</strong>
+                  <span>{{ prontuario.createdAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+                <div class="info-item">
+                  <strong>Ultima atualizacao:</strong>
+                  <span>{{ prontuario.updatedAt | date: 'dd/MM/yyyy HH:mm' }}</span>
+                </div>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-divider></mat-divider>
+
+          <!-- Historico Medico -->
+          <mat-card>
+            <mat-card-header>
+              <mat-card-title>Historico Medico</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon>history</mat-icon>
+                    Historico Medico
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p>{{ prontuario.historicoMedico || 'Nenhum historico registrado' }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon>warning</mat-icon>
+                    Alergias
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p>{{ prontuario.alergias || 'Nenhuma alergia registrada' }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon>medication</mat-icon>
+                    Medicamentos Continuos
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p>{{ prontuario.medicamentosContinuos || 'Nenhum medicamento continuo' }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon>restaurant</mat-icon>
+                    Restricoes Alimentares
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p>{{ prontuario.restricoesAlimentares || 'Nenhuma restricao alimentar' }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon>family_restroom</mat-icon>
+                    Historico Familiar
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p>{{ prontuario.historicoFamiliar || 'Nenhum historico familiar registrado' }}</p>
+              </mat-expansion-panel>
+
+              <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    <mat-icon>note</mat-icon>
+                    Observacoes
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <p>{{ prontuario.observacoes || 'Nenhuma observacao' }}</p>
+              </mat-expansion-panel>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </mat-tab>
+
+      <!-- Tab: Consultas -->
+      <mat-tab label="Consultas">
+        <div class="tab-content">
+          <div class="tab-header">
+            <h3>Historico de Consultas</h3>
+            <button mat-raised-button color="primary" (click)="addConsulta()">
+              <mat-icon>add</mat-icon>
+              Nova Consulta
+            </button>
+          </div>
+
+          <div class="consultas-list" *ngIf="consultas.length > 0">
+            <mat-card *ngFor="let consulta of consultas" class="consulta-card">
+              <mat-card-header>
+                <mat-card-title>
+                  {{ consulta.tipoConsulta }}
+                  <mat-chip-set>
+                    <mat-chip [color]="getStatusChipColor(consulta.status)" highlighted>
+                      {{ consulta.status }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </mat-card-title>
+                <mat-card-subtitle>
+                  {{ consulta.dataConsulta | date: 'dd/MM/yyyy HH:mm' }}
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p *ngIf="consulta.queixaPrincipal">
+                  <strong>Queixa Principal:</strong> {{ consulta.queixaPrincipal }}
+                </p>
+                <p *ngIf="consulta.diagnostico">
+                  <strong>Diagnostico:</strong> {{ consulta.diagnostico }}
+                </p>
+                <p *ngIf="consulta.tratamento">
+                  <strong>Tratamento:</strong> {{ consulta.tratamento }}
+                </p>
+              </mat-card-content>
+              <mat-card-actions align="end">
+                <button mat-button color="primary" (click)="editConsulta(consulta.id)">
+                  <mat-icon>edit</mat-icon>
+                  Editar
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+
+          <div class="no-data" *ngIf="consultas.length === 0">
+            <mat-icon>event_busy</mat-icon>
+            <p>Nenhuma consulta registrada</p>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab: Exames -->
+      <mat-tab label="Exames">
+        <div class="tab-content">
+          <div class="tab-header">
+            <h3>Historico de Exames</h3>
+            <button mat-raised-button color="primary" (click)="addExame()">
+              <mat-icon>add</mat-icon>
+              Novo Exame
+            </button>
+          </div>
+
+          <div class="exames-list" *ngIf="exames.length > 0">
+            <mat-card *ngFor="let exame of exames" class="exame-card">
+              <mat-card-header>
+                <mat-card-title>
+                  {{ exame.nomeExame }}
+                  <mat-chip-set>
+                    <mat-chip [color]="getStatusChipColor(exame.status)" highlighted>
+                      {{ exame.status }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </mat-card-title>
+                <mat-card-subtitle>
+                  Tipo: {{ exame.tipoExame }} | Solicitado em: {{ exame.dataSolicitacao | date: 'dd/MM/yyyy' }}
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p *ngIf="exame.descricao">
+                  <strong>Descricao:</strong> {{ exame.descricao }}
+                </p>
+                <p *ngIf="exame.resultado">
+                  <strong>Resultado:</strong> {{ exame.resultado }}
+                </p>
+                <p *ngIf="exame.dataRealizacao">
+                  <strong>Realizado em:</strong> {{ exame.dataRealizacao | date: 'dd/MM/yyyy' }}
+                </p>
+              </mat-card-content>
+              <mat-card-actions align="end">
+                <button mat-button color="primary" (click)="editExame(exame.id)">
+                  <mat-icon>edit</mat-icon>
+                  Editar
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+
+          <div class="no-data" *ngIf="exames.length === 0">
+            <mat-icon>science</mat-icon>
+            <p>Nenhum exame registrado</p>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Tab: Medicamentos -->
+      <mat-tab label="Medicamentos">
+        <div class="tab-content">
+          <div class="tab-header">
+            <h3>Medicamentos Prescritos</h3>
+            <button mat-raised-button color="primary" (click)="addMedicamento()">
+              <mat-icon>add</mat-icon>
+              Nova Prescricao
+            </button>
+          </div>
+
+          <div class="medicamentos-list" *ngIf="medicamentos.length > 0">
+            <mat-card *ngFor="let medicamento of medicamentos" class="medicamento-card">
+              <mat-card-header>
+                <mat-card-title>
+                  {{ medicamento.medicamentoNome }}
+                  <mat-chip-set>
+                    <mat-chip [color]="getStatusChipColor(medicamento.status)" highlighted>
+                      {{ medicamento.status }}
+                    </mat-chip>
+                  </mat-chip-set>
+                </mat-card-title>
+                <mat-card-subtitle>
+                  {{ medicamento.dosagem }} - {{ medicamento.viaAdministracao }}
+                </mat-card-subtitle>
+              </mat-card-header>
+              <mat-card-content>
+                <p>
+                  <strong>Frequencia:</strong> {{ medicamento.frequenciaAdministracao }}
+                </p>
+                <p>
+                  <strong>Indicacao:</strong> {{ medicamento.indicacaoClinica }}
+                </p>
+                <p>
+                  <strong>Inicio:</strong> {{ medicamento.dataInicio | date: 'dd/MM/yyyy' }}
+                  <span *ngIf="medicamento.dataFim">
+                    | <strong>Fim:</strong> {{ medicamento.dataFim | date: 'dd/MM/yyyy' }}
+                  </span>
+                </p>
+                <p *ngIf="medicamento.instrucoesUso">
+                  <strong>Instrucoes:</strong> {{ medicamento.instrucoesUso }}
+                </p>
+              </mat-card-content>
+              <mat-card-actions align="end">
+                <button mat-button color="primary" (click)="editMedicamento(medicamento.id)">
+                  <mat-icon>edit</mat-icon>
+                  Editar
+                </button>
+              </mat-card-actions>
+            </mat-card>
+          </div>
+
+          <div class="no-data" *ngIf="medicamentos.length === 0">
+            <mat-icon>medication</mat-icon>
+            <p>Nenhum medicamento prescrito</p>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>
+
+<!-- 
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+-->

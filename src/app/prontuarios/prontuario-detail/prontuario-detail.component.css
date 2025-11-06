@@ -1,0 +1,307 @@
+.prontuario-detail-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 400px;
+  gap: 20px;
+}
+
+.loading-container p {
+  font-size: 16px;
+  color: #666;
+}
+
+/* Error */
+.error-card {
+  margin: 20px auto;
+  max-width: 600px;
+}
+
+.error-card mat-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 30px;
+  text-align: center;
+}
+
+.error-card mat-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+}
+
+/* Header Card */
+.header-card {
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+}
+
+.header-card mat-card-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header-card mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  margin: 0;
+}
+
+.header-card mat-card-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 18px;
+  margin-top: 5px;
+}
+
+.header-card mat-card-actions {
+  padding: 16px;
+  display: flex;
+  gap: 10px;
+}
+
+.header-card button {
+  color: white;
+}
+
+/* Tabs */
+mat-tab-group {
+  margin-top: 20px;
+}
+
+.tab-content {
+  padding: 20px;
+  min-height: 400px;
+}
+
+.tab-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.tab-header h3 {
+  margin: 0;
+  font-size: 20px;
+  color: #1e3c72;
+}
+
+/* Info Grid */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-item strong {
+  color: #1e3c72;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.info-item span {
+  color: #333;
+  font-size: 16px;
+}
+
+/* Expansion Panels */
+mat-expansion-panel {
+  margin-bottom: 10px;
+}
+
+mat-expansion-panel mat-icon {
+  margin-right: 10px;
+  color: #1e3c72;
+}
+
+mat-expansion-panel p {
+  margin: 10px 0;
+  line-height: 1.6;
+  color: #555;
+}
+
+/* Cards de Consultas, Exames e Medicamentos */
+.consultas-list,
+.exames-list,
+.medicamentos-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.consulta-card,
+.exame-card,
+.medicamento-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.consulta-card:hover,
+.exame-card:hover,
+.medicamento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.consulta-card mat-card-header,
+.exame-card mat-card-header,
+.medicamento-card mat-card-header {
+  background: linear-gradient(135deg, #f5f7fa 0%, #e9ecf1 100%);
+  padding: 16px;
+  margin: -16px -16px 16px -16px;
+  border-radius: 4px 4px 0 0;
+}
+
+.consulta-card mat-card-title,
+.exame-card mat-card-title,
+.medicamento-card mat-card-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 18px;
+  margin-bottom: 8px;
+}
+
+.consulta-card mat-card-subtitle,
+.exame-card mat-card-subtitle,
+.medicamento-card mat-card-subtitle {
+  font-size: 14px;
+  color: #666;
+}
+
+.consulta-card mat-card-content p,
+.exame-card mat-card-content p,
+.medicamento-card mat-card-content p {
+  margin: 10px 0;
+  line-height: 1.5;
+  color: #444;
+}
+
+.consulta-card mat-card-content strong,
+.exame-card mat-card-content strong,
+.medicamento-card mat-card-content strong {
+  color: #1e3c72;
+  font-weight: 600;
+}
+
+/* Status Chips */
+mat-chip-set {
+  display: inline-flex;
+}
+
+mat-chip {
+  font-weight: 500;
+  text-transform: uppercase;
+  font-size: 12px;
+}
+
+/* No Data */
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  color: #999;
+}
+
+.no-data mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.no-data p {
+  font-size: 18px;
+  margin: 0;
+}
+
+/* Divider */
+mat-divider {
+  margin: 20px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .prontuario-detail-container {
+    padding: 10px;
+  }
+
+  .header-card mat-card-title {
+    font-size: 20px;
+  }
+
+  .header-card mat-card-subtitle {
+    font-size: 16px;
+  }
+
+  .header-card mat-card-actions {
+    flex-direction: column;
+  }
+
+  .header-card mat-card-actions button {
+    width: 100%;
+  }
+
+  .tab-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .tab-header button {
+    width: 100%;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .consultas-list,
+  .exames-list,
+  .medicamentos-list {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .tab-content {
+    padding: 10px;
+  }
+
+  .consulta-card,
+  .exame-card,
+  .medicamento-card {
+    margin-bottom: 15px;
+  }
+}
+
+/* 
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+*/

@@ -1,0 +1,130 @@
+.consulta-form-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.form-card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.form-card mat-card-header {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  padding: 20px;
+  margin: -16px -16px 24px -16px;
+  border-radius: 4px 4px 0 0;
+}
+
+.form-card mat-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 24px;
+  margin: 0;
+}
+
+.form-card mat-card-subtitle {
+  color: rgba(255, 255, 255, 0.9);
+  margin-top: 8px;
+}
+
+.consulta-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-form-field {
+  font-size: 16px;
+}
+
+mat-form-field mat-icon {
+  color: #1e3c72;
+}
+
+textarea {
+  min-height: 80px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.form-actions button {
+  min-width: 140px;
+  height: 48px;
+  font-size: 16px;
+}
+
+.form-actions button mat-icon {
+  margin-right: 8px;
+}
+
+/* Success/Error Snackbars */
+::ng-deep .success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .consulta-form-container {
+    padding: 10px;
+  }
+
+  .form-card mat-card-title {
+    font-size: 20px;
+  }
+
+  .consulta-form {
+    padding: 10px 0;
+    gap: 16px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .form-card {
+    margin: 0;
+  }
+
+  mat-form-field {
+    font-size: 14px;
+  }
+
+  .form-actions button {
+    height: 44px;
+    font-size: 14px;
+  }
+}
+
+/* 
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+*/

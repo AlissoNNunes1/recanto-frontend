@@ -1,0 +1,211 @@
+import { CommonModule, isPlatformBrowser } from '@angular/common';
+import {
+  Component,
+  Inject,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTabsModule } from '@angular/material/tabs';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Consulta, Exame, MedicamentoPrescrito, ProntuarioEletronico } from '../prontuario';
+import { ProntuariosService } from '../prontuarios.service';
+import { ReportService } from '../report.service';
+
+@Component({
+  selector: 'app-prontuario-detail',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatCardModule,
+    MatButtonModule,
+    MatIconModule,
+    MatTabsModule,
+    MatDividerModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule,
+  ],
+  templateUrl: './prontuario-detail.component.html',
+  styleUrls: ['./prontuario-detail.component.css'],
+})
+export class ProntuarioDetailComponent implements OnInit {
+  prontuario: ProntuarioEletronico | null = null;
+  consultas: Consulta[] = [];
+  exames: Exame[] = [];
+  medicamentos: MedicamentoPrescrito[] = [];
+  
+  loading = true;
+  error: string | null = null;
+  isAdmin = false;
+  private isBrowser: boolean;
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private prontuariosService: ProntuariosService,
+    private reportService: ReportService,
+    @Inject(PLATFORM_ID) platformId: Object
+  ) {
+    this.isBrowser = isPlatformBrowser(platformId);
+  }
+
+  ngOnInit(): void {
+    if (this.isBrowser) {
+      this.isAdmin = localStorage.getItem('role') === 'admin';
+    }
+
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.loadProntuario(Number(id));
+    }
+  }
+
+  loadProntuario(id: number): void {
+    this.loading = true;
+    this.error = null;
+
+    this.prontuariosService.getProntuario(id).subscribe({
+      next: (prontuario) => {
+        this.prontuario = prontuario;
+        this.loadConsultas(id);
+        this.loadExames(id);
+        this.loadMedicamentos(id);
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar prontuario:', error);
+        this.error = 'Erro ao carregar prontuario. Tente novamente.';
+        this.loading = false;
+      },
+    });
+  }
+
+  loadConsultas(prontuarioId: number): void {
+    this.prontuariosService.getConsultas(prontuarioId).subscribe({
+      next: (consultas) => {
+        this.consultas = consultas;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar consultas:', error);
+      },
+    });
+  }
+
+  loadExames(prontuarioId: number): void {
+    this.prontuariosService.getExames(prontuarioId).subscribe({
+      next: (exames) => {
+        this.exames = exames;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar exames:', error);
+      },
+    });
+  }
+
+  loadMedicamentos(prontuarioId: number): void {
+    this.prontuariosService.getMedicamentos(prontuarioId).subscribe({
+      next: (medicamentos) => {
+        this.medicamentos = medicamentos;
+      },
+      error: (error) => {
+        console.error('Erro ao carregar medicamentos:', error);
+      },
+    });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/prontuarios']);
+  }
+
+  editProntuario(): void {
+    if (this.prontuario) {
+      this.router.navigate(['/prontuario-edit', this.prontuario.id]);
+    }
+  }
+
+  addConsulta(): void {
+    if (this.prontuario) {
+      this.router.navigate(['/prontuario', this.prontuario.id, 'consulta', 'add']);
+    }
+  }
+
+  addExame(): void {
+    if (this.prontuario) {
+      this.router.navigate(['/prontuario', this.prontuario.id, 'exame', 'add']);
+    }
+  }
+
+  addMedicamento(): void {
+    if (this.prontuario) {
+      this.router.navigate(['/prontuario', this.prontuario.id, 'medicamento', 'add']);
+    }
+  }
+
+  editConsulta(consultaId: number): void {
+    if (this.prontuario) {
+      this.router.navigate(['/prontuario', this.prontuario.id, 'consulta', consultaId, 'edit']);
+    }
+  }
+
+  editExame(exameId: number): void {
+    if (this.prontuario) {
+      this.router.navigate(['/prontuario', this.prontuario.id, 'exame', exameId, 'edit']);
+    }
+  }
+
+  editMedicamento(medicamentoId: number): void {
+    if (this.prontuario) {
+      this.router.navigate(['/prontuario', this.prontuario.id, 'medicamento', medicamentoId, 'edit']);
+    }
+  }
+
+  getStatusClass(status: string): string {
+    return `status-${status.toLowerCase()}`;
+  }
+
+  getStatusChipColor(status: string): 'primary' | 'accent' | 'warn' {
+    switch (status.toUpperCase()) {
+      case 'ATIVO':
+      case 'REALIZADA':
+      case 'CONCLUIDO':
+        return 'primary';
+      case 'AGENDADA':
+      case 'SOLICITADO':
+      case 'EM_ANDAMENTO':
+        return 'accent';
+      case 'CANCELADA':
+      case 'SUSPENSO':
+      case 'INATIVO':
+        return 'warn';
+      default:
+        return 'primary';
+    }
+  }
+
+  generateReport(): void {
+    if (this.prontuario) {
+      this.reportService.generateProntuarioReport(
+        this.prontuario,
+        this.consultas,
+        this.exames,
+        this.medicamentos
+      );
+    }
+  }
+}
+
+// Componente de detalhes do prontuario eletronico
+// Exibe informacoes completas do prontuario, consultas, exames e medicamentos
+// Permite navegacao para edicao e adicao de novos registros
+// Geracao de relatorios PDF com todas as informacoes do prontuario
+//    __  ____ ____ _  _
+//  / _\/ ___) ___) )( \
+// /    \___ \___ ) \/ (
+// \_/\_(____(____|____/

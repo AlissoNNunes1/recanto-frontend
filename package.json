@@ -29,6 +29,7 @@
     "device-uuid": "latest",
     "express": "latest",
     "jsonp": "latest",
+    "jspdf": "^3.0.3",
     "rxjs": "latest",
     "tslib": "latest",
     "uuid": "latest",

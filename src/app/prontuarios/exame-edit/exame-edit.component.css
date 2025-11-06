@@ -1,0 +1,159 @@
+.exame-edit-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.exame-edit-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+  color: white;
+  padding: 20px;
+  border-radius: 8px 8px 0 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-icon {
+  font-size: 28px;
+  width: 28px;
+  height: 28px;
+}
+
+mat-card-title {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+mat-card-content {
+  padding: 30px;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+mat-form-field {
+  display: block;
+}
+
+textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.form-actions button {
+  flex: 1;
+  height: 48px;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.loading-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: #2a5298;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-container p {
+  margin-top: 20px;
+  font-size: 16px;
+  color: #666;
+}
+
+/* Snackbar Styles */
+::ng-deep .snackbar-success {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+::ng-deep .snackbar-error {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .consulta-edit-container {
+    padding: 12px;
+  }
+
+  mat-card-content {
+    padding: 20px;
+  }
+
+  .card-header {
+    padding: 16px;
+  }
+
+  mat-card-title {
+    font-size: 20px;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .consulta-edit-container {
+    padding: 8px;
+  }
+
+  mat-card-content {
+    padding: 16px;
+  }
+
+  .header-icon {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+  }
+
+  mat-card-title {
+    font-size: 18px;
+  }
+}
+
+/*
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+*/

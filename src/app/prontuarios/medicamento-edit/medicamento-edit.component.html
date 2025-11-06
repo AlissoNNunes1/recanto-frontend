@@ -1,0 +1,84 @@
+<div class='medicamento-edit-container'>
+  <mat-card class='medicamento-edit-card'>
+    <mat-card-header class='card-header'>
+      <mat-icon class='header-icon'>medication</mat-icon>
+      <mat-card-title>Editar Medicamento</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]='medicamentoForm' (ngSubmit)='onSubmit()' *ngIf='!loading'>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>ID do Profissional</mat-label>
+          <input matInput type='number' formControlName='profissionalId' placeholder='ID do profissional'>
+          <mat-icon matSuffix>badge</mat-icon>
+          <mat-error *ngIf='medicamentoForm.get("profissionalId")?.hasError("required")'>Campo obrigatorio</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Nome do Medicamento</mat-label>
+          <input matInput formControlName='medicamentoNome' placeholder='Nome do medicamento'>
+          <mat-icon matSuffix>medication_liquid</mat-icon>
+          <mat-error *ngIf='medicamentoForm.get("medicamentoNome")?.hasError("required")'>Campo obrigatorio</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Dosagem</mat-label>
+          <input matInput formControlName='dosagem' placeholder='Ex: 500mg'>
+          <mat-icon matSuffix>science</mat-icon>
+          <mat-error *ngIf='medicamentoForm.get("dosagem")?.hasError("required")'>Campo obrigatorio</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Via de Administracao</mat-label>
+          <input matInput formControlName='viaAdministracao' placeholder='Ex: Oral'>
+          <mat-icon matSuffix>route</mat-icon>
+          <mat-error *ngIf='medicamentoForm.get("viaAdministracao")?.hasError("required")'>Campo obrigatorio</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Frequencia de Administracao</mat-label>
+          <input matInput formControlName='frequenciaAdministracao' placeholder='Ex: 8/8h'>
+          <mat-icon matSuffix>schedule</mat-icon>
+          <mat-error *ngIf='medicamentoForm.get("frequenciaAdministracao")?.hasError("required")'>Campo obrigatorio</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Indicacao Clinica</mat-label>
+          <textarea matInput formControlName='indicacaoClinica' rows='3' placeholder='Indicacao clinica'></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+          <mat-error *ngIf='medicamentoForm.get("indicacaoClinica")?.hasError("required")'>Campo obrigatorio</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Instrucoes de Uso</mat-label>
+          <textarea matInput formControlName='instrucoesUso' rows='3' placeholder='Instrucoes de uso'></textarea>
+          <mat-icon matSuffix>info</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Data de Inicio</mat-label>
+          <input matInput [matDatepicker]='pickerInicio' formControlName='dataInicio'>
+          <mat-datepicker-toggle matSuffix [for]='pickerInicio'></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+          <mat-error *ngIf='medicamentoForm.get("dataInicio")?.hasError("required")'>Campo obrigatorio</mat-error>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Data de Fim</mat-label>
+          <input matInput [matDatepicker]='pickerFim' formControlName='dataFim'>
+          <mat-datepicker-toggle matSuffix [for]='pickerFim'></mat-datepicker-toggle>
+          <mat-datepicker #pickerFim></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Quantidade</mat-label>
+          <input matInput formControlName='quantidade' placeholder='Quantidade'>
+          <mat-icon matSuffix>inventory</mat-icon>
+        </mat-form-field>
+        <mat-form-field appearance='outline' class='full-width'>
+          <mat-label>Observacoes</mat-label>
+          <textarea matInput formControlName='observacoes' rows='3' placeholder='Observacoes adicionais'></textarea>
+          <mat-icon matSuffix>notes</mat-icon>
+        </mat-form-field>
+        <div class='form-actions'>
+          <button mat-raised-button type='button' (click)='goBack()' [disabled]='loading'><mat-icon>arrow_back</mat-icon> Cancelar</button>
+          <button mat-raised-button color='primary' type='submit' [disabled]='loading'><mat-icon>save</mat-icon> {{ loading ? 'Salvando...' : 'Salvar Alteracoes' }}</button>
+        </div>
+      </form>
+      <div *ngIf='loading' class='loading-container'>
+        <mat-icon class='loading-icon'>hourglass_empty</mat-icon>
+        <p>Carregando dados do medicamento...</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
