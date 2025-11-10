@@ -3,10 +3,12 @@ import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -17,6 +19,7 @@ import {
 } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
 import { ReportService } from '../report.service';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-prontuario-detail',
@@ -31,6 +34,8 @@ import { ReportService } from '../report.service';
     MatChipsModule,
     MatExpansionModule,
     MatProgressSpinnerModule,
+    MatDialogModule,
+    MatSnackBarModule,
   ],
   templateUrl: './prontuario-detail.component.html',
   styleUrls: ['./prontuario-detail.component.css'],
@@ -51,6 +56,8 @@ export class ProntuarioDetailComponent implements OnInit {
     private router: Router,
     private prontuariosService: ProntuariosService,
     private reportService: ReportService,
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -126,7 +133,7 @@ export class ProntuarioDetailComponent implements OnInit {
 
   editProntuario(): void {
     if (this.prontuario) {
-      this.router.navigate(['/prontuario-edit', this.prontuario.id]);
+      this.router.navigate(['/prontuario/edit', this.prontuario.id]);
     }
   }
 
@@ -192,6 +199,80 @@ export class ProntuarioDetailComponent implements OnInit {
         'edit',
       ]);
     }
+  }
+
+  suspenderMedicamento(medicamentoId: number): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '400px',
+      data: {
+        title: 'Suspender Medicamento',
+        message: 'Deseja realmente suspender esta prescricao? O medicamento nao sera mais administrado ao residente.',
+        confirmText: 'Sim, Suspender',
+        cancelText: 'Cancelar',
+        type: 'warn',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed && this.prontuario) {
+        this.prontuariosService.suspenderMedicamento(medicamentoId).subscribe({
+          next: () => {
+            this.showSuccess('Medicamento suspenso com sucesso');
+            this.loadMedicamentos(this.prontuario!.id);
+          },
+          error: (error) => {
+            console.error('Erro ao suspender medicamento:', error);
+            this.showError('Erro ao suspender medicamento');
+          },
+        });
+      }
+    });
+  }
+
+  excluirMedicamento(medicamentoId: number): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '450px',
+      data: {
+        title: 'Excluir Medicamento',
+        message: 'ATENCAO: Esta acao NAO pode ser desfeita! Deseja realmente excluir permanentemente esta prescricao do prontuario?',
+        confirmText: 'Sim, Excluir Permanentemente',
+        cancelText: 'Cancelar',
+        type: 'warn',
+      },
+    });
+
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (confirmed && this.prontuario) {
+        this.prontuariosService.excluirMedicamento(medicamentoId).subscribe({
+          next: () => {
+            this.showSuccess('Medicamento excluido com sucesso');
+            this.loadMedicamentos(this.prontuario!.id);
+          },
+          error: (err: unknown) => {
+            console.error('Erro ao excluir medicamento:', err);
+            this.showError('Erro ao excluir medicamento');
+          },
+        });
+      }
+    });
+  }
+
+  private showSuccess(message: string): void {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 3000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['success-snackbar'],
+    });
+  }
+
+  private showError(message: string): void {
+    this.snackBar.open(message, 'Fechar', {
+      duration: 5000,
+      horizontalPosition: 'center',
+      verticalPosition: 'top',
+      panelClass: ['error-snackbar'],
+    });
   }
 
   getStatusClass(status: string): string {

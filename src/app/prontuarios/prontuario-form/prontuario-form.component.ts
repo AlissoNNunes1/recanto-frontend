@@ -8,19 +8,17 @@ import {
 } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatNativeDateModule } from '@angular/material/core';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ExameCreate, TipoExame } from '../prontuario';
+import { ProntuarioCreate } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
 
 @Component({
-  selector: 'app-exame-form',
+  selector: 'app-prontuario-form',
   standalone: true,
   imports: [
     CommonModule,
@@ -31,19 +29,15 @@ import { ProntuariosService } from '../prontuarios.service';
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
     MatSnackBarModule,
   ],
-  templateUrl: './exame-form.component.html',
-  styleUrls: ['./exame-form.component.css'],
+  templateUrl: './prontuario-form.component.html',
+  styleUrls: ['./prontuario-form.component.css'],
 })
-export class ExameFormComponent implements OnInit {
-  exameForm!: FormGroup;
-  prontuarioId!: number;
+export class ProntuarioFormComponent implements OnInit {
+  prontuarioForm!: FormGroup;
+  residenteId!: number;
   loading = false;
-
-  tiposExame = Object.values(TipoExame);
 
   constructor(
     private fb: FormBuilder,
@@ -54,11 +48,11 @@ export class ExameFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    const id = this.route.snapshot.paramMap.get('prontuarioId');
+    const id = this.route.snapshot.paramMap.get('residenteId');
     if (id) {
-      this.prontuarioId = Number(id);
+      this.residenteId = Number(id);
     } else {
-      this.showError('ID do prontuario nao encontrado');
+      this.showError('ID do residente nao encontrado');
       this.goBack();
       return;
     }
@@ -67,47 +61,47 @@ export class ExameFormComponent implements OnInit {
   }
 
   initForm(): void {
-    this.exameForm = this.fb.group({
-      profissionalSolicitanteId: [null, Validators.required],
-      tipoExame: ['', Validators.required],
-      nomeExame: ['', Validators.required],
-      descricao: [''],
-      dataSolicitacao: [new Date(), Validators.required],
+    this.prontuarioForm = this.fb.group({
+      historicoMedico: [''],
+      alergias: [''],
+      medicamentosContinuos: [''],
+      restricoesAlimentares: [''],
+      historicoFamiliar: [''],
       observacoes: [''],
     });
   }
 
   onSubmit(): void {
-    if (this.exameForm.invalid) {
-      this.markFormGroupTouched(this.exameForm);
-      this.showError('Por favor, preencha todos os campos obrigatorios');
+    if (this.prontuarioForm.invalid) {
+      this.markFormGroupTouched(this.prontuarioForm);
+      this.showError('Por favor, verifique os campos do formulario');
       return;
     }
 
     this.loading = true;
 
-    const exameData: ExameCreate = {
-      prontuarioId: this.prontuarioId,
-      ...this.exameForm.value,
+    const prontuarioData: ProntuarioCreate = {
+      residenteId: this.residenteId,
+      ...this.prontuarioForm.value,
     };
 
-    this.prontuariosService
-      .createExame(this.prontuarioId, exameData)
-      .subscribe({
-        next: () => {
-          this.showSuccess('Exame registrado com sucesso');
-          this.goBack();
-        },
-        error: (error) => {
-          console.error('Erro ao registrar exame:', error);
-          this.showError(error.error?.message || 'Erro ao registrar exame');
-          this.loading = false;
-        },
-      });
+    this.prontuariosService.createProntuario(prontuarioData).subscribe({
+      next: (prontuario) => {
+        this.showSuccess('Prontuario criado com sucesso');
+        this.router.navigate(['/prontuario-detail', prontuario.id]);
+      },
+      error: (error) => {
+        console.error('Erro ao criar prontuario:', error);
+        this.showError(
+          error.error?.message || 'Erro ao criar prontuario'
+        );
+        this.loading = false;
+      },
+    });
   }
 
   goBack(): void {
-    this.router.navigate(['/prontuario-detail', this.prontuarioId]);
+    this.router.navigate(['/residents']);
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {
@@ -140,7 +134,7 @@ export class ExameFormComponent implements OnInit {
   }
 
   getErrorMessage(fieldName: string): string {
-    const control = this.exameForm.get(fieldName);
+    const control = this.prontuarioForm.get(fieldName);
     if (control?.hasError('required')) {
       return 'Campo obrigatorio';
     }
@@ -148,9 +142,9 @@ export class ExameFormComponent implements OnInit {
   }
 }
 
-// Formulario para solicitacao de exames medicos
-// Permite adicionar nova solicitacao de exame a um prontuario
-// Validacoes de campos obrigatorios e feedback visual
+// Componente de formulario para criacao de prontuario eletronico
+// Permite criar novo prontuario vinculado a um residente
+// Campos opciona is para historico medico, alergias, medicamentos, restricoes
 //    __  ____ ____ _  _
 //  / _\/ ___) ___) )( \
 // /    \___ \___ ) \/ (

@@ -191,7 +191,7 @@
             <h3>Historico de Consultas</h3>
             <button mat-raised-button color="primary" (click)="addConsulta()">
               <mat-icon>add</mat-icon>
-              Nova Consulta
+              Registrar Consulta
             </button>
           </div>
 
@@ -252,7 +252,7 @@
             <h3>Historico de Exames</h3>
             <button mat-raised-button color="primary" (click)="addExame()">
               <mat-icon>add</mat-icon>
-              Novo Exame
+              Registrar Exame
             </button>
           </div>
 
@@ -271,7 +271,7 @@
                   </mat-chip-set>
                 </mat-card-title>
                 <mat-card-subtitle>
-                  Tipo: {{ exame.tipoExame }} | Solicitado em:
+                  Tipo: {{ exame.tipoExame }} | Realizado em:
                   {{ exame.dataSolicitacao | date : "dd/MM/yyyy" }}
                 </mat-card-subtitle>
               </mat-card-header>
@@ -368,9 +368,27 @@
                   mat-button
                   color="primary"
                   (click)="editMedicamento(medicamento.id)"
+                  [disabled]="medicamento.status === 'SUSPENSA'"
                 >
                   <mat-icon>edit</mat-icon>
                   Editar
+                </button>
+                <button
+                  mat-button
+                  color="warn"
+                  (click)="suspenderMedicamento(medicamento.id)"
+                  *ngIf="medicamento.status === 'ATIVA'"
+                >
+                  <mat-icon>pause_circle</mat-icon>
+                  Suspender
+                </button>
+                <button
+                  mat-button
+                  color="warn"
+                  (click)="excluirMedicamento(medicamento.id)"
+                >
+                  <mat-icon>delete</mat-icon>
+                  Excluir
                 </button>
               </mat-card-actions>
             </mat-card>

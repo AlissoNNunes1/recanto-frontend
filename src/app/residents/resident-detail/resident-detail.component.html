@@ -73,6 +73,15 @@
   <div class="actions">
     <button
       mat-raised-button
+      color="accent"
+      (click)="createProntuario()"
+      aria-label="Criar prontuario para este residente"
+    >
+      <mat-icon>add_circle</mat-icon>
+      Criar Prontuario
+    </button>
+    <button
+      mat-raised-button
       color="primary"
       (click)="goBack()"
       aria-label="Voltar para lista de residentes"

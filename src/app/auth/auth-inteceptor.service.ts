@@ -43,7 +43,9 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         // Verifica se o erro é devido a um token expirado ou acesso proibido
+        // Somente tenta refresh se estiver no browser (nao no SSR)
         if (
+          this.isBrowser &&
           (error.status === 401 || error.status === 403) &&
           !authReq.url.includes('/refresh-token')
         ) {

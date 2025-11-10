@@ -7,7 +7,7 @@
     <mat-card-content>
       <form [formGroup]="exameForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Profissional Solicitante</mat-label>
+          <mat-label>Profissional Responsavel</mat-label>
           <input
             matInput
             type="number"
@@ -47,17 +47,17 @@
           >
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Descricao</mat-label>
+          <mat-label>Resultados</mat-label>
           <textarea
             matInput
             formControlName="descricao"
             rows="4"
-            placeholder="Descricao do exame"
+            placeholder="Resultados do exame"
           ></textarea>
           <mat-icon matSuffix>description</mat-icon>
         </mat-form-field>
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Data de Solicitacao</mat-label>
+          <mat-label>Data de Realizacao</mat-label>
           <input
             matInput
             [matDatepicker]="picker"

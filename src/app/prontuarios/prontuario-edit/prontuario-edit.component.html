@@ -1,0 +1,96 @@
+<div class="prontuario-edit-container">
+  <mat-card class="prontuario-edit-card">
+    <mat-card-header class="card-header">
+      <mat-icon class="header-icon">edit_note</mat-icon>
+      <mat-card-title>Editar Prontuario Eletronico</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <form [formGroup]="prontuarioForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Historico Medico</mat-label>
+          <textarea 
+            matInput 
+            formControlName="historicoMedico" 
+            rows="4"
+            placeholder="Historico medico do residente...">
+          </textarea>
+          <mat-icon matSuffix>history</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Alergias Conhecidas</mat-label>
+          <textarea 
+            matInput 
+            formControlName="alergias" 
+            rows="3"
+            placeholder="Ex: Dipirona, Penicilina, Lactose...">
+          </textarea>
+          <mat-icon matSuffix>warning</mat-icon>
+          <mat-hint>Separe multiplas alergias por virgula</mat-hint>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Medicamentos de Uso Continuo</mat-label>
+          <textarea 
+            matInput 
+            formControlName="medicamentosContinuos" 
+            rows="3"
+            placeholder="Medicamentos que o residente ja utiliza...">
+          </textarea>
+          <mat-icon matSuffix>medication</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Restricoes Alimentares</mat-label>
+          <textarea 
+            matInput 
+            formControlName="restricoesAlimentares" 
+            rows="3"
+            placeholder="Dietas especiais, restricoes, preferencias...">
+          </textarea>
+          <mat-icon matSuffix>restaurant</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Historico Familiar</mat-label>
+          <textarea 
+            matInput 
+            formControlName="historicoFamiliar" 
+            rows="4"
+            placeholder="Historico de doencas na familia...">
+          </textarea>
+          <mat-icon matSuffix>family_restroom</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Observacoes Gerais</mat-label>
+          <textarea 
+            matInput 
+            formControlName="observacoes" 
+            rows="3"
+            placeholder="Outras observacoes relevantes...">
+          </textarea>
+          <mat-icon matSuffix>notes</mat-icon>
+        </mat-form-field>
+
+        <div class="form-actions">
+          <button mat-button type="button" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+            Cancelar
+          </button>
+          <button mat-raised-button color="primary" type="submit">
+            <mat-icon>save</mat-icon>
+            Salvar Alteracoes
+          </button>
+        </div>
+      </form>
+
+      <div class="loading-container" *ngIf="loading">
+        <mat-icon class="loading-icon">hourglass_empty</mat-icon>
+        <p>Carregando prontuario...</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>

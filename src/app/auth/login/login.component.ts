@@ -37,7 +37,10 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.loginAutomatico();
+    // Somente tenta login automatico se estiver no browser
+    if (this.isBrowser) {
+      this.loginAutomatico();
+    }
   }
 
   ngOnDestroy() {

@@ -26,13 +26,21 @@
         </mat-form-field>
         <mat-form-field appearance='outline' class='full-width'>
           <mat-label>Via de Administracao</mat-label>
-          <input matInput formControlName='viaAdministracao' placeholder='Ex: Oral'>
+          <mat-select formControlName='viaAdministracao'>
+            <mat-option *ngFor='let via of viasAdministracao' [value]='via.value'>
+              {{ via.label }}
+            </mat-option>
+          </mat-select>
           <mat-icon matSuffix>route</mat-icon>
           <mat-error *ngIf='medicamentoForm.get("viaAdministracao")?.hasError("required")'>Campo obrigatorio</mat-error>
         </mat-form-field>
         <mat-form-field appearance='outline' class='full-width'>
           <mat-label>Frequencia de Administracao</mat-label>
-          <input matInput formControlName='frequenciaAdministracao' placeholder='Ex: 8/8h'>
+          <mat-select formControlName='frequenciaAdministracao'>
+            <mat-option *ngFor='let freq of frequenciasAdministracao' [value]='freq.value'>
+              {{ freq.label }}
+            </mat-option>
+          </mat-select>
           <mat-icon matSuffix>schedule</mat-icon>
           <mat-error *ngIf='medicamentoForm.get("frequenciaAdministracao")?.hasError("required")'>Campo obrigatorio</mat-error>
         </mat-form-field>

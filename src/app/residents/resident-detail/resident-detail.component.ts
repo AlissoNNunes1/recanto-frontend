@@ -52,6 +52,15 @@ export class ResidentDetailComponent implements OnInit {
   }
 
   /**
+   * Navega para criacao de prontuario
+   */
+  createProntuario(): void {
+    if (this.resident) {
+      this.router.navigate(['/prontuario/create', this.resident.id]);
+    }
+  }
+
+  /**
    * Formata CPF para exibição
    */
   formatCpf(cpf: string): string {

@@ -14,6 +14,8 @@ import { ExameFormComponent } from './prontuarios/exame-form/exame-form.componen
 import { MedicamentoEditComponent } from './prontuarios/medicamento-edit/medicamento-edit.component';
 import { MedicamentoFormComponent } from './prontuarios/medicamento-form/medicamento-form.component';
 import { ProntuarioDetailComponent } from './prontuarios/prontuario-detail/prontuario-detail.component';
+import { ProntuarioFormComponent } from './prontuarios/prontuario-form/prontuario-form.component';
+import { ProntuarioEditComponent } from './prontuarios/prontuario-edit/prontuario-edit.component';
 import { ProntuariosComponent } from './prontuarios/prontuarios/prontuarios.component';
 import { ResidentDetailComponent } from './residents/resident-detail/resident-detail.component';
 import { ResidentsComponent } from './residents/residents/residents.component';
@@ -49,8 +51,18 @@ export const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
+    path: 'prontuario/create/:residenteId',
+    component: ProntuarioFormComponent,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'prontuario-detail/:id',
     component: ProntuarioDetailComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'prontuario/edit/:id',
+    component: ProntuarioEditComponent,
     canActivate: [AuthGuard],
   },
   {

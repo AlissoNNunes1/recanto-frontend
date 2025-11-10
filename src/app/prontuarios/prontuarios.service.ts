@@ -24,7 +24,7 @@ import {
   providedIn: 'root',
 })
 export class ProntuariosService {
-  private apiUrl = 'http://192.168.0.169:3000/api/prontuarios';
+  private apiUrl = '/api/v1/prontuarios';
   private isBrowser: boolean;
 
   constructor(
@@ -254,4 +254,18 @@ export class ProntuariosService {
       this.getHttpOptions()
     );
   }
+
+  excluirMedicamento(medicamentoId: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiUrl}/medicamentos/${medicamentoId}`,
+      this.getHttpOptions()
+    );
+  }
 }
+
+/*
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+*/

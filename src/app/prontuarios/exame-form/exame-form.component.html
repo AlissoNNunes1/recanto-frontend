@@ -3,18 +3,18 @@
     <mat-card-header>
       <mat-card-title>
         <mat-icon>science</mat-icon>
-        Solicitar Novo Exame
+        Registrar Novo Exame
       </mat-card-title>
       <mat-card-subtitle
-        >Preencha os dados da solicitacao de exame</mat-card-subtitle
+        >Preencha os dados do exame realizado</mat-card-subtitle
       >
     </mat-card-header>
 
     <mat-card-content>
       <form [formGroup]="exameForm" (ngSubmit)="onSubmit()" class="exame-form">
-        <!-- ID do Profissional Solicitante -->
+        <!-- ID do Profissional Responsavel -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>ID do Profissional Solicitante</mat-label>
+          <mat-label>ID do Profissional Responsavel</mat-label>
           <input
             matInput
             type="number"
@@ -59,9 +59,9 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Data de Solicitacao -->
+        <!-- Data de Realizacao -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Data de Solicitacao</mat-label>
+          <mat-label>Data de Realizacao</mat-label>
           <input
             matInput
             [matDatepicker]="picker"
@@ -80,14 +80,14 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Descricao -->
+        <!-- Resultados -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Descricao</mat-label>
+          <mat-label>Resultados</mat-label>
           <textarea
             matInput
             formControlName="descricao"
             rows="4"
-            placeholder="Descreva detalhes ou justificativa do exame"
+            placeholder="Descreva os resultados do exame realizado"
           ></textarea>
           <mat-icon matSuffix>description</mat-icon>
         </mat-form-field>
@@ -99,7 +99,7 @@
             matInput
             formControlName="observacoes"
             rows="3"
-            placeholder="Observacoes adicionais"
+            placeholder="Observacoes adicionais sobre o exame"
           ></textarea>
           <mat-icon matSuffix>note</mat-icon>
         </mat-form-field>
@@ -122,7 +122,7 @@
             [disabled]="loading"
           >
             <mat-icon>save</mat-icon>
-            {{ loading ? "Salvando..." : "Solicitar Exame" }}
+            {{ loading ? "Salvando..." : "Registrar Exame" }}
           </button>
         </div>
       </form>

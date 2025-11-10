@@ -64,11 +64,14 @@
         <!-- Via de Administracao -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Via de Administracao</mat-label>
-          <input
-            matInput
-            formControlName="viaAdministracao"
-            placeholder="Ex: Oral, Intravenosa, Intramuscular"
-          />
+          <mat-select formControlName="viaAdministracao">
+            <mat-option
+              *ngFor="let via of viasAdministracao"
+              [value]="via.value"
+            >
+              {{ via.label }}
+            </mat-option>
+          </mat-select>
           <mat-icon matSuffix>route</mat-icon>
           <mat-error
             *ngIf="
@@ -82,11 +85,14 @@
         <!-- Frequencia de Administracao -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Frequencia de Administracao</mat-label>
-          <input
-            matInput
-            formControlName="frequenciaAdministracao"
-            placeholder="Ex: 8/8h, 12/12h, 1x ao dia"
-          />
+          <mat-select formControlName="frequenciaAdministracao">
+            <mat-option
+              *ngFor="let freq of frequenciasAdministracao"
+              [value]="freq.value"
+            >
+              {{ freq.label }}
+            </mat-option>
+          </mat-select>
           <mat-icon matSuffix>schedule</mat-icon>
           <mat-error
             *ngIf="

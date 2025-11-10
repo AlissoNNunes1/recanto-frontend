@@ -14,11 +14,37 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AllergyWarningDialogComponent } from '../allergy-warning-dialog/allergy-warning-dialog.component';
 import { MedicamentoPrescrito, ProntuarioEletronico } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
+
+// Enums para validacao
+export enum ViaAdministracao {
+  ORAL = 'ORAL',
+  INJETAVEL = 'INJETAVEL',
+  TOPICA = 'TOPICA',
+  INALATORIA = 'INALATORIA',
+  OFTALMICA = 'OFTALMICA',
+  OTOLOGICA = 'OTOLOGICA',
+  RETAL = 'RETAL',
+  VAGINAL = 'VAGINAL',
+  OUTROS = 'OUTROS',
+}
+
+export enum FrequenciaAdministracao {
+  UMA_VEZ = 'UMA_VEZ',
+  DIARIA = 'DIARIA',
+  BID = 'BID',
+  TID = 'TID',
+  QID = 'QID',
+  SOS = 'SOS',
+  SEMANAL = 'SEMANAL',
+  MENSAL = 'MENSAL',
+  OUTROS = 'OUTROS',
+}
 
 @Component({
   selector: 'app-medicamento-edit',
@@ -29,6 +55,7 @@ import { ProntuariosService } from '../prontuarios.service';
     MatCardModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
     MatButtonModule,
     MatIconModule,
     MatDatepickerModule,
@@ -47,6 +74,31 @@ export class MedicamentoEditComponent implements OnInit {
   medicamento: MedicamentoPrescrito | null = null;
   loading = false;
 
+  // Opcoes dos dropdowns com labels amigaveis
+  viasAdministracao = [
+    { value: ViaAdministracao.ORAL, label: 'Oral (Via oral)' },
+    { value: ViaAdministracao.INJETAVEL, label: 'Injetavel (IM/IV/SC)' },
+    { value: ViaAdministracao.TOPICA, label: 'Topica (Pele)' },
+    { value: ViaAdministracao.INALATORIA, label: 'Inalatoria (Nebulizacao)' },
+    { value: ViaAdministracao.OFTALMICA, label: 'Oftalmica (Colirio)' },
+    { value: ViaAdministracao.OTOLOGICA, label: 'Otologica (Ouvido)' },
+    { value: ViaAdministracao.RETAL, label: 'Retal (Supositorio)' },
+    { value: ViaAdministracao.VAGINAL, label: 'Vaginal (Ovulo)' },
+    { value: ViaAdministracao.OUTROS, label: 'Outras vias' },
+  ];
+
+  frequenciasAdministracao = [
+    { value: FrequenciaAdministracao.UMA_VEZ, label: 'Uma vez (Dose unica)' },
+    { value: FrequenciaAdministracao.DIARIA, label: 'Diaria (1x ao dia)' },
+    { value: FrequenciaAdministracao.BID, label: 'BID (2x ao dia / 12/12h)' },
+    { value: FrequenciaAdministracao.TID, label: 'TID (3x ao dia / 8/8h)' },
+    { value: FrequenciaAdministracao.QID, label: 'QID (4x ao dia / 6/6h)' },
+    { value: FrequenciaAdministracao.SOS, label: 'SOS (Se necessario)' },
+    { value: FrequenciaAdministracao.SEMANAL, label: 'Semanal (1x por semana)' },
+    { value: FrequenciaAdministracao.MENSAL, label: 'Mensal (1x por mes)' },
+    { value: FrequenciaAdministracao.OUTROS, label: 'Outras frequencias' },
+  ];
+
   constructor(
     private fb: FormBuilder,
     private route: ActivatedRoute,
@@ -58,7 +110,7 @@ export class MedicamentoEditComponent implements OnInit {
 
   ngOnInit(): void {
     const prontuarioIdParam = this.route.snapshot.paramMap.get('prontuarioId');
-    const medicamentoIdParam = this.route.snapshot.paramMap.get('id');
+    const medicamentoIdParam = this.route.snapshot.paramMap.get('medicamentoId');
 
     if (prontuarioIdParam && medicamentoIdParam) {
       this.prontuarioId = Number(prontuarioIdParam);
@@ -78,6 +130,8 @@ export class MedicamentoEditComponent implements OnInit {
     this.prontuariosService.getProntuario(this.prontuarioId).subscribe({
       next: (prontuario) => {
         this.prontuario = prontuario;
+        console.log('Prontuario carregado:', prontuario);
+        console.log('Alergias registradas:', prontuario.alergias);
       },
       error: (error) => {
         console.error('Erro ao carregar prontuario:', error);
@@ -143,7 +197,7 @@ export class MedicamentoEditComponent implements OnInit {
     const medicamentoNome = this.medicamentoForm.get('medicamentoNome')?.value;
 
     // Verificar alergias antes de submeter
-    if (this.prontuario?.alergias && this.prontuario.alergias.length > 0) {
+    if (this.prontuario?.alergias && this.prontuario.alergias.trim().length > 0) {
       const alergiaDetectada = this.checkAllergies(medicamentoNome);
 
       if (alergiaDetectada.length > 0) {
@@ -156,34 +210,51 @@ export class MedicamentoEditComponent implements OnInit {
   }
 
   checkAllergies(medicamentoNome: string): string[] {
-    if (!this.prontuario?.alergias) return [];
+    if (!this.prontuario?.alergias || this.prontuario.alergias.trim() === '') {
+      console.log('Nenhuma alergia registrada no prontuario');
+      return [];
+    }
 
-    const medicamentoLower = medicamentoNome.toLowerCase();
+    console.log('Verificando alergias para medicamento:', medicamentoNome);
+    console.log('Alergias do prontuario:', this.prontuario.alergias);
+
+    const medicamentoLower = medicamentoNome.toLowerCase().trim();
     const alergiasFiltradas: string[] = [];
 
-    for (const alergia of this.prontuario.alergias) {
+    // Converter string de alergias em array (separado por virgula, ponto-virgula ou quebra de linha)
+    const listaAlergias = this.prontuario.alergias
+      .split(/[,;\n]+/)
+      .map(a => a.trim())
+      .filter(a => a.length > 0);
+
+    console.log('Lista de alergias processada:', listaAlergias);
+
+    for (const alergia of listaAlergias) {
       const alergiaLower = alergia.toLowerCase();
 
       // Verificar se alguma palavra da alergia esta no nome do medicamento
-      const palavrasAlergia = alergiaLower.split(/[\s,;]+/);
-      const palavrasMedicamento = medicamentoLower.split(/[\s,;]+/);
+      const palavrasAlergia = alergiaLower.split(/[\s,;]+/).filter(p => p.length > 3);
+      const palavrasMedicamento = medicamentoLower.split(/[\s,;]+/).filter(p => p.length > 2);
+
+      console.log(`Comparando alergia "${alergia}":`, {
+        palavrasAlergia,
+        palavrasMedicamento
+      });
 
       for (const palavraAlergia of palavrasAlergia) {
-        if (palavraAlergia.length > 3) {
-          // Ignorar palavras muito curtas
-          for (const palavraMed of palavrasMedicamento) {
-            if (
-              palavraMed.includes(palavraAlergia) ||
-              palavraAlergia.includes(palavraMed)
-            ) {
-              alergiasFiltradas.push(alergia);
-              break;
-            }
+        for (const palavraMed of palavrasMedicamento) {
+          // Verificar correspondencia parcial (minimo 4 caracteres em comum)
+          if (palavraMed.includes(palavraAlergia) || palavraAlergia.includes(palavraMed)) {
+            console.log(`ALERGIA DETECTADA: "${palavraMed}" combina com "${palavraAlergia}"`);
+            alergiasFiltradas.push(alergia);
+            break;
           }
         }
+        if (alergiasFiltradas.includes(alergia)) break;
       }
     }
 
+    console.log('Alergias detectadas:', alergiasFiltradas);
     return alergiasFiltradas;
   }
 

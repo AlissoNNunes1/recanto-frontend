@@ -110,6 +110,22 @@ main {
   background: #555;
 }
 
+/* Estilos para snackbar de sucesso e erro */
+.success-snackbar {
+  background-color: #4caf50 !important;
+  color: white !important;
+}
+
+.error-snackbar {
+  background-color: #f44336 !important;
+  color: white !important;
+}
+
+.success-snackbar .mat-simple-snackbar-action,
+.error-snackbar .mat-simple-snackbar-action {
+  color: white !important;
+}
+
 /* Estilos globais mobile-first */
 /*    __  ____ ____ _  _  */
 /*  / _\/ ___) ___) )( \ */
