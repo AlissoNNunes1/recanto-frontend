@@ -52,12 +52,14 @@ export const FREQUENCIAS_ADMINISTRACAO_LABELS = [
 
 // Funcoes helper para obter labels
 export function getViaAdministracaoLabel(value: ViaAdministracao): string {
-  const item = VIAS_ADMINISTRACAO_LABELS.find(v => v.value === value);
+  const item = VIAS_ADMINISTRACAO_LABELS.find((v) => v.value === value);
   return item ? item.label : value;
 }
 
-export function getFrequenciaAdministracaoLabel(value: FrequenciaAdministracao): string {
-  const item = FREQUENCIAS_ADMINISTRACAO_LABELS.find(f => f.value === value);
+export function getFrequenciaAdministracaoLabel(
+  value: FrequenciaAdministracao
+): string {
+  const item = FREQUENCIAS_ADMINISTRACAO_LABELS.find((f) => f.value === value);
   return item ? item.label : value;
 }
 

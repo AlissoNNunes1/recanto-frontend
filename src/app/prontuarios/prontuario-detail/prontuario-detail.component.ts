@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import {
   Consulta,
   Exame,
@@ -19,7 +20,6 @@ import {
 } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
 import { ReportService } from '../report.service';
-import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-prontuario-detail',
@@ -206,7 +206,8 @@ export class ProntuarioDetailComponent implements OnInit {
       width: '400px',
       data: {
         title: 'Suspender Medicamento',
-        message: 'Deseja realmente suspender esta prescricao? O medicamento nao sera mais administrado ao residente.',
+        message:
+          'Deseja realmente suspender esta prescricao? O medicamento nao sera mais administrado ao residente.',
         confirmText: 'Sim, Suspender',
         cancelText: 'Cancelar',
         type: 'warn',
@@ -234,7 +235,8 @@ export class ProntuarioDetailComponent implements OnInit {
       width: '450px',
       data: {
         title: 'Excluir Medicamento',
-        message: 'ATENCAO: Esta acao NAO pode ser desfeita! Deseja realmente excluir permanentemente esta prescricao do prontuario?',
+        message:
+          'ATENCAO: Esta acao NAO pode ser desfeita! Deseja realmente excluir permanentemente esta prescricao do prontuario?',
         confirmText: 'Sim, Excluir Permanentemente',
         cancelText: 'Cancelar',
         type: 'warn',

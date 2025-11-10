@@ -1,11 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -92,9 +87,7 @@ export class ProntuarioFormComponent implements OnInit {
       },
       error: (error) => {
         console.error('Erro ao criar prontuario:', error);
-        this.showError(
-          error.error?.message || 'Erro ao criar prontuario'
-        );
+        this.showError(error.error?.message || 'Erro ao criar prontuario');
         this.loading = false;
       },
     });

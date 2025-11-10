@@ -92,7 +92,10 @@ export class MedicamentoFormComponent implements OnInit {
     { value: FrequenciaAdministracao.TID, label: 'TID (3x ao dia / 8/8h)' },
     { value: FrequenciaAdministracao.QID, label: 'QID (4x ao dia / 6/6h)' },
     { value: FrequenciaAdministracao.SOS, label: 'SOS (Se necessario)' },
-    { value: FrequenciaAdministracao.SEMANAL, label: 'Semanal (1x por semana)' },
+    {
+      value: FrequenciaAdministracao.SEMANAL,
+      label: 'Semanal (1x por semana)',
+    },
     { value: FrequenciaAdministracao.MENSAL, label: 'Mensal (1x por mes)' },
     { value: FrequenciaAdministracao.OUTROS, label: 'Outras frequencias' },
   ];
@@ -159,7 +162,10 @@ export class MedicamentoFormComponent implements OnInit {
     const medicamentoNome = this.medicamentoForm.get('medicamentoNome')?.value;
 
     // Verificar alergias antes de submeter
-    if (this.prontuario?.alergias && this.prontuario.alergias.trim().length > 0) {
+    if (
+      this.prontuario?.alergias &&
+      this.prontuario.alergias.trim().length > 0
+    ) {
       const alergiaDetectada = this.checkAllergies(medicamentoNome);
 
       if (alergiaDetectada.length > 0) {
@@ -186,8 +192,8 @@ export class MedicamentoFormComponent implements OnInit {
     // Converter string de alergias em array (separado por virgula, ponto-virgula ou quebra de linha)
     const listaAlergias = this.prontuario.alergias
       .split(/[,;\n]+/)
-      .map(a => a.trim())
-      .filter(a => a.length > 0);
+      .map((a) => a.trim())
+      .filter((a) => a.length > 0);
 
     console.log('Lista de alergias processada:', listaAlergias);
 
@@ -195,19 +201,28 @@ export class MedicamentoFormComponent implements OnInit {
       const alergiaLower = alergia.toLowerCase();
 
       // Verificar se alguma palavra da alergia esta no nome do medicamento
-      const palavrasAlergia = alergiaLower.split(/[\s,;]+/).filter(p => p.length > 3);
-      const palavrasMedicamento = medicamentoLower.split(/[\s,;]+/).filter(p => p.length > 2);
+      const palavrasAlergia = alergiaLower
+        .split(/[\s,;]+/)
+        .filter((p) => p.length > 3);
+      const palavrasMedicamento = medicamentoLower
+        .split(/[\s,;]+/)
+        .filter((p) => p.length > 2);
 
       console.log(`Comparando alergia "${alergia}":`, {
         palavrasAlergia,
-        palavrasMedicamento
+        palavrasMedicamento,
       });
 
       for (const palavraAlergia of palavrasAlergia) {
         for (const palavraMed of palavrasMedicamento) {
           // Verificar correspondencia parcial (minimo 4 caracteres em comum)
-          if (palavraMed.includes(palavraAlergia) || palavraAlergia.includes(palavraMed)) {
-            console.log(`ALERGIA DETECTADA: "${palavraMed}" combina com "${palavraAlergia}"`);
+          if (
+            palavraMed.includes(palavraAlergia) ||
+            palavraAlergia.includes(palavraMed)
+          ) {
+            console.log(
+              `ALERGIA DETECTADA: "${palavraMed}" combina com "${palavraAlergia}"`
+            );
             alergiasFiltradas.push(alergia);
             break;
           }

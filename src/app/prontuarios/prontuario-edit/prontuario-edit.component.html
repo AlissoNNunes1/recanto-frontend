@@ -6,26 +6,31 @@
     </mat-card-header>
 
     <mat-card-content>
-      <form [formGroup]="prontuarioForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-        
+      <form
+        [formGroup]="prontuarioForm"
+        (ngSubmit)="onSubmit()"
+        *ngIf="!loading"
+      >
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Historico Medico</mat-label>
-          <textarea 
-            matInput 
-            formControlName="historicoMedico" 
+          <textarea
+            matInput
+            formControlName="historicoMedico"
             rows="4"
-            placeholder="Historico medico do residente...">
+            placeholder="Historico medico do residente..."
+          >
           </textarea>
           <mat-icon matSuffix>history</mat-icon>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Alergias Conhecidas</mat-label>
-          <textarea 
-            matInput 
-            formControlName="alergias" 
+          <textarea
+            matInput
+            formControlName="alergias"
             rows="3"
-            placeholder="Ex: Dipirona, Penicilina, Lactose...">
+            placeholder="Ex: Dipirona, Penicilina, Lactose..."
+          >
           </textarea>
           <mat-icon matSuffix>warning</mat-icon>
           <mat-hint>Separe multiplas alergias por virgula</mat-hint>
@@ -33,44 +38,48 @@
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Medicamentos de Uso Continuo</mat-label>
-          <textarea 
-            matInput 
-            formControlName="medicamentosContinuos" 
+          <textarea
+            matInput
+            formControlName="medicamentosContinuos"
             rows="3"
-            placeholder="Medicamentos que o residente ja utiliza...">
+            placeholder="Medicamentos que o residente ja utiliza..."
+          >
           </textarea>
           <mat-icon matSuffix>medication</mat-icon>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Restricoes Alimentares</mat-label>
-          <textarea 
-            matInput 
-            formControlName="restricoesAlimentares" 
+          <textarea
+            matInput
+            formControlName="restricoesAlimentares"
             rows="3"
-            placeholder="Dietas especiais, restricoes, preferencias...">
+            placeholder="Dietas especiais, restricoes, preferencias..."
+          >
           </textarea>
           <mat-icon matSuffix>restaurant</mat-icon>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Historico Familiar</mat-label>
-          <textarea 
-            matInput 
-            formControlName="historicoFamiliar" 
+          <textarea
+            matInput
+            formControlName="historicoFamiliar"
             rows="4"
-            placeholder="Historico de doencas na familia...">
+            placeholder="Historico de doencas na familia..."
+          >
           </textarea>
           <mat-icon matSuffix>family_restroom</mat-icon>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Observacoes Gerais</mat-label>
-          <textarea 
-            matInput 
-            formControlName="observacoes" 
+          <textarea
+            matInput
+            formControlName="observacoes"
             rows="3"
-            placeholder="Outras observacoes relevantes...">
+            placeholder="Outras observacoes relevantes..."
+          >
           </textarea>
           <mat-icon matSuffix>notes</mat-icon>
         </mat-form-field>

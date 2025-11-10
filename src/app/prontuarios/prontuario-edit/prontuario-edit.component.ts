@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-import { ProntuariosService } from '../prontuarios.service';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProntuarioUpdate } from '../prontuario';
+import { ProntuariosService } from '../prontuarios.service';
 
 @Component({
   selector: 'app-prontuario-edit',
@@ -24,10 +24,10 @@ import { ProntuarioUpdate } from '../prontuario';
     MatButtonModule,
     MatIconModule,
     MatSelectModule,
-    MatSnackBarModule
+    MatSnackBarModule,
   ],
   templateUrl: './prontuario-edit.component.html',
-  styleUrls: ['./prontuario-edit.component.css']
+  styleUrls: ['./prontuario-edit.component.css'],
 })
 export class ProntuarioEditComponent implements OnInit {
   prontuarioForm!: FormGroup;
@@ -44,7 +44,7 @@ export class ProntuarioEditComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
-    
+
     if (!id) {
       this.showError('ID do prontuario nao encontrado');
       this.router.navigate(['/prontuarios']);
@@ -63,13 +63,13 @@ export class ProntuarioEditComponent implements OnInit {
       medicamentosContinuos: [''],
       restricoesAlimentares: [''],
       historicoFamiliar: [''],
-      observacoes: ['']
+      observacoes: [''],
     });
   }
 
   private loadProntuario(): void {
     this.loading = true;
-    
+
     this.prontuariosService.getProntuario(this.prontuarioId).subscribe({
       next: (prontuario) => {
         this.prontuarioForm.patchValue({
@@ -78,7 +78,7 @@ export class ProntuarioEditComponent implements OnInit {
           medicamentosContinuos: prontuario.medicamentosContinuos || '',
           restricoesAlimentares: prontuario.restricoesAlimentares || '',
           historicoFamiliar: prontuario.historicoFamiliar || '',
-          observacoes: prontuario.observacoes || ''
+          observacoes: prontuario.observacoes || '',
         });
         this.loading = false;
       },
@@ -87,7 +87,7 @@ export class ProntuarioEditComponent implements OnInit {
         this.showError('Erro ao carregar prontuario');
         this.loading = false;
         this.router.navigate(['/prontuarios']);
-      }
+      },
     });
   }
 
@@ -106,21 +106,23 @@ export class ProntuarioEditComponent implements OnInit {
       medicamentosContinuos: formValue.medicamentosContinuos || undefined,
       restricoesAlimentares: formValue.restricoesAlimentares || undefined,
       historicoFamiliar: formValue.historicoFamiliar || undefined,
-      observacoes: formValue.observacoes || undefined
+      observacoes: formValue.observacoes || undefined,
     };
 
-    this.prontuariosService.updateProntuario(this.prontuarioId, prontuarioUpdate).subscribe({
-      next: (response) => {
-        this.showSuccess('Prontuario atualizado com sucesso!');
-        this.loading = false;
-        this.router.navigate(['/prontuario-detail', this.prontuarioId]);
-      },
-      error: (error) => {
-        console.error('Erro ao atualizar prontuario:', error);
-        this.showError('Erro ao atualizar prontuario. Tente novamente.');
-        this.loading = false;
-      }
-    });
+    this.prontuariosService
+      .updateProntuario(this.prontuarioId, prontuarioUpdate)
+      .subscribe({
+        next: (response) => {
+          this.showSuccess('Prontuario atualizado com sucesso!');
+          this.loading = false;
+          this.router.navigate(['/prontuario-detail', this.prontuarioId]);
+        },
+        error: (error) => {
+          console.error('Erro ao atualizar prontuario:', error);
+          this.showError('Erro ao atualizar prontuario. Tente novamente.');
+          this.loading = false;
+        },
+      });
   }
 
   goBack(): void {
@@ -128,7 +130,7 @@ export class ProntuarioEditComponent implements OnInit {
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
+    Object.keys(formGroup.controls).forEach((key) => {
       const control = formGroup.get(key);
       control?.markAsTouched();
     });
@@ -139,7 +141,7 @@ export class ProntuarioEditComponent implements OnInit {
       duration: 3000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['success-snackbar']
+      panelClass: ['success-snackbar'],
     });
   }
 
@@ -148,7 +150,7 @@ export class ProntuarioEditComponent implements OnInit {
       duration: 5000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['error-snackbar']
+      panelClass: ['error-snackbar'],
     });
   }
 
