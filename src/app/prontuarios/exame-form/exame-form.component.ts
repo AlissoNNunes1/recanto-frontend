@@ -16,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AnexosUploadComponent } from '../../anexos-upload/anexos-upload.component';
+import { Anexo } from '../../services/anexos.service';
 import { ExameCreate, TipoExame } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
 
@@ -34,6 +36,7 @@ import { ProntuariosService } from '../prontuarios.service';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
+    AnexosUploadComponent,
   ],
   templateUrl: './exame-form.component.html',
   styleUrls: ['./exame-form.component.css'],
@@ -41,7 +44,9 @@ import { ProntuariosService } from '../prontuarios.service';
 export class ExameFormComponent implements OnInit {
   exameForm!: FormGroup;
   prontuarioId!: number;
+  exameId?: number;
   loading = false;
+  exameSalvo = false;
 
   tiposExame = Object.values(TipoExame);
 
@@ -94,9 +99,13 @@ export class ExameFormComponent implements OnInit {
     this.prontuariosService
       .createExame(this.prontuarioId, exameData)
       .subscribe({
-        next: () => {
-          this.showSuccess('Exame registrado com sucesso');
-          this.goBack();
+        next: (response: any) => {
+          this.exameId = response.id;
+          this.exameSalvo = true;
+          this.showSuccess(
+            'Exame registrado com sucesso! Agora voce pode anexar arquivos.'
+          );
+          this.loading = false;
         },
         error: (error) => {
           console.error('Erro ao registrar exame:', error);
@@ -104,6 +113,19 @@ export class ExameFormComponent implements OnInit {
           this.loading = false;
         },
       });
+  }
+
+  onUploadCompleto(anexo: Anexo): void {
+    this.showSuccess(`Arquivo "${anexo.nomeArquivo}" enviado com sucesso`);
+  }
+
+  onUploadErro(erro: string): void {
+    this.showError(erro);
+  }
+
+  finalizar(): void {
+    this.showSuccess('Exame registrado com anexos!');
+    this.goBack();
   }
 
   goBack(): void {

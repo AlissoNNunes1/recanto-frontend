@@ -136,7 +136,7 @@ export class ReportService {
       yPosition += 10;
     } else {
       consultas.forEach((consulta, index) => {
-        this.checkPageBreak(doc, yPosition, 50);
+        yPosition = this.checkPageBreak(doc, yPosition, 55);
 
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
@@ -153,6 +153,15 @@ export class ReportService {
         yPosition += 5;
         doc.text(`Tipo: ${consulta.tipoConsulta}`, 20, yPosition);
         yPosition += 5;
+
+        if (consulta.profissional?.nome) {
+          doc.text(
+            `Profissional: ${consulta.profissional.nome}`,
+            20,
+            yPosition
+          );
+          yPosition += 5;
+        }
 
         if (consulta.queixaPrincipal) {
           doc.text(`Queixa: ${consulta.queixaPrincipal}`, 20, yPosition);
@@ -185,7 +194,7 @@ export class ReportService {
       yPosition += 10;
     } else {
       exames.forEach((exame, index) => {
-        this.checkPageBreak(doc, yPosition, 40);
+        yPosition = this.checkPageBreak(doc, yPosition, 45);
 
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
@@ -199,11 +208,20 @@ export class ReportService {
         doc.text(`Tipo: ${exame.tipoExame}`, 20, yPosition);
         yPosition += 5;
         doc.text(
-          `Solicitado em: ${this.formatDate(exame.dataSolicitacao)}`,
+          `Realizado em: ${this.formatDate(exame.dataSolicitacao)}`,
           20,
           yPosition
         );
         yPosition += 5;
+
+        if (exame.profissionalSolicitante?.nome) {
+          doc.text(
+            `Profissional: ${exame.profissionalSolicitante.nome}`,
+            20,
+            yPosition
+          );
+          yPosition += 5;
+        }
 
         if (exame.resultado) {
           doc.text(`Resultado: ${exame.resultado}`, 20, yPosition);
@@ -230,7 +248,7 @@ export class ReportService {
       doc.text('Nenhum medicamento prescrito', 20, yPosition);
     } else {
       medicamentos.forEach((medicamento, index) => {
-        this.checkPageBreak(doc, yPosition, 50);
+        yPosition = this.checkPageBreak(doc, yPosition, 60);
 
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
@@ -251,6 +269,31 @@ export class ReportService {
           yPosition
         );
         yPosition += 5;
+
+        // Status com cor
+        if (medicamento.status) {
+          const statusText = `Status: ${medicamento.status}`;
+          if (medicamento.status === 'ATIVA') {
+            doc.setTextColor(34, 197, 94); // Verde
+          } else if (medicamento.status === 'SUSPENSA') {
+            doc.setTextColor(234, 179, 8); // Amarelo
+          } else if (medicamento.status === 'FINALIZADA') {
+            doc.setTextColor(156, 163, 175); // Cinza
+          }
+          doc.text(statusText, 20, yPosition);
+          doc.setTextColor(0, 0, 0); // Volta para preto
+          yPosition += 5;
+        }
+
+        if (medicamento.profissional?.nome) {
+          doc.text(
+            `Profissional: ${medicamento.profissional.nome}`,
+            20,
+            yPosition
+          );
+          yPosition += 5;
+        }
+
         doc.text(
           `Inicio: ${this.formatDate(medicamento.dataInicio)}`,
           20,

@@ -1,0 +1,195 @@
+<div class="sinais-vitais-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Sinais Vitais</mat-card-title>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Filtros -->
+      <div class="filtros-container">
+        <mat-form-field appearance="outline" class="filtro-field">
+          <mat-label>Residente</mat-label>
+          <mat-select [(ngModel)]="filtros.residenteId" name="residenteId">
+            <mat-option [value]="undefined">Todos</mat-option>
+            <mat-option
+              *ngFor="let residente of residentes"
+              [value]="residente.id"
+            >
+              {{ residente.nome }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filtro-field">
+          <mat-label>Data Inicio</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickerInicio"
+            [(ngModel)]="filtros.dataInicio"
+            name="dataInicio"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerInicio"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="filtro-field">
+          <mat-label>Data Fim</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickerFim"
+            [(ngModel)]="filtros.dataFim"
+            name="dataFim"
+          />
+          <mat-datepicker-toggle
+            matSuffix
+            [for]="pickerFim"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerFim></mat-datepicker>
+        </mat-form-field>
+
+        <div class="filtros-acoes">
+          <button mat-raised-button color="primary" (click)="aplicarFiltros()">
+            <mat-icon>search</mat-icon>
+            Filtrar
+          </button>
+          <button mat-raised-button (click)="limparFiltros()">
+            <mat-icon>clear</mat-icon>
+            Limpar
+          </button>
+          <button mat-raised-button color="accent" (click)="novoRegistro()">
+            <mat-icon>add</mat-icon>
+            Novo Registro
+          </button>
+        </div>
+      </div>
+
+      <!-- Spinner de carregamento -->
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+
+      <!-- Tabela -->
+      <div *ngIf="!loading" class="table-container">
+        <table mat-table [dataSource]="sinaisVitais" class="mat-elevation-z2">
+          <!-- Coluna Data -->
+          <ng-container matColumnDef="dataMedicao">
+            <th mat-header-cell *matHeaderCellDef>Data/Hora</th>
+            <td mat-cell *matCellDef="let element">
+              {{ formatarData(element.dataMedicao) }}
+            </td>
+          </ng-container>
+
+          <!-- Coluna Residente -->
+          <ng-container matColumnDef="residente">
+            <th mat-header-cell *matHeaderCellDef>Residente</th>
+            <td mat-cell *matCellDef="let element">
+              {{ element.residente?.nome || "-" }}
+            </td>
+          </ng-container>
+
+          <!-- Coluna Pressao -->
+          <ng-container matColumnDef="pressao">
+            <th mat-header-cell *matHeaderCellDef>Pressao (mmHg)</th>
+            <td mat-cell *matCellDef="let element">
+              {{ formatarPressao(element) }}
+            </td>
+          </ng-container>
+
+          <!-- Coluna Temperatura -->
+          <ng-container matColumnDef="temperatura">
+            <th mat-header-cell *matHeaderCellDef>Temperatura</th>
+            <td mat-cell *matCellDef="let element">
+              {{ formatarTemperatura(element.temperatura) }}
+            </td>
+          </ng-container>
+
+          <!-- Coluna Frequencia Cardiaca -->
+          <ng-container matColumnDef="frequenciaCardiaca">
+            <th mat-header-cell *matHeaderCellDef>FC</th>
+            <td mat-cell *matCellDef="let element">
+              {{ formatarFrequencia(element.frequenciaCardiaca) }}
+            </td>
+          </ng-container>
+
+          <!-- Coluna Saturacao -->
+          <ng-container matColumnDef="saturacaoOxigenio">
+            <th mat-header-cell *matHeaderCellDef>SpO2</th>
+            <td mat-cell *matCellDef="let element">
+              {{ formatarSaturacao(element.saturacaoOxigenio) }}
+            </td>
+          </ng-container>
+
+          <!-- Coluna Acoes -->
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Acoes</th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="visualizar(element.id)"
+                matTooltip="Visualizar"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="accent"
+                (click)="editar(element.id)"
+                matTooltip="Editar"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="excluir(element)"
+                matTooltip="Excluir"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+              <button
+                *ngIf="element.residenteId"
+                mat-icon-button
+                (click)="verEstatisticas(element.residenteId)"
+                matTooltip="Ver Estatisticas"
+              >
+                <mat-icon>insert_chart</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+          <!-- Linha quando nao ha dados -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              Nenhum registro encontrado
+            </td>
+          </tr>
+        </table>
+
+        <!-- Paginacao -->
+        <mat-paginator
+          [length]="totalItems"
+          [pageSize]="pageSize"
+          [pageIndex]="pageIndex"
+          [pageSizeOptions]="[5, 10, 25, 50]"
+          (page)="onPageChange($event)"
+          showFirstLastButtons
+        >
+        </mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!--
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+-->

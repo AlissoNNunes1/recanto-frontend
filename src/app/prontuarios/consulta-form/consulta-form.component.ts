@@ -16,6 +16,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AnexosUploadComponent } from '../../anexos-upload/anexos-upload.component';
+import { Anexo } from '../../services/anexos.service';
 import { ConsultaCreate, StatusConsulta, TipoConsulta } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
 
@@ -34,6 +36,7 @@ import { ProntuariosService } from '../prontuarios.service';
     MatDatepickerModule,
     MatNativeDateModule,
     MatSnackBarModule,
+    AnexosUploadComponent,
   ],
   templateUrl: './consulta-form.component.html',
   styleUrls: ['./consulta-form.component.css'],
@@ -41,7 +44,9 @@ import { ProntuariosService } from '../prontuarios.service';
 export class ConsultaFormComponent implements OnInit {
   consultaForm!: FormGroup;
   prontuarioId!: number;
+  consultaId?: number;
   loading = false;
+  consultaSalva = false;
 
   tiposConsulta = Object.values(TipoConsulta);
   statusConsulta = Object.values(StatusConsulta);
@@ -72,12 +77,6 @@ export class ConsultaFormComponent implements OnInit {
       profissionalId: [null, Validators.required],
       tipoConsulta: ['', Validators.required],
       dataConsulta: [new Date(), Validators.required],
-      queixaPrincipal: [''],
-      historiaDoencaAtual: [''],
-      exameFisico: [''],
-      hipoteseDiagnostica: [''],
-      diagnostico: [''],
-      tratamento: [''],
       observacoes: [''],
     });
   }
@@ -99,9 +98,13 @@ export class ConsultaFormComponent implements OnInit {
     this.prontuariosService
       .createConsulta(this.prontuarioId, consultaData)
       .subscribe({
-        next: () => {
-          this.showSuccess('Consulta registrada com sucesso');
-          this.goBack();
+        next: (response: any) => {
+          this.consultaId = response.id;
+          this.consultaSalva = true;
+          this.showSuccess(
+            'Consulta registrada com sucesso! Agora voce pode anexar arquivos.'
+          );
+          this.loading = false;
         },
         error: (error) => {
           console.error('Erro ao registrar consulta:', error);
@@ -109,6 +112,19 @@ export class ConsultaFormComponent implements OnInit {
           this.loading = false;
         },
       });
+  }
+
+  onUploadCompleto(anexo: Anexo): void {
+    this.showSuccess(`Arquivo "${anexo.nomeArquivo}" enviado com sucesso`);
+  }
+
+  onUploadErro(erro: string): void {
+    this.showError(erro);
+  }
+
+  finalizar(): void {
+    this.showSuccess('Consulta registrada com anexos!');
+    this.goBack();
   }
 
   goBack(): void {

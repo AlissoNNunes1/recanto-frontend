@@ -1,0 +1,122 @@
+<div class="anexos-container">
+  <!-- Loading -->
+  <div *ngIf="carregando" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Carregando anexos...</p>
+  </div>
+
+  <!-- Sem anexos -->
+  <div *ngIf="!carregando && anexos.length === 0" class="sem-anexos">
+    <mat-icon>attach_file</mat-icon>
+    <p>Nenhum arquivo anexado</p>
+  </div>
+
+  <!-- Galeria de anexos -->
+  <div *ngIf="!carregando && anexos.length > 0" class="anexos-grid">
+    <mat-card *ngFor="let anexo of anexos" class="anexo-card">
+      <!-- Preview do arquivo -->
+      <div class="anexo-preview" (click)="abrirPreviewModal(anexo)">
+        <!-- Imagem -->
+        <img
+          *ngIf="isImagem(anexo)"
+          [src]="getUrlPreviewSegura(anexo)"
+          [alt]="anexo.nomeArquivo"
+          class="preview-imagem"
+        />
+
+        <!-- PDF -->
+        <div *ngIf="isPDF(anexo)" class="preview-pdf">
+          <mat-icon>picture_as_pdf</mat-icon>
+          <span>PDF</span>
+        </div>
+
+        <!-- Outros documentos -->
+        <div
+          *ngIf="!isImagem(anexo) && !isPDF(anexo)"
+          class="preview-documento"
+        >
+          <mat-icon>description</mat-icon>
+          <span>{{ anexo.tipoAnexo }}</span>
+        </div>
+
+        <!-- Overlay de preview -->
+        <div class="preview-overlay">
+          <mat-icon>visibility</mat-icon>
+          <span>Visualizar</span>
+        </div>
+      </div>
+
+      <!-- Informacoes do arquivo -->
+      <mat-card-content>
+        <div class="anexo-info">
+          <p class="anexo-nome" [matTooltip]="anexo.nomeArquivo">
+            {{ anexo.nomeArquivo }}
+          </p>
+
+          <mat-chip-listbox class="anexo-chips">
+            <mat-chip [color]="getCor(anexo)">
+              {{ anexo.tipoAnexo }}
+            </mat-chip>
+          </mat-chip-listbox>
+
+          <div class="anexo-meta">
+            <span class="meta-item">
+              <mat-icon>file_present</mat-icon>
+              {{ anexo.tamanhoFormatado }}
+            </span>
+            <span class="meta-item">
+              <mat-icon>person</mat-icon>
+              {{ anexo.usuarioNome }}
+            </span>
+            <span class="meta-item">
+              <mat-icon>schedule</mat-icon>
+              {{ formatarData(anexo.createdAt) }}
+            </span>
+          </div>
+
+          <p *ngIf="anexo.descricao" class="anexo-descricao">
+            {{ anexo.descricao }}
+          </p>
+        </div>
+      </mat-card-content>
+
+      <!-- Acoes -->
+      <mat-card-actions>
+        <button
+          mat-icon-button
+          color="primary"
+          (click)="downloadAnexo(anexo)"
+          matTooltip="Download"
+        >
+          <mat-icon>download</mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          color="accent"
+          (click)="abrirPreviewModal(anexo)"
+          matTooltip="Visualizar"
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
+
+        <button
+          mat-icon-button
+          color="warn"
+          (click)="excluirAnexo(anexo)"
+          matTooltip="Excluir"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>
+
+<!-- Template de preview de anexos -->
+<!-- Galeria responsiva com cards -->
+<!-- Download, visualizacao e exclusao -->
+<!--    __  ____ ____ _  _ -->
+<!--  / _\/ ___) ___) )( \ -->
+<!-- /    \___ \___ ) \/ ( -->
+<!-- \_/\_(____(____|____/ -->

@@ -1,0 +1,194 @@
+<div class="stats-container">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Estatisticas de Sinais Vitais</mat-card-title>
+      <div class="header-actions">
+        <button mat-raised-button (click)="voltar()">
+          <mat-icon>arrow_back</mat-icon>
+          Voltar
+        </button>
+        <button mat-raised-button color="primary" (click)="novoRegistro()">
+          <mat-icon>add</mat-icon>
+          Novo Registro
+        </button>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <!-- Seletor de periodo -->
+      <div class="periodo-selector">
+        <span class="label">Periodo:</span>
+        <button
+          *ngFor="let dias of periodosDisponiveis"
+          mat-raised-button
+          [color]="periodoSelecionado === dias ? 'accent' : ''"
+          (click)="mudarPeriodo(dias)"
+        >
+          {{ dias }} dias
+        </button>
+      </div>
+
+      <!-- Spinner de carregamento -->
+      <div *ngIf="loading" class="loading-container">
+        <mat-spinner diameter="50"></mat-spinner>
+      </div>
+
+      <!-- Conteudo das estatisticas -->
+      <div *ngIf="!loading && estatisticas" class="stats-content">
+        <!-- Cards de medias -->
+        <div class="medias-grid">
+          <mat-card class="media-card">
+            <mat-card-header>
+              <mat-icon class="card-icon pressao">favorite</mat-icon>
+              <mat-card-title>Pressao Arterial</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="valor-grande">
+                {{ formatarValor(estatisticas.medias.pressaoSistolica) }} /
+                {{ formatarValor(estatisticas.medias.pressaoDiastolica) }}
+              </div>
+              <div class="unidade">mmHg</div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="media-card">
+            <mat-card-header>
+              <mat-icon class="card-icon temperatura">thermostat</mat-icon>
+              <mat-card-title>Temperatura</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="valor-grande">
+                {{ formatarValor(estatisticas.medias.temperatura) }}
+              </div>
+              <div class="unidade">C</div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="media-card">
+            <mat-card-header>
+              <mat-icon class="card-icon frequencia">monitor_heart</mat-icon>
+              <mat-card-title>Freq. Cardiaca</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="valor-grande">
+                {{ formatarValor(estatisticas.medias.frequenciaCardiaca) }}
+              </div>
+              <div class="unidade">bpm</div>
+            </mat-card-content>
+          </mat-card>
+
+          <mat-card class="media-card">
+            <mat-card-header>
+              <mat-icon class="card-icon saturacao">air</mat-icon>
+              <mat-card-title>Saturacao O2</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="valor-grande">
+                {{ formatarValor(estatisticas.medias.saturacaoOxigenio) }}
+              </div>
+              <div class="unidade">%</div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Graficos -->
+        <div class="charts-container">
+          <!-- Grafico de Pressao Arterial -->
+          <mat-card class="chart-card">
+            <mat-card-header>
+              <mat-card-title>Pressao Arterial</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-wrapper">
+                <canvas
+                  baseChart
+                  [data]="pressaoChartData"
+                  [options]="chartOptions"
+                  type="line"
+                ></canvas>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Grafico de Temperatura -->
+          <mat-card class="chart-card">
+            <mat-card-header>
+              <mat-card-title>Temperatura</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-wrapper">
+                <canvas
+                  baseChart
+                  [data]="temperaturaChartData"
+                  [options]="chartOptions"
+                  type="line"
+                ></canvas>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Grafico de Frequencia Cardiaca -->
+          <mat-card class="chart-card">
+            <mat-card-header>
+              <mat-card-title>Frequencia Cardiaca</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-wrapper">
+                <canvas
+                  baseChart
+                  [data]="frequenciaChartData"
+                  [options]="chartOptions"
+                  type="line"
+                ></canvas>
+              </div>
+            </mat-card-content>
+          </mat-card>
+
+          <!-- Grafico de Saturacao -->
+          <mat-card class="chart-card">
+            <mat-card-header>
+              <mat-card-title>Saturacao de Oxigenio</mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+              <div class="chart-wrapper">
+                <canvas
+                  baseChart
+                  [data]="saturacaoChartData"
+                  [options]="chartOptions"
+                  type="line"
+                ></canvas>
+              </div>
+            </mat-card-content>
+          </mat-card>
+        </div>
+
+        <!-- Informacoes do periodo -->
+        <div class="periodo-info">
+          <mat-icon>info</mat-icon>
+          <span>
+            Periodo analisado:
+            {{ estatisticas.periodo.inicio | date : "dd/MM/yyyy" }} a
+            {{ estatisticas.periodo.fim | date : "dd/MM/yyyy" }}
+            ({{ estatisticas.historico.length }} medicoes)
+          </span>
+        </div>
+      </div>
+
+      <!-- Mensagem quando nao ha dados -->
+      <div *ngIf="!loading && !estatisticas" class="no-data">
+        <mat-icon>show_chart</mat-icon>
+        <p>Nenhum dado disponivel para o periodo selecionado</p>
+        <button mat-raised-button color="primary" (click)="novoRegistro()">
+          Adicionar Primeiro Registro
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!--
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+-->

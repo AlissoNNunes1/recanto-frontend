@@ -1,0 +1,232 @@
+.stats-container {
+  padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+mat-card-title {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.periodo-selector {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.periodo-selector .label {
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 400px;
+}
+
+.stats-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.medias-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.media-card {
+  text-align: center;
+}
+
+.media-card mat-card-header {
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.card-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 8px;
+}
+
+.card-icon.pressao {
+  color: #f44336;
+}
+
+.card-icon.temperatura {
+  color: #ff9800;
+}
+
+.card-icon.frequencia {
+  color: #e91e63;
+}
+
+.card-icon.saturacao {
+  color: #4caf50;
+}
+
+.valor-grande {
+  font-size: 36px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.2;
+}
+
+.unidade {
+  font-size: 14px;
+  color: #666;
+  margin-top: 4px;
+}
+
+.charts-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+  gap: 20px;
+}
+
+.chart-card {
+  min-height: 350px;
+}
+
+.chart-wrapper {
+  height: 300px;
+  position: relative;
+}
+
+.periodo-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background-color: #e3f2fd;
+  border-radius: 4px;
+  color: #1976d2;
+  font-size: 14px;
+}
+
+.periodo-info mat-icon {
+  font-size: 20px;
+  width: 20px;
+  height: 20px;
+}
+
+.no-data {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.no-data mat-icon {
+  font-size: 72px;
+  width: 72px;
+  height: 72px;
+  color: #9e9e9e;
+  margin-bottom: 16px;
+}
+
+.no-data p {
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 24px;
+}
+
+/* Responsividade mobile */
+@media (max-width: 768px) {
+  .stats-container {
+    padding: 12px;
+  }
+
+  mat-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .header-actions {
+    width: 100%;
+  }
+
+  .header-actions button {
+    flex: 1;
+  }
+
+  .medias-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-container {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-card {
+    min-height: 300px;
+  }
+
+  .chart-wrapper {
+    height: 250px;
+  }
+
+  .periodo-selector {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .periodo-selector button {
+    width: 100%;
+  }
+
+  .valor-grande {
+    font-size: 28px;
+  }
+}
+
+@media (max-width: 480px) {
+  mat-card-title {
+    font-size: 20px;
+  }
+
+  .card-icon {
+    font-size: 36px;
+    width: 36px;
+    height: 36px;
+  }
+
+  .valor-grande {
+    font-size: 24px;
+  }
+
+  .chart-wrapper {
+    height: 200px;
+  }
+}
+
+/*
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+*/

@@ -19,6 +19,9 @@ import { ProntuarioFormComponent } from './prontuarios/prontuario-form/prontuari
 import { ProntuariosComponent } from './prontuarios/prontuarios/prontuarios.component';
 import { ResidentDetailComponent } from './residents/resident-detail/resident-detail.component';
 import { ResidentsComponent } from './residents/residents/residents.component';
+import { SinaisVitaisFormComponent } from './sinais-vitais/sinais-vitais-form.component';
+import { SinaisVitaisListComponent } from './sinais-vitais/sinais-vitais-list.component';
+import { SinaisVitaisStatsComponent } from './sinais-vitais/sinais-vitais-stats.component';
 import { UsuariosComponent } from './usuarios/usuarios/usuarios.component';
 
 export const routes: Routes = [
@@ -109,5 +112,25 @@ export const routes: Routes = [
     path: 'auditoria',
     component: AuditoriaComponent,
     canActivate: [AuthGuard, AdminAuthGuard],
+  },
+  {
+    path: 'sinais-vitais',
+    component: SinaisVitaisListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'sinais-vitais/novo',
+    component: SinaisVitaisFormComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'sinais-vitais/:id/edit',
+    component: SinaisVitaisFormComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'sinais-vitais/residente/:residenteId/estatisticas',
+    component: SinaisVitaisStatsComponent,
+    canActivate: [AuthGuard],
   },
 ];

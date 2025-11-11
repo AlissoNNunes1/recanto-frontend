@@ -1,63 +1,87 @@
-<div class="consulta-form-container">
+<div class="exame-form-container">
   <mat-card class="form-card">
     <mat-card-header>
       <mat-card-title>
-        <mat-icon>medical_services</mat-icon>
-        Registrar Nova Consulta
+        <mat-icon>science</mat-icon>
+        Registrar Novo Exame
       </mat-card-title>
       <mat-card-subtitle>
-        Preencha os dados basicos e anexe documentos (PDFs, imagens, laudos)
+        Preencha os dados basicos e anexe resultados (PDFs, imagens, laudos)
       </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <!-- Formulario Basico -->
       <form
-        [formGroup]="consultaForm"
+        [formGroup]="exameForm"
         (ngSubmit)="onSubmit()"
-        class="consulta-form"
-        *ngIf="!consultaSalva"
+        class="exame-form"
+        *ngIf="!exameSalvo"
       >
         <!-- ID do Profissional -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>ID do Profissional</mat-label>
+          <mat-label>ID do Profissional Responsavel</mat-label>
           <input
             matInput
             type="number"
-            formControlName="profissionalId"
+            formControlName="profissionalSolicitanteId"
             placeholder="Digite o ID do profissional"
           />
           <mat-icon matSuffix>badge</mat-icon>
           <mat-error
-            *ngIf="consultaForm.get('profissionalId')?.hasError('required')"
+            *ngIf="exameForm.get('profissionalSolicitanteId')?.hasError('required')"
           >
-            {{ getErrorMessage("profissionalId") }}
+            {{ getErrorMessage("profissionalSolicitanteId") }}
           </mat-error>
         </mat-form-field>
 
-        <!-- Tipo de Consulta -->
+        <!-- Tipo de Exame -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Tipo de Consulta</mat-label>
-          <mat-select formControlName="tipoConsulta">
-            <mat-option *ngFor="let tipo of tiposConsulta" [value]="tipo">
+          <mat-label>Tipo de Exame</mat-label>
+          <mat-select formControlName="tipoExame">
+            <mat-option *ngFor="let tipo of tiposExame" [value]="tipo">
               {{ tipo }}
             </mat-option>
           </mat-select>
           <mat-icon matSuffix>category</mat-icon>
-          <mat-error
-            *ngIf="consultaForm.get('tipoConsulta')?.hasError('required')"
-          >
-            {{ getErrorMessage("tipoConsulta") }}
+          <mat-error *ngIf="exameForm.get('tipoExame')?.hasError('required')">
+            {{ getErrorMessage("tipoExame") }}
           </mat-error>
         </mat-form-field>
 
-        <!-- Data da Consulta -->
+        <!-- Nome do Exame -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Data da Consulta</mat-label>
+          <mat-label>Nome do Exame</mat-label>
+          <input
+            matInput
+            formControlName="nomeExame"
+            placeholder="Ex: Hemograma Completo, Raio-X Torax"
+          />
+          <mat-icon matSuffix>assignment</mat-icon>
+          <mat-error *ngIf="exameForm.get('nomeExame')?.hasError('required')">
+            {{ getErrorMessage("nomeExame") }}
+          </mat-error>
+        </mat-form-field>
+
+        <!-- Descricao -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descricao</mat-label>
+          <textarea
+            matInput
+            formControlName="descricao"
+            rows="3"
+            placeholder="Breve descricao ou motivo do exame"
+          ></textarea>
+          <mat-icon matSuffix>description</mat-icon>
+        </mat-form-field>
+
+        <!-- Data do Exame -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Data do Exame</mat-label>
           <input
             matInput
             [matDatepicker]="picker"
-            formControlName="dataConsulta"
+            formControlName="dataSolicitacao"
             placeholder="Selecione a data"
           />
           <mat-datepicker-toggle
@@ -66,9 +90,9 @@
           ></mat-datepicker-toggle>
           <mat-datepicker #picker></mat-datepicker>
           <mat-error
-            *ngIf="consultaForm.get('dataConsulta')?.hasError('required')"
+            *ngIf="exameForm.get('dataSolicitacao')?.hasError('required')"
           >
-            {{ getErrorMessage("dataConsulta") }}
+            {{ getErrorMessage("dataSolicitacao") }}
           </mat-error>
         </mat-form-field>
 
@@ -79,7 +103,7 @@
             matInput
             formControlName="observacoes"
             rows="4"
-            placeholder="Observacoes sobre a consulta, sintomas, evolucao, etc."
+            placeholder="Observacoes sobre o exame, resultados, recomendacoes, etc."
           ></textarea>
           <mat-icon matSuffix>note</mat-icon>
           <mat-hint>Campo livre para anotacoes</mat-hint>
@@ -108,18 +132,18 @@
         </div>
       </form>
 
-      <!-- Secao de Anexos (apos salvar consulta) -->
-      <div *ngIf="consultaSalva && consultaId" class="anexos-section">
+      <!-- Secao de Anexos (apos salvar exame) -->
+      <div *ngIf="exameSalvo && exameId" class="anexos-section">
         <div class="success-message">
           <mat-icon color="primary">check_circle</mat-icon>
           <p>
-            Consulta registrada com sucesso! Agora voce pode anexar arquivos.
+            Exame registrado com sucesso! Agora voce pode anexar resultados.
           </p>
         </div>
 
         <app-anexos-upload
-          tipo="consulta"
-          [registroId]="consultaId"
+          tipo="exame"
+          [registroId]="exameId"
           (uploadCompleto)="onUploadCompleto($event)"
           (uploadErro)="onUploadErro($event)"
         >
