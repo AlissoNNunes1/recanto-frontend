@@ -1,9 +1,11 @@
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 /**
  * Servico para geracao de fingerprint unico do dispositivo/navegador
  * Usado para autenticacao automatica independente do IP
  * Suporta IPs dinamicos mantendo o mesmo dispositivo autorizado
+ * Compativel com SSR (Server-Side Rendering)
  */
 @Injectable({
   providedIn: 'root',
@@ -11,15 +13,23 @@ import { Injectable } from '@angular/core';
 export class FingerprintService {
   private readonly STORAGE_KEY = 'device_fingerprint';
   private fingerprint: string | null = null;
+  private isBrowser: boolean;
 
-  constructor() {
-    this.initializeFingerprint();
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+    this.isBrowser = isPlatformBrowser(this.platformId);
+    if (this.isBrowser) {
+      this.initializeFingerprint();
+    }
   }
 
   /**
    * Inicializa ou recupera fingerprint do dispositivo
    */
   private initializeFingerprint(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+
     // Tentar recuperar fingerprint do localStorage
     const stored = localStorage.getItem(this.STORAGE_KEY);
 
@@ -39,6 +49,11 @@ export class FingerprintService {
    * Combina multiplos fatores para criar identificador estavel
    */
   private generateFingerprint(): string {
+    if (!this.isBrowser) {
+      // Gerar fingerprint temporario no servidor
+      return `fp_ssr_${Date.now().toString(36)}`;
+    }
+
     const components: string[] = [];
 
     // 1. User Agent
@@ -133,6 +148,10 @@ export class FingerprintService {
    * Retorna o fingerprint atual do dispositivo
    */
   getFingerprint(): string {
+    if (!this.isBrowser) {
+      return '';
+    }
+    
     if (!this.fingerprint) {
       this.initializeFingerprint();
     }
@@ -144,6 +163,10 @@ export class FingerprintService {
    * Remove o fingerprint antigo e cria um novo
    */
   regenerateFingerprint(): string {
+    if (!this.isBrowser) {
+      return '';
+    }
+    
     localStorage.removeItem(this.STORAGE_KEY);
     this.fingerprint = this.generateFingerprint();
     localStorage.setItem(this.STORAGE_KEY, this.fingerprint);
@@ -156,6 +179,10 @@ export class FingerprintService {
    * Usado para logout completo ou reset
    */
   clearFingerprint(): void {
+    if (!this.isBrowser) {
+      return;
+    }
+    
     localStorage.removeItem(this.STORAGE_KEY);
     this.fingerprint = null;
     console.log('Fingerprint removido');
@@ -165,6 +192,9 @@ export class FingerprintService {
    * Verifica se dispositivo tem fingerprint valido
    */
   hasValidFingerprint(): boolean {
+    if (!this.isBrowser) {
+      return false;
+    }
     return !!this.getFingerprint();
   }
 
@@ -172,6 +202,14 @@ export class FingerprintService {
    * Obtem informacoes de debug do fingerprint
    */
   getDebugInfo(): any {
+    if (!this.isBrowser) {
+      return {
+        fingerprint: '',
+        platform: 'server',
+        message: 'Executando no servidor (SSR)',
+      };
+    }
+    
     return {
       fingerprint: this.getFingerprint(),
       userAgent: navigator.userAgent,
@@ -189,6 +227,7 @@ export class FingerprintService {
 // Servico de geracao de fingerprint de dispositivo
 // Cria identificador unico e estavel independente do IP
 // Suporta autenticacao automatica com IPs dinamicos
+// Compativel com SSR (Server-Side Rendering)
 //    __  ____ ____ _  _
 //  / _\/ ___) ___) )( \
 // /    \___ \___ ) \/ (

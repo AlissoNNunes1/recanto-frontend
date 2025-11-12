@@ -16,6 +16,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AnexosPreviewComponent } from '../../anexos-preview/anexos-preview.component';
+import { AnexosUploadComponent } from '../../anexos-upload/anexos-upload.component';
+import { TipoConsulta } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
 
 @Component({
@@ -33,6 +36,8 @@ import { ProntuariosService } from '../prontuarios.service';
     MatCardModule,
     MatIconModule,
     MatSnackBarModule,
+    AnexosUploadComponent,
+    AnexosPreviewComponent,
   ],
   templateUrl: './consulta-edit.component.html',
   styleUrls: ['./consulta-edit.component.css'],
@@ -49,13 +54,7 @@ export class ConsultaEditComponent implements OnInit {
   prontuarioId!: number;
   loading = false;
 
-  tiposConsulta = [
-    'Rotina',
-    'Emergencia',
-    'Retorno',
-    'Avaliacao Inicial',
-    'Acompanhamento',
-  ];
+  tiposConsulta = Object.values(TipoConsulta);
 
   ngOnInit(): void {
     // Obter IDs da rota
@@ -70,15 +69,9 @@ export class ConsultaEditComponent implements OnInit {
 
   private initForm(): void {
     this.consultaForm = this.fb.group({
-      profissionalId: ['', Validators.required],
+      profissionalId: [null, Validators.required],
       tipoConsulta: ['', Validators.required],
       dataConsulta: ['', Validators.required],
-      queixaPrincipal: ['', Validators.required],
-      historiaDoencaAtual: [''],
-      exameFisico: [''],
-      hipoteseDiagnostica: [''],
-      diagnostico: [''],
-      tratamento: [''],
       observacoes: [''],
     });
   }
@@ -91,12 +84,6 @@ export class ConsultaEditComponent implements OnInit {
           profissionalId: consulta.profissionalId,
           tipoConsulta: consulta.tipoConsulta,
           dataConsulta: new Date(consulta.dataConsulta),
-          queixaPrincipal: consulta.queixaPrincipal,
-          historiaDoencaAtual: consulta.historiaDoencaAtual,
-          exameFisico: consulta.exameFisico,
-          hipoteseDiagnostica: consulta.hipoteseDiagnostica,
-          diagnostico: consulta.diagnostico,
-          tratamento: consulta.tratamento,
           observacoes: consulta.observacoes,
         });
         this.loading = false;

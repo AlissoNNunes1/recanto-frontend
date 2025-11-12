@@ -11,6 +11,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AnexosPreviewComponent } from '../../anexos-preview/anexos-preview.component';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import {
   Consulta,
@@ -36,6 +37,7 @@ import { ReportService } from '../report.service';
     MatProgressSpinnerModule,
     MatDialogModule,
     MatSnackBarModule,
+    AnexosPreviewComponent,
   ],
   templateUrl: './prontuario-detail.component.html',
   styleUrls: ['./prontuario-detail.component.css'],

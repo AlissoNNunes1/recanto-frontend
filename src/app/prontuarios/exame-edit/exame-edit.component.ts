@@ -11,6 +11,9 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { AnexosPreviewComponent } from '../../anexos-preview/anexos-preview.component';
+import { AnexosUploadComponent } from '../../anexos-upload/anexos-upload.component';
+import { TipoExame } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
 
 @Component({
@@ -27,7 +30,9 @@ import { ProntuariosService } from '../prontuarios.service';
     MatNativeDateModule,
     MatCardModule,
     MatIconModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    AnexosUploadComponent,
+    AnexosPreviewComponent,
   ],
   templateUrl: './exame-edit.component.html',
   styleUrls: ['./exame-edit.component.css']
@@ -44,13 +49,7 @@ export class ExameEditComponent implements OnInit {
   prontuarioId!: number;
   loading = false;
 
-  tiposExame = [
-    'Laboratorial',
-    'Imagem',
-    'Cardiologico',
-    'Neurologico',
-    'Outros'
-  ];
+  tiposExame = Object.values(TipoExame);
 
   ngOnInit(): void {
     this.exameId = Number(this.route.snapshot.paramMap.get('exameId'));

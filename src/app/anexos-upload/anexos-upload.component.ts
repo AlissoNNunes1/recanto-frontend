@@ -140,7 +140,11 @@ export class AnexosUploadComponent implements OnInit {
       return;
     }
 
+    console.log(`Iniciando upload de ${this.arquivosSelecionados.length} arquivos`);
+    console.log('Tipo:', this.tipoAnexo, 'Descricao:', this.descricao);
+
     for (const arquivo of this.arquivosSelecionados) {
+      console.log(`Fazendo upload de: ${arquivo.name} (${arquivo.size} bytes)`);
       this.uploadArquivo(arquivo);
     }
   }
@@ -168,9 +172,11 @@ export class AnexosUploadComponent implements OnInit {
       next: (resultado) => {
         if ('progress' in resultado) {
           // Atualizar progresso
+          console.log(`Upload ${arquivo.name}: ${resultado.progress}%`);
           this.uploadsEmProgresso.set(arquivo.name, resultado);
         } else {
           // Upload completo
+          console.log(`Upload completo: ${arquivo.name}`, resultado);
           this.uploadsEmProgresso.delete(arquivo.name);
           this.arquivosSelecionados = this.arquivosSelecionados.filter(
             (f) => f.name !== arquivo.name
@@ -179,10 +185,11 @@ export class AnexosUploadComponent implements OnInit {
         }
       },
       error: (erro) => {
+        console.error(`Erro no upload de ${arquivo.name}:`, erro);
         this.uploadsEmProgresso.delete(arquivo.name);
         this.uploadErro.emit(
           `Erro ao enviar ${arquivo.name}: ${
-            erro.error?.message || 'Erro desconhecido'
+            erro.error?.message || erro.message || 'Erro desconhecido'
           }`
         );
       },

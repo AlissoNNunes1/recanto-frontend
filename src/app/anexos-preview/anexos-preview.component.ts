@@ -3,6 +3,7 @@ import {
   Component,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   SimpleChanges,
 } from '@angular/core';
@@ -34,13 +35,16 @@ import { Anexo, AnexosService } from '../services/anexos.service';
   templateUrl: './anexos-preview.component.html',
   styleUrls: ['./anexos-preview.component.css'],
 })
-export class AnexosPreviewComponent implements OnInit, OnChanges {
+export class AnexosPreviewComponent implements OnInit, OnChanges, OnDestroy {
   @Input() tipo: 'consulta' | 'exame' = 'consulta';
   @Input() registroId!: number;
   @Input() anexos: Anexo[] = [];
   @Input() autoCarregar = true;
 
   carregando = false;
+  previewUrls: Map<number, SafeResourceUrl> = new Map();
+  // Cache separado para URLs brutas (usadas em window.open)
+  private blobUrls: Map<number, string> = new Map();
 
   constructor(
     private anexosService: AnexosService,
@@ -78,15 +82,48 @@ export class AnexosPreviewComponent implements OnInit, OnChanges {
       next: (anexos) => {
         this.anexos = anexos;
         this.carregando = false;
+        // Carregar previews de imagens apenas se houver anexos
+        if (this.anexos.length > 0) {
+          this.carregarPreviewsDeImagens();
+        }
       },
       error: (erro) => {
         console.error('Erro ao carregar anexos:', erro);
+        this.anexos = []; // Garantir array vazio em caso de erro
         this.snackBar.open('Erro ao carregar anexos', 'Fechar', {
           duration: 3000,
         });
         this.carregando = false;
       },
     });
+  }
+
+  /**
+   * Carregar previews de imagens via HttpClient (passa pelo interceptor)
+   */
+  private carregarPreviewsDeImagens(): void {
+    this.anexos
+      .filter((anexo) => this.isImagem(anexo))
+      .forEach((anexo) => {
+        this.anexosService.getPreviewBlob(anexo.id).subscribe({
+          next: (blob) => {
+            const url = URL.createObjectURL(blob);
+            // Armazenar URL bruta para window.open
+            this.blobUrls.set(anexo.id, url);
+            // Armazenar SafeResourceUrl para template
+            this.previewUrls.set(
+              anexo.id,
+              this.sanitizer.bypassSecurityTrustResourceUrl(url)
+            );
+          },
+          error: (erro) => {
+            console.error(
+              `Erro ao carregar preview do anexo ${anexo.id}:`,
+              erro
+            );
+          },
+        });
+      });
   }
 
   /**
@@ -120,17 +157,37 @@ export class AnexosPreviewComponent implements OnInit, OnChanges {
   /**
    * Obter URL de preview segura
    */
-  getUrlPreviewSegura(anexo: Anexo): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(
-      this.anexosService.getUrlPreview(anexo.id)
-    );
+  getUrlPreviewSegura(anexo: Anexo): SafeResourceUrl | string {
+    // Se ja carregou o preview como Blob, retorna da cache
+    if (this.previewUrls.has(anexo.id)) {
+      return this.previewUrls.get(anexo.id)!;
+    }
+    // Caso contrario, retorna placeholder ou vazio
+    return '';
   }
 
   /**
    * Download de anexo
    */
   downloadAnexo(anexo: Anexo): void {
-    window.open(this.anexosService.getUrlDownload(anexo.id), '_blank');
+    this.anexosService.getPreviewBlob(anexo.id).subscribe({
+      next: (blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = anexo.nomeArquivo;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      },
+      error: (erro) => {
+        console.error('Erro ao baixar anexo:', erro);
+        this.snackBar.open('Erro ao baixar arquivo', 'Fechar', {
+          duration: 3000,
+        });
+      },
+    });
   }
 
   /**
@@ -163,9 +220,32 @@ export class AnexosPreviewComponent implements OnInit, OnChanges {
    * Abrir preview em modal
    */
   abrirPreviewModal(anexo: Anexo): void {
-    // TODO: Implementar dialog com preview fullscreen
-    // Por enquanto, abrir em nova aba
-    window.open(this.anexosService.getUrlPreview(anexo.id), '_blank');
+    // Buscar URL bruta do cache ou carregar
+    if (this.blobUrls.has(anexo.id)) {
+      // Abrir em nova aba usando Blob URL do cache
+      const url = this.blobUrls.get(anexo.id);
+      window.open(url, '_blank');
+    } else {
+      // Carregar via HttpClient (passa pelo interceptor com token)
+      this.anexosService.getPreviewBlob(anexo.id).subscribe({
+        next: (blob) => {
+          const url = URL.createObjectURL(blob);
+          window.open(url, '_blank');
+          // Armazenar no cache para proximas visualizacoes
+          this.blobUrls.set(anexo.id, url);
+          this.previewUrls.set(
+            anexo.id,
+            this.sanitizer.bypassSecurityTrustResourceUrl(url)
+          );
+        },
+        error: (erro) => {
+          console.error('Erro ao abrir preview:', erro);
+          this.snackBar.open('Erro ao visualizar arquivo', 'Fechar', {
+            duration: 3000,
+          });
+        },
+      });
+    }
   }
 
   /**
@@ -179,6 +259,18 @@ export class AnexosPreviewComponent implements OnInit, OnChanges {
       hour: '2-digit',
       minute: '2-digit',
     });
+  }
+
+  /**
+   * Limpeza ao destruir componente
+   */
+  ngOnDestroy(): void {
+    // Liberar URLs de Blob da memoria
+    this.blobUrls.forEach((url) => {
+      URL.revokeObjectURL(url);
+    });
+    this.blobUrls.clear();
+    this.previewUrls.clear();
   }
 }
 

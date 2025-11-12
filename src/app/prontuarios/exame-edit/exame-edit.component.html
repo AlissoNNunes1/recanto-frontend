@@ -109,4 +109,34 @@
       </div>
     </mat-card-content>
   </mat-card>
+
+  <!-- Secao de Anexos -->
+  <mat-card class="anexos-card" *ngIf="exameId">
+    <mat-card-header class="card-header">
+      <mat-icon class="header-icon">attach_file</mat-icon>
+      <mat-card-title>Anexos do Exame</mat-card-title>
+      <mat-card-subtitle>
+        Gerencie os arquivos anexados a este exame
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Componente de Upload -->
+      <div class="upload-section">
+        <h3>Adicionar Novos Anexos</h3>
+        <app-anexos-upload
+          tipo="exame"
+          [registroId]="exameId"
+        ></app-anexos-upload>
+      </div>
+
+      <!-- Componente de Preview/Galeria -->
+      <div class="preview-section">
+        <h3>Anexos Existentes</h3>
+        <app-anexos-preview
+          tipo="exame"
+          [registroId]="exameId"
+        ></app-anexos-preview>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>

@@ -224,6 +224,24 @@
                 <p *ngIf="consulta.tratamento">
                   <strong>Tratamento:</strong> {{ consulta.tratamento }}
                 </p>
+                <p *ngIf="consulta.observacoes">
+                  <strong>Observacoes:</strong> {{ consulta.observacoes }}
+                </p>
+
+                <!-- Secao de Anexos -->
+                <div class="anexos-section" *ngIf="consulta.id">
+                  <mat-divider style="margin: 16px 0"></mat-divider>
+                  <h4 style="margin: 16px 0 8px 0; color: #1e3c72">
+                    <mat-icon style="vertical-align: middle; margin-right: 8px">
+                      attach_file
+                    </mat-icon>
+                    Anexos da Consulta
+                  </h4>
+                  <app-anexos-preview
+                    tipo="consulta"
+                    [registroId]="consulta.id"
+                  ></app-anexos-preview>
+                </div>
               </mat-card-content>
               <mat-card-actions align="end">
                 <button
@@ -286,6 +304,21 @@
                   <strong>Realizado em:</strong>
                   {{ exame.dataRealizacao | date : "dd/MM/yyyy" }}
                 </p>
+
+                <!-- Secao de Anexos -->
+                <div class="anexos-section" *ngIf="exame.id">
+                  <mat-divider style="margin: 16px 0"></mat-divider>
+                  <h4 style="margin: 16px 0 8px 0; color: #1e3c72">
+                    <mat-icon style="vertical-align: middle; margin-right: 8px">
+                      attach_file
+                    </mat-icon>
+                    Anexos do Exame
+                  </h4>
+                  <app-anexos-preview
+                    tipo="exame"
+                    [registroId]="exame.id"
+                  ></app-anexos-preview>
+                </div>
               </mat-card-content>
               <mat-card-actions align="end">
                 <button

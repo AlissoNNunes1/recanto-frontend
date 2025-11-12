@@ -3,18 +3,21 @@
     <mat-card-header class="card-header">
       <mat-icon class="header-icon">edit</mat-icon>
       <mat-card-title>Editar Consulta</mat-card-title>
+      <mat-card-subtitle>
+        Atualize os dados basicos da consulta
+      </mat-card-subtitle>
     </mat-card-header>
 
     <mat-card-content>
       <form [formGroup]="consultaForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
-        <!-- Profissional Responsavel -->
+        <!-- ID do Profissional -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Profissional Responsavel</mat-label>
+          <mat-label>ID do Profissional</mat-label>
           <input
             matInput
             type="number"
             formControlName="profissionalId"
-            placeholder="ID do profissional"
+            placeholder="Digite o ID do profissional"
           />
           <mat-icon matSuffix>badge</mat-icon>
           <mat-error
@@ -47,6 +50,7 @@
             matInput
             [matDatepicker]="picker"
             formControlName="dataConsulta"
+            placeholder="Selecione a data"
           />
           <mat-datepicker-toggle
             matSuffix
@@ -60,93 +64,17 @@
           </mat-error>
         </mat-form-field>
 
-        <!-- Queixa Principal -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Queixa Principal</mat-label>
-          <textarea
-            matInput
-            formControlName="queixaPrincipal"
-            rows="3"
-            placeholder="Descreva a queixa principal do paciente"
-          ></textarea>
-          <mat-icon matSuffix>description</mat-icon>
-          <mat-error
-            *ngIf="consultaForm.get('queixaPrincipal')?.hasError('required')"
-          >
-            Campo obrigatorio
-          </mat-error>
-        </mat-form-field>
-
-        <!-- Historia da Doenca Atual -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Historia da Doenca Atual</mat-label>
-          <textarea
-            matInput
-            formControlName="historiaDoencaAtual"
-            rows="4"
-            placeholder="Descreva a historia da doenca atual"
-          ></textarea>
-          <mat-icon matSuffix>history</mat-icon>
-        </mat-form-field>
-
-        <!-- Exame Fisico -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Exame Fisico</mat-label>
-          <textarea
-            matInput
-            formControlName="exameFisico"
-            rows="4"
-            placeholder="Descricao do exame fisico realizado"
-          ></textarea>
-          <mat-icon matSuffix>health_and_safety</mat-icon>
-        </mat-form-field>
-
-        <!-- Hipotese Diagnostica -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Hipotese Diagnostica</mat-label>
-          <textarea
-            matInput
-            formControlName="hipoteseDiagnostica"
-            rows="3"
-            placeholder="Hipotese diagnostica inicial"
-          ></textarea>
-          <mat-icon matSuffix>lightbulb</mat-icon>
-        </mat-form-field>
-
-        <!-- Diagnostico -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Diagnostico Final</mat-label>
-          <textarea
-            matInput
-            formControlName="diagnostico"
-            rows="3"
-            placeholder="Diagnostico confirmado"
-          ></textarea>
-          <mat-icon matSuffix>check_circle</mat-icon>
-        </mat-form-field>
-
-        <!-- Tratamento -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Tratamento Proposto</mat-label>
-          <textarea
-            matInput
-            formControlName="tratamento"
-            rows="4"
-            placeholder="Descricao do tratamento proposto"
-          ></textarea>
-          <mat-icon matSuffix>medication</mat-icon>
-        </mat-form-field>
-
         <!-- Observacoes -->
         <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Observacoes</mat-label>
+          <mat-label>Observacoes (Opcional)</mat-label>
           <textarea
             matInput
             formControlName="observacoes"
-            rows="3"
-            placeholder="Observacoes adicionais"
+            rows="4"
+            placeholder="Observacoes sobre a consulta, sintomas, evolucao, etc."
           ></textarea>
-          <mat-icon matSuffix>notes</mat-icon>
+          <mat-icon matSuffix>note</mat-icon>
+          <mat-hint>Campo livre para anotacoes</mat-hint>
         </mat-form-field>
 
         <!-- Botoes de Acao -->
@@ -176,6 +104,36 @@
       <div *ngIf="loading" class="loading-container">
         <mat-icon class="loading-icon">hourglass_empty</mat-icon>
         <p>Carregando dados da consulta...</p>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Secao de Anexos -->
+  <mat-card class="anexos-card" *ngIf="consultaId">
+    <mat-card-header class="card-header">
+      <mat-icon class="header-icon">attach_file</mat-icon>
+      <mat-card-title>Anexos da Consulta</mat-card-title>
+      <mat-card-subtitle>
+        Gerencie os arquivos anexados a esta consulta
+      </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- Componente de Upload -->
+      <div class="upload-section">
+        <h3>Adicionar Novos Anexos</h3>
+        <app-anexos-upload
+          tipo="consulta"
+          [registroId]="consultaId"
+        ></app-anexos-upload>
+      </div>
+
+      <!-- Componente de Preview/Galeria -->
+      <div class="preview-section">
+        <h3>Anexos Existentes</h3>
+        <app-anexos-preview
+          tipo="consulta"
+          [registroId]="consultaId"
+        ></app-anexos-preview>
       </div>
     </mat-card-content>
   </mat-card>

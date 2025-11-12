@@ -125,6 +125,15 @@ export class AnexosService {
   }
 
   /**
+   * Obter preview como Blob (passa pelo interceptor com token)
+   */
+  getPreviewBlob(anexoId: number): Observable<Blob> {
+    return this.http.get(`${this.apiUrl}/${anexoId}/preview`, {
+      responseType: 'blob',
+    });
+  }
+
+  /**
    * Excluir anexo
    */
   excluir(anexoId: number): Observable<{ message: string }> {

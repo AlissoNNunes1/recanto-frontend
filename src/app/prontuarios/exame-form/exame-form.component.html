@@ -128,6 +128,40 @@
       </form>
     </mat-card-content>
   </mat-card>
+
+  <!-- Secao de Anexos - Exibida apos salvar exame -->
+  <mat-card class="anexos-card" *ngIf="exameSalvo && exameId">
+    <mat-card-header>
+      <mat-card-title>
+        <mat-icon>attach_file</mat-icon>
+        Anexar Arquivos ao Exame
+      </mat-card-title>
+      <mat-card-subtitle>
+        Adicione resultados, laudos e imagens relacionadas ao exame
+      </mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <app-anexos-upload
+        [tipo]="'exame'"
+        [registroId]="exameId"
+        (uploadCompleto)="onUploadCompleto($event)"
+        (uploadErro)="onUploadErro($event)"
+      ></app-anexos-upload>
+
+      <div class="form-actions" style="margin-top: 24px;">
+        <button
+          mat-raised-button
+          color="accent"
+          type="button"
+          (click)="finalizar()"
+        >
+          <mat-icon>check_circle</mat-icon>
+          Finalizar
+        </button>
+      </div>
+    </mat-card-content>
+  </mat-card>
 </div>
 
 <!--
