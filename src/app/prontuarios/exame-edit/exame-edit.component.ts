@@ -1,16 +1,21 @@
-import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { Component, OnInit, inject } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSelectModule } from '@angular/material/select';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AnexosPreviewComponent } from '../../anexos-preview/anexos-preview.component';
 import { AnexosUploadComponent } from '../../anexos-upload/anexos-upload.component';
 import { TipoExame } from '../prontuario';
@@ -35,7 +40,7 @@ import { ProntuariosService } from '../prontuarios.service';
     AnexosPreviewComponent,
   ],
   templateUrl: './exame-edit.component.html',
-  styleUrls: ['./exame-edit.component.css']
+  styleUrls: ['./exame-edit.component.css'],
 })
 export class ExameEditComponent implements OnInit {
   private fb = inject(FormBuilder);
@@ -53,7 +58,9 @@ export class ExameEditComponent implements OnInit {
 
   ngOnInit(): void {
     this.exameId = Number(this.route.snapshot.paramMap.get('exameId'));
-    this.prontuarioId = Number(this.route.snapshot.paramMap.get('prontuarioId'));
+    this.prontuarioId = Number(
+      this.route.snapshot.paramMap.get('prontuarioId')
+    );
 
     this.initForm();
     this.loadExame();
@@ -66,7 +73,7 @@ export class ExameEditComponent implements OnInit {
       nomeExame: ['', Validators.required],
       descricao: [''],
       dataSolicitacao: ['', Validators.required],
-      observacoes: ['']
+      observacoes: [''],
     });
   }
 
@@ -80,7 +87,7 @@ export class ExameEditComponent implements OnInit {
           nomeExame: exame.nomeExame,
           descricao: exame.descricao,
           dataSolicitacao: new Date(exame.dataSolicitacao),
-          observacoes: exame.observacoes
+          observacoes: exame.observacoes,
         });
         this.loading = false;
       },
@@ -88,7 +95,7 @@ export class ExameEditComponent implements OnInit {
         console.error('Erro ao carregar exame:', error);
         this.showError('Erro ao carregar dados do exame');
         this.loading = false;
-      }
+      },
     });
   }
 
@@ -106,7 +113,7 @@ export class ExameEditComponent implements OnInit {
           console.error('Erro ao atualizar exame:', error);
           this.showError('Erro ao atualizar exame. Tente novamente.');
           this.loading = false;
-        }
+        },
       });
     } else {
       this.markFormGroupTouched(this.exameForm);
@@ -115,7 +122,7 @@ export class ExameEditComponent implements OnInit {
   }
 
   private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach(key => {
+    Object.keys(formGroup.controls).forEach((key) => {
       const control = formGroup.get(key);
       control?.markAsTouched();
 
@@ -134,7 +141,7 @@ export class ExameEditComponent implements OnInit {
       duration: 3000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['snackbar-success']
+      panelClass: ['snackbar-success'],
     });
   }
 
@@ -143,7 +150,7 @@ export class ExameEditComponent implements OnInit {
       duration: 5000,
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      panelClass: ['snackbar-error']
+      panelClass: ['snackbar-error'],
     });
   }
 }

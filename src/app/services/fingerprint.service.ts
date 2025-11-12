@@ -1,5 +1,5 @@
-import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 
 /**
  * Servico para geracao de fingerprint unico do dispositivo/navegador
@@ -151,7 +151,7 @@ export class FingerprintService {
     if (!this.isBrowser) {
       return '';
     }
-    
+
     if (!this.fingerprint) {
       this.initializeFingerprint();
     }
@@ -166,7 +166,7 @@ export class FingerprintService {
     if (!this.isBrowser) {
       return '';
     }
-    
+
     localStorage.removeItem(this.STORAGE_KEY);
     this.fingerprint = this.generateFingerprint();
     localStorage.setItem(this.STORAGE_KEY, this.fingerprint);
@@ -182,7 +182,7 @@ export class FingerprintService {
     if (!this.isBrowser) {
       return;
     }
-    
+
     localStorage.removeItem(this.STORAGE_KEY);
     this.fingerprint = null;
     console.log('Fingerprint removido');
@@ -209,7 +209,7 @@ export class FingerprintService {
         message: 'Executando no servidor (SSR)',
       };
     }
-    
+
     return {
       fingerprint: this.getFingerprint(),
       userAgent: navigator.userAgent,

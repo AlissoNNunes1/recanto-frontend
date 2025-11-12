@@ -140,7 +140,9 @@ export class AnexosUploadComponent implements OnInit {
       return;
     }
 
-    console.log(`Iniciando upload de ${this.arquivosSelecionados.length} arquivos`);
+    console.log(
+      `Iniciando upload de ${this.arquivosSelecionados.length} arquivos`
+    );
     console.log('Tipo:', this.tipoAnexo, 'Descricao:', this.descricao);
 
     for (const arquivo of this.arquivosSelecionados) {
