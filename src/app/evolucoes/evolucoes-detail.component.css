@@ -1,0 +1,163 @@
+.evolucoes-detail-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: 0 auto;
+  min-height: calc(100vh - 100px);
+}
+
+.spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+  margin: auto;
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.header-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.header-card mat-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-card mat-card-title,
+.header-card mat-card-subtitle {
+  color: white;
+}
+
+.info-card {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.info-card mat-card-content {
+  padding: 20px;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-row.metadata {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.info-label {
+  font-weight: 600;
+  color: #555;
+  min-width: 150px;
+}
+
+.info-value {
+  color: #333;
+  flex: 1;
+}
+
+.info-section {
+  margin: 20px 0;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-left: 4px solid #667eea;
+  border-radius: 4px;
+}
+
+.info-section h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 16px;
+}
+
+.descricao-text {
+  margin: 0;
+  color: #555;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.acoes-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.acoes-container button {
+  min-width: 140px;
+}
+
+button mat-icon {
+  margin-right: 8px;
+}
+
+.sem-dados {
+  text-align: center;
+  padding: 60px 20px;
+  color: #999;
+}
+
+.sem-dados mat-icon {
+  font-size: 64px;
+  width: 64px;
+  height: 64px;
+  color: #ddd;
+  margin-bottom: 20px;
+}
+
+.sem-dados p {
+  margin: 0 0 20px 0;
+  font-size: 18px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .evolucoes-detail-container {
+    padding: 10px;
+  }
+
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .info-row.metadata {
+    grid-template-columns: 1fr;
+  }
+
+  .info-label {
+    margin-bottom: 5px;
+  }
+
+  .acoes-container {
+    flex-direction: column;
+  }
+
+  .acoes-container button {
+    width: 100%;
+  }
+}
+
+/* Componente de detalhes de evolucao */
+/* Estilos para exibicao de informacoes */
+/* Mobile-first e responsivo */
+/*    __  ____ ____ _  _ */
+/*  / _\/ ___) ___) )( \ */
+/* /    \___ \___ ) \/ ( */
+/* \_/\_(____(____|____/ */

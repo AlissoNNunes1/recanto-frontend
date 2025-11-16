@@ -12,25 +12,6 @@
 
     <mat-card-content>
       <form [formGroup]="exameForm" (ngSubmit)="onSubmit()" class="exame-form">
-        <!-- ID do Profissional Responsavel -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>ID do Profissional Responsavel</mat-label>
-          <input
-            matInput
-            type="number"
-            formControlName="profissionalSolicitanteId"
-            placeholder="Digite o ID do profissional"
-          />
-          <mat-icon matSuffix>badge</mat-icon>
-          <mat-error
-            *ngIf="
-              exameForm.get('profissionalSolicitanteId')?.hasError('required')
-            "
-          >
-            {{ getErrorMessage("profissionalSolicitanteId") }}
-          </mat-error>
-        </mat-form-field>
-
         <!-- Tipo de Exame -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Tipo de Exame</mat-label>

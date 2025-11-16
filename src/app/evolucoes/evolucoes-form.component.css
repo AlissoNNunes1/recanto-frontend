@@ -1,0 +1,93 @@
+.evolucoes-form-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  min-height: calc(100vh - 100px);
+}
+
+.form-card {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-card mat-card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 20px;
+  margin: -16px -16px 20px -16px;
+}
+
+.form-card mat-card-title {
+  color: white;
+  margin: 0;
+  font-size: 24px;
+}
+
+.form-content {
+  position: relative;
+  min-height: 300px;
+}
+
+.spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
+.form-fields {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+textarea {
+  font-family: "Courier New", monospace;
+  font-size: 14px;
+  resize: vertical;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.form-actions button {
+  min-width: 150px;
+}
+
+button mat-icon {
+  margin-right: 8px;
+}
+
+/* Responsivo */
+@media (max-width: 768px) {
+  .evolucoes-form-container {
+    padding: 10px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+  }
+
+  .form-actions button {
+    width: 100%;
+  }
+}
+
+/* Componente de formulario para criar/editar evolucoes */
+/* Estilos para formulario, validacoes e acoes */
+/* Mobile-first e responsivo */
+/*    __  ____ ____ _  _ */
+/*  / _\/ ___) ___) )( \ */
+/* /    \___ \___ ) \/ ( */
+/* \_/\_(____(____|____/ */

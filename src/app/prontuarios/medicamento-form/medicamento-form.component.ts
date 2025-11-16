@@ -138,7 +138,6 @@ export class MedicamentoFormComponent implements OnInit {
 
   initForm(): void {
     this.medicamentoForm = this.fb.group({
-      profissionalId: [null, Validators.required],
       medicamentoNome: ['', Validators.required],
       dosagem: ['', Validators.required],
       viaAdministracao: ['', Validators.required],

@@ -114,6 +114,38 @@
         </a>
       </li>
 
+      <!-- Sinais Vitais -->
+      <li class="nav-item" role="none">
+        <a
+          routerLink="/sinais-vitais"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Sinais Vitais' : null"
+        >
+          <i class="fas fa-heartbeat nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed"
+            >Sinais Vitais</span
+          >
+        </a>
+      </li>
+
+      <!-- Evolucoes -->
+      <li class="nav-item" role="none">
+        <a
+          routerLink="/evolucoes"
+          routerLinkActive="active"
+          class="nav-link"
+          (click)="closeSidebarOnMobile()"
+          role="menuitem"
+          [attr.aria-label]="isSidebarCollapsed ? 'Evolucoes' : null"
+        >
+          <i class="fas fa-chart-line nav-icon"></i>
+          <span class="nav-text" *ngIf="!isSidebarCollapsed">Evolucoes</span>
+        </a>
+      </li>
+
       <!-- Divisor Admin -->
       <li class="nav-divider" *ngIf="isAdmin()" role="separator">
         <span *ngIf="!isSidebarCollapsed">Administracao</span>

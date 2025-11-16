@@ -18,23 +18,6 @@
         class="consulta-form"
         *ngIf="!consultaSalva"
       >
-        <!-- ID do Profissional -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>ID do Profissional</mat-label>
-          <input
-            matInput
-            type="number"
-            formControlName="profissionalId"
-            placeholder="Digite o ID do profissional"
-          />
-          <mat-icon matSuffix>badge</mat-icon>
-          <mat-error
-            *ngIf="consultaForm.get('profissionalId')?.hasError('required')"
-          >
-            {{ getErrorMessage("profissionalId") }}
-          </mat-error>
-        </mat-form-field>
-
         <!-- Tipo de Consulta -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Tipo de Consulta</mat-label>

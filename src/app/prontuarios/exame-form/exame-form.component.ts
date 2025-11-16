@@ -73,7 +73,6 @@ export class ExameFormComponent implements OnInit {
 
   initForm(): void {
     this.exameForm = this.fb.group({
-      profissionalSolicitanteId: [null, Validators.required],
       tipoExame: ['', Validators.required],
       nomeExame: ['', Validators.required],
       descricao: [''],

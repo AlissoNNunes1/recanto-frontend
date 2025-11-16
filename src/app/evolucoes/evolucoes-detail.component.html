@@ -1,0 +1,101 @@
+<div class="evolucoes-detail-container">
+  <mat-progress-spinner
+    *ngIf="loading"
+    diameter="50"
+    mode="indeterminate"
+    class="spinner"
+  ></mat-progress-spinner>
+
+  <div *ngIf="!loading && evolucao" class="detail-content">
+    <mat-card class="header-card">
+      <mat-card-header>
+        <mat-card-title>Evolucao Clinica</mat-card-title>
+        <mat-card-subtitle>
+          Residente: {{ evolucao.residente?.nome || "N/A" }}
+        </mat-card-subtitle>
+      </mat-card-header>
+    </mat-card>
+
+    <mat-card class="info-card">
+      <mat-card-content>
+        <div class="info-row">
+          <div class="info-label">Data do Registro:</div>
+          <div class="info-value">
+            {{ formatarData(evolucao.dataRegistro) }}
+          </div>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">Registrado por:</div>
+          <div class="info-value">
+            {{ evolucao.usuario?.nome || "N/A" }}
+            ({{ evolucao.usuario?.cargo || "N/A" }})
+          </div>
+        </div>
+
+        <div class="info-section">
+          <h3>Descricao da Evolucao</h3>
+          <p class="descricao-text">{{ evolucao.descricaoEvolucao }}</p>
+        </div>
+
+        <div *ngIf="evolucao.objectivos" class="info-section">
+          <h3>Objetivos</h3>
+          <p class="descricao-text">{{ evolucao.objectivos }}</p>
+        </div>
+
+        <div *ngIf="evolucao.intervencoes" class="info-section">
+          <h3>Intervencoes</h3>
+          <p class="descricao-text">{{ evolucao.intervencoes }}</p>
+        </div>
+
+        <div *ngIf="evolucao.resultados" class="info-section">
+          <h3>Resultados</h3>
+          <p class="descricao-text">{{ evolucao.resultados }}</p>
+        </div>
+
+        <div class="info-row">
+          <div class="info-label">Proxima Avaliacao:</div>
+          <div class="info-value">
+            {{ formatarData(evolucao.dataSeguimento) }}
+          </div>
+        </div>
+
+        <div class="info-row metadata">
+          <div class="info-label">Criado em:</div>
+          <div class="info-value">{{ formatarData(evolucao.createdAt) }}</div>
+          <div class="info-label">Atualizado em:</div>
+          <div class="info-value">{{ formatarData(evolucao.updatedAt) }}</div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+    <div class="acoes-container">
+      <button mat-stroked-button (click)="voltar()">
+        <mat-icon>arrow_back</mat-icon>
+        Voltar
+      </button>
+      <button mat-raised-button color="accent" (click)="editar()">
+        <mat-icon>edit</mat-icon>
+        Editar
+      </button>
+      <button mat-raised-button color="warn" (click)="excluir()">
+        <mat-icon>delete</mat-icon>
+        Excluir
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !evolucao" class="sem-dados">
+    <mat-icon>error</mat-icon>
+    <p>Evolucao nao encontrada</p>
+    <button mat-raised-button (click)="voltar()">Voltar</button>
+  </div>
+</div>
+
+<!-- Componente de detalhes de evolucao -->
+<!-- Exibe informacoes completas de uma evolucao especifica -->
+<!-- Permite editar e excluir -->
+<!--    __  ____ ____ _  _ -->
+<!--  / _\/ ___) ___) )( \ -->
+<!-- /    \___ \___ ) \/ ( -->
+<!-- \_/\_(____(____|____/ -->

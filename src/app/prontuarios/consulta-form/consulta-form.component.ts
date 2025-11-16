@@ -74,7 +74,6 @@ export class ConsultaFormComponent implements OnInit {
 
   initForm(): void {
     this.consultaForm = this.fb.group({
-      profissionalId: [null, Validators.required],
       tipoConsulta: ['', Validators.required],
       dataConsulta: [new Date(), Validators.required],
       observacoes: [''],

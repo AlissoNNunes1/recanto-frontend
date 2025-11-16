@@ -3,6 +3,9 @@ import { AuditoriaComponent } from './auditoria/auditoria/auditoria.component';
 import { AdminAuthGuard } from './auth/auth-admin.guard';
 import { AuthGuard } from './auth/auth-guard.service';
 import { LoginComponent } from './auth/login/login.component';
+import { EvolucoesDetailComponent } from './evolucoes/evolucoes-detail.component';
+import { EvolucoesFormComponent } from './evolucoes/evolucoes-form.component';
+import { EvolucoesListComponent } from './evolucoes/evolucoes-list.component';
 import { AddFuncionarioFormComponent } from './funcionarios/add-funcionario-form/add-funcionario-form.component';
 import { FuncionariosComponent } from './funcionarios/funcionarios/funcionarios.component';
 import { HomeComponent } from './home/home.component';
@@ -131,6 +134,26 @@ export const routes: Routes = [
   {
     path: 'sinais-vitais/residente/:residenteId/estatisticas',
     component: SinaisVitaisStatsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'evolucoes',
+    component: EvolucoesListComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'evolucoes/novo',
+    component: EvolucoesFormComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'evolucoes/:id',
+    component: EvolucoesDetailComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'evolucoes/:id/edit',
+    component: EvolucoesFormComponent,
     canActivate: [AuthGuard],
   },
 ];

@@ -1,0 +1,179 @@
+<div class="evolucoes-container">
+  <mat-card class="header-card">
+    <mat-card-header>
+      <mat-card-title>Evolucoes Clinicas</mat-card-title>
+      <mat-card-subtitle
+        >Acompanhe a evolucao clinica dos residentes</mat-card-subtitle
+      >
+    </mat-card-header>
+  </mat-card>
+
+  <mat-card class="filtros-card">
+    <mat-card-content>
+      <div class="filtros-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Residente</mat-label>
+          <mat-select [(ngModel)]="filtros.residenteId">
+            <mat-option [value]="undefined">Todos</mat-option>
+            <mat-option
+              *ngFor="let residente of residentes"
+              [value]="residente.id"
+            >
+              {{ residente.nome }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data Inicio</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickerInicio"
+            [(ngModel)]="filtros.dataInicio"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="pickerInicio"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerInicio></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Data Fim</mat-label>
+          <input
+            matInput
+            [matDatepicker]="pickerFim"
+            [(ngModel)]="filtros.dataFim"
+          />
+          <mat-datepicker-toggle
+            matIconSuffix
+            [for]="pickerFim"
+          ></mat-datepicker-toggle>
+          <mat-datepicker #pickerFim></mat-datepicker>
+        </mat-form-field>
+
+        <div class="acoes-filtros">
+          <button mat-raised-button color="primary" (click)="aplicarFiltros()">
+            <mat-icon>search</mat-icon>
+            Buscar
+          </button>
+          <button mat-stroked-button (click)="limparFiltros()">
+            <mat-icon>clear</mat-icon>
+            Limpar
+          </button>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="acoes-top">
+    <button mat-raised-button color="accent" (click)="novoRegistro()">
+      <mat-icon>add</mat-icon>
+      Nova Evolucao
+    </button>
+  </div>
+
+  <mat-card class="tabela-card">
+    <mat-card-content>
+      <mat-progress-spinner
+        *ngIf="loading"
+        diameter="50"
+        mode="indeterminate"
+        class="spinner"
+      ></mat-progress-spinner>
+
+      <div *ngIf="!loading && evolucoes.length === 0" class="sem-dados">
+        <mat-icon>info</mat-icon>
+        <p>Nenhuma evolucao encontrada</p>
+      </div>
+
+      <div *ngIf="!loading && evolucoes.length > 0" class="tabela-wrapper">
+        <table mat-table [dataSource]="evolucoes" class="tabela-evolucoes">
+          <!-- Data Registro Column -->
+          <ng-container matColumnDef="dataRegistro">
+            <th mat-header-cell *matHeaderCellDef>Data Registro</th>
+            <td mat-cell *matCellDef="let element">
+              {{ formatarData(element.dataRegistro) }}
+            </td>
+          </ng-container>
+
+          <!-- Residente Column -->
+          <ng-container matColumnDef="residente">
+            <th mat-header-cell *matHeaderCellDef>Residente</th>
+            <td mat-cell *matCellDef="let element">
+              {{ getNomeResidente(element) }}
+            </td>
+          </ng-container>
+
+          <!-- Descricao Column -->
+          <ng-container matColumnDef="descricao">
+            <th mat-header-cell *matHeaderCellDef>Descricao</th>
+            <td mat-cell *matCellDef="let element">
+              <span [matTooltip]="element.descricaoEvolucao">
+                {{ getTruncadoDescricao(element.descricaoEvolucao) }}
+              </span>
+            </td>
+          </ng-container>
+
+          <!-- Data Seguimento Column -->
+          <ng-container matColumnDef="dataSeguimento">
+            <th mat-header-cell *matHeaderCellDef>Proxima Avaliacao</th>
+            <td mat-cell *matCellDef="let element">
+              {{ formatarData(element.dataSeguimento) }}
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="acoes">
+            <th mat-header-cell *matHeaderCellDef>Acoes</th>
+            <td mat-cell *matCellDef="let element">
+              <button
+                mat-icon-button
+                color="primary"
+                (click)="visualizar(element.id)"
+                matTooltip="Visualizar"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="accent"
+                (click)="editar(element.id)"
+                matTooltip="Editar"
+              >
+                <mat-icon>edit</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                color="warn"
+                (click)="excluir(element)"
+                matTooltip="Excluir"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+
+        <mat-paginator
+          #paginator
+          [length]="totalItems"
+          [pageSize]="pageSize"
+          [pageSizeOptions]="[10, 25, 50]"
+          (page)="onPageChange($event)"
+        ></mat-paginator>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<!-- Componente de listagem de evolucoes -->
+<!-- Exibe tabela com filtros, paginacao e acoes -->
+<!-- Permite visualizar, editar e excluir registros -->
+<!--    __  ____ ____ _  _ -->
+<!--  / _\/ ___) ___) )( \ -->
+<!-- /    \___ \___ ) \/ ( -->
+<!-- \_/\_(____(____|____/ -->

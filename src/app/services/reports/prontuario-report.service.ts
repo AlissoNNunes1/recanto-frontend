@@ -1,17 +1,29 @@
 import { Injectable } from '@angular/core';
-import jsPDF from 'jspdf';
-import { Anexo } from '../services/anexos.service';
 import {
   Consulta,
   Exame,
   MedicamentoPrescrito,
   ProntuarioEletronico,
-} from './prontuario';
+} from '../../prontuarios/prontuario';
+import { Anexo } from '../anexos.service';
+import { PdfBuilderService } from './pdf-builder.service';
+import { ReportService } from './report.service';
 
+/**
+ * Servico especializado para relatorios de prontuarios
+ * Contem logica especifica para documentos medicos
+ */
 @Injectable({
   providedIn: 'root',
 })
-export class ReportService {
+export class ProntuarioReportService extends ReportService {
+  constructor(protected override pdfBuilder: PdfBuilderService) {
+    super(pdfBuilder);
+  }
+
+  /**
+   * Gera relatorio completo do prontuario eletronico
+   */
   generateProntuarioReport(
     prontuario: ProntuarioEletronico,
     consultas: Consulta[],
@@ -19,25 +31,88 @@ export class ReportService {
     medicamentos: MedicamentoPrescrito[],
     anexos: Anexo[] = []
   ): void {
-    const doc = new jsPDF();
+    const doc = this.pdfBuilder.createDocument();
     let yPosition = 20;
 
     // Header
-    doc.setFontSize(18);
-    doc.setFont('helvetica', 'bold');
-    doc.text('PRONTUARIO ELETRONICO', 105, yPosition, { align: 'center' });
-    yPosition += 10;
-
-    doc.setFontSize(10);
-    doc.setFont('helvetica', 'normal');
-    doc.text('Sistema Recanto da Vovo', 105, yPosition, { align: 'center' });
-    yPosition += 15;
+    yPosition = this.pdfBuilder.addHeader(
+      doc,
+      'PRONTUARIO ELETRONICO',
+      'Sistema Recanto da Vovo'
+    );
+    yPosition += 5;
 
     // Informacoes do Paciente
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('DADOS DO PACIENTE', 20, yPosition);
-    yPosition += 8;
+    yPosition = this.addPatientInfo(doc, prontuario, yPosition);
+
+    // Historico Medico
+    if (prontuario.historicoMedico) {
+      yPosition = this.addMedicalHistory(
+        doc,
+        prontuario.historicoMedico,
+        yPosition
+      );
+    }
+
+    // Alergias
+    if (prontuario.alergias) {
+      yPosition = this.addAllergies(doc, prontuario.alergias, yPosition);
+    }
+
+    // Medicamentos de Uso Continuo
+    if (prontuario.medicamentosContinuos) {
+      yPosition = this.addContinuousMedications(
+        doc,
+        prontuario.medicamentosContinuos,
+        yPosition
+      );
+    }
+
+    // Nova pagina para consultas
+    doc.addPage();
+    yPosition = 20;
+    yPosition = this.addConsultas(doc, consultas, yPosition);
+
+    // Nova pagina para exames
+    doc.addPage();
+    yPosition = 20;
+    yPosition = this.addExames(doc, exames, yPosition);
+
+    // Nova pagina para medicamentos
+    doc.addPage();
+    yPosition = 20;
+    yPosition = this.addMedicamentos(doc, medicamentos, yPosition);
+
+    // Nova pagina para anexos
+    doc.addPage();
+    yPosition = 20;
+    yPosition = this.addAnexos(doc, anexos, yPosition);
+
+    // Rodape
+    this.pdfBuilder.addFooter(doc);
+
+    // Salvar
+    const fileName = `prontuario_${
+      prontuario.residente?.nome || 'paciente'
+    }_${new Date().getTime()}.pdf`;
+    this.pdfBuilder.saveDocument(doc, fileName);
+  }
+
+  /**
+   * Adiciona informacoes do paciente
+   */
+  private addPatientInfo(
+    doc: any,
+    prontuario: ProntuarioEletronico,
+    yPosition: number
+  ): number {
+    yPosition = this.pdfBuilder.addSection(
+      doc,
+      'DADOS DO PACIENTE',
+      yPosition,
+      { fontSize: 14 }
+    );
+    yPosition += 2;
 
     doc.setFontSize(10);
     doc.setFont('helvetica', 'normal');
@@ -46,90 +121,123 @@ export class ReportService {
     doc.text(`Status: ${prontuario.status}`, 20, yPosition);
     yPosition += 6;
     doc.text(
-      `Criado em: ${this.formatDate(prontuario.createdAt)}`,
+      `Criado em: ${this.pdfBuilder.formatDate(prontuario.createdAt)}`,
       20,
       yPosition
     );
     yPosition += 10;
 
-    // Historico Medico
-    if (prontuario.historicoMedico) {
-      doc.setFontSize(12);
-      doc.setFont('helvetica', 'bold');
-      doc.text('HISTORICO MEDICO', 20, yPosition);
-      yPosition += 6;
+    return yPosition;
+  }
 
-      doc.setFontSize(9);
-      doc.setFont('helvetica', 'normal');
-      const historicoLines = doc.splitTextToSize(
-        prontuario.historicoMedico,
-        170
+  /**
+   * Adiciona historico medico
+   */
+  private addMedicalHistory(
+    doc: any,
+    historicoMedico: string,
+    yPosition: number
+  ): number {
+    yPosition = this.pdfBuilder.checkPageBreak(doc, yPosition, 20);
+    yPosition = this.pdfBuilder.addSection(doc, 'HISTORICO MEDICO', yPosition, {
+      fontSize: 12,
+    });
+    yPosition += 2;
+
+    yPosition = this.pdfBuilder.addParagraph(
+      doc,
+      historicoMedico,
+      20,
+      yPosition,
+      170,
+      { fontSize: 9 }
+    );
+    yPosition += 5;
+
+    return yPosition;
+  }
+
+  /**
+   * Adiciona alergias conhecidas
+   */
+  private addAllergies(doc: any, alergias: any, yPosition: number): number {
+    const alergiasArray =
+      typeof alergias === 'string'
+        ? alergias.split(',').map((a) => a.trim())
+        : alergias;
+
+    if (alergiasArray && alergiasArray.length > 0) {
+      yPosition = this.pdfBuilder.checkPageBreak(doc, yPosition, 20);
+
+      yPosition = this.pdfBuilder.addSection(
+        doc,
+        'ALERGIAS CONHECIDAS',
+        yPosition,
+        {
+          fontSize: 12,
+          color: [220, 38, 38],
+        }
       );
-      doc.text(historicoLines, 20, yPosition);
-      yPosition += historicoLines.length * 5 + 5;
+      yPosition += 2;
+
+      yPosition = this.pdfBuilder.addList(doc, alergiasArray, 25, yPosition);
+      yPosition += 5;
     }
 
-    // Alergias
-    if (prontuario.alergias) {
-      const alergiasArray =
-        typeof prontuario.alergias === 'string'
-          ? prontuario.alergias.split(',').map((a) => a.trim())
-          : prontuario.alergias;
+    return yPosition;
+  }
 
-      if (alergiasArray && alergiasArray.length > 0) {
-        this.checkPageBreak(doc, yPosition, 20);
+  /**
+   * Adiciona medicamentos de uso continuo
+   */
+  private addContinuousMedications(
+    doc: any,
+    medicamentosContinuos: any,
+    yPosition: number
+  ): number {
+    const medicamentosArray =
+      typeof medicamentosContinuos === 'string'
+        ? medicamentosContinuos.split(',').map((m) => m.trim())
+        : medicamentosContinuos;
 
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(220, 38, 38); // Vermelho
-        doc.text('ALERGIAS CONHECIDAS', 20, yPosition);
-        doc.setTextColor(0, 0, 0); // Volta para preto
-        yPosition += 6;
+    if (medicamentosArray && medicamentosArray.length > 0) {
+      yPosition = this.pdfBuilder.checkPageBreak(doc, yPosition, 20);
 
-        doc.setFontSize(9);
-        doc.setFont('helvetica', 'normal');
-        alergiasArray.forEach((alergia: string) => {
-          doc.text(`- ${alergia}`, 25, yPosition);
-          yPosition += 5;
-        });
-        yPosition += 5;
-      }
+      yPosition = this.pdfBuilder.addSection(
+        doc,
+        'MEDICAMENTOS DE USO CONTINUO',
+        yPosition,
+        { fontSize: 12 }
+      );
+      yPosition += 2;
+
+      yPosition = this.pdfBuilder.addList(
+        doc,
+        medicamentosArray,
+        25,
+        yPosition
+      );
+      yPosition += 5;
     }
 
-    // Medicamentos de Uso Continuo
-    if (prontuario.medicamentosContinuos) {
-      const medicamentosArray =
-        typeof prontuario.medicamentosContinuos === 'string'
-          ? prontuario.medicamentosContinuos.split(',').map((m) => m.trim())
-          : prontuario.medicamentosContinuos;
+    return yPosition;
+  }
 
-      if (medicamentosArray && medicamentosArray.length > 0) {
-        this.checkPageBreak(doc, yPosition, 20);
-
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.text('MEDICAMENTOS DE USO CONTINUO', 20, yPosition);
-        yPosition += 6;
-
-        doc.setFontSize(9);
-        doc.setFont('helvetica', 'normal');
-        medicamentosArray.forEach((med: string) => {
-          doc.text(`- ${med}`, 25, yPosition);
-          yPosition += 5;
-        });
-        yPosition += 5;
-      }
-    }
-
-    // Nova pagina para consultas
-    doc.addPage();
-    yPosition = 20;
-
-    // Consultas
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('HISTORICO DE CONSULTAS', 20, yPosition);
-    yPosition += 10;
+  /**
+   * Adiciona historico de consultas
+   */
+  private addConsultas(
+    doc: any,
+    consultas: Consulta[],
+    yPosition: number
+  ): number {
+    yPosition = this.pdfBuilder.addSection(
+      doc,
+      'HISTORICO DE CONSULTAS',
+      yPosition,
+      { fontSize: 14 }
+    );
+    yPosition += 5;
 
     if (consultas.length === 0) {
       doc.setFontSize(9);
@@ -138,7 +246,7 @@ export class ReportService {
       yPosition += 10;
     } else {
       consultas.forEach((consulta, index) => {
-        yPosition = this.checkPageBreak(doc, yPosition, 55);
+        yPosition = this.pdfBuilder.checkPageBreak(doc, yPosition, 55);
 
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
@@ -148,7 +256,7 @@ export class ReportService {
         doc.setFontSize(9);
         doc.setFont('helvetica', 'normal');
         doc.text(
-          `Data: ${this.formatDate(consulta.dataConsulta)}`,
+          `Data: ${this.pdfBuilder.formatDate(consulta.dataConsulta)}`,
           20,
           yPosition
         );
@@ -179,15 +287,20 @@ export class ReportService {
       });
     }
 
-    // Nova pagina para exames
-    doc.addPage();
-    yPosition = 20;
+    return yPosition;
+  }
 
-    // Exames
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('HISTORICO DE EXAMES', 20, yPosition);
-    yPosition += 10;
+  /**
+   * Adiciona historico de exames
+   */
+  private addExames(doc: any, exames: Exame[], yPosition: number): number {
+    yPosition = this.pdfBuilder.addSection(
+      doc,
+      'HISTORICO DE EXAMES',
+      yPosition,
+      { fontSize: 14 }
+    );
+    yPosition += 5;
 
     if (exames.length === 0) {
       doc.setFontSize(9);
@@ -196,7 +309,7 @@ export class ReportService {
       yPosition += 10;
     } else {
       exames.forEach((exame, index) => {
-        yPosition = this.checkPageBreak(doc, yPosition, 45);
+        yPosition = this.pdfBuilder.checkPageBreak(doc, yPosition, 45);
 
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
@@ -210,7 +323,7 @@ export class ReportService {
         doc.text(`Tipo: ${exame.tipoExame}`, 20, yPosition);
         yPosition += 5;
         doc.text(
-          `Realizado em: ${this.formatDate(exame.dataSolicitacao)}`,
+          `Realizado em: ${this.pdfBuilder.formatDate(exame.dataSolicitacao)}`,
           20,
           yPosition
         );
@@ -234,15 +347,24 @@ export class ReportService {
       });
     }
 
-    // Nova pagina para medicamentos
-    doc.addPage();
-    yPosition = 20;
+    return yPosition;
+  }
 
-    // Medicamentos Prescritos
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('MEDICAMENTOS PRESCRITOS', 20, yPosition);
-    yPosition += 10;
+  /**
+   * Adiciona medicamentos prescritos
+   */
+  private addMedicamentos(
+    doc: any,
+    medicamentos: MedicamentoPrescrito[],
+    yPosition: number
+  ): number {
+    yPosition = this.pdfBuilder.addSection(
+      doc,
+      'MEDICAMENTOS PRESCRITOS',
+      yPosition,
+      { fontSize: 14 }
+    );
+    yPosition += 5;
 
     if (medicamentos.length === 0) {
       doc.setFontSize(9);
@@ -250,7 +372,7 @@ export class ReportService {
       doc.text('Nenhum medicamento prescrito', 20, yPosition);
     } else {
       medicamentos.forEach((medicamento, index) => {
-        yPosition = this.checkPageBreak(doc, yPosition, 60);
+        yPosition = this.pdfBuilder.checkPageBreak(doc, yPosition, 60);
 
         doc.setFontSize(11);
         doc.setFont('helvetica', 'bold');
@@ -272,18 +394,17 @@ export class ReportService {
         );
         yPosition += 5;
 
-        // Status com cor
         if (medicamento.status) {
           const statusText = `Status: ${medicamento.status}`;
           if (medicamento.status === 'ATIVA') {
-            doc.setTextColor(34, 197, 94); // Verde
+            doc.setTextColor(34, 197, 94);
           } else if (medicamento.status === 'SUSPENSA') {
-            doc.setTextColor(234, 179, 8); // Amarelo
+            doc.setTextColor(234, 179, 8);
           } else if (medicamento.status === 'FINALIZADA') {
-            doc.setTextColor(156, 163, 175); // Cinza
+            doc.setTextColor(156, 163, 175);
           }
           doc.text(statusText, 20, yPosition);
-          doc.setTextColor(0, 0, 0); // Volta para preto
+          doc.setTextColor(0, 0, 0);
           yPosition += 5;
         }
 
@@ -297,7 +418,7 @@ export class ReportService {
         }
 
         doc.text(
-          `Inicio: ${this.formatDate(medicamento.dataInicio)}`,
+          `Inicio: ${this.pdfBuilder.formatDate(medicamento.dataInicio)}`,
           20,
           yPosition
         );
@@ -305,7 +426,7 @@ export class ReportService {
 
         if (medicamento.dataFim) {
           doc.text(
-            `Fim: ${this.formatDate(medicamento.dataFim)}`,
+            `Fim: ${this.pdfBuilder.formatDate(medicamento.dataFim)}`,
             20,
             yPosition
           );
@@ -316,15 +437,20 @@ export class ReportService {
       });
     }
 
-    // Nova pagina para anexos
-    doc.addPage();
-    yPosition = 20;
+    return yPosition;
+  }
 
-    // Anexos e Documentos
-    doc.setFontSize(14);
-    doc.setFont('helvetica', 'bold');
-    doc.text('ANEXOS E DOCUMENTOS', 20, yPosition);
-    yPosition += 10;
+  /**
+   * Adiciona anexos e documentos
+   */
+  private addAnexos(doc: any, anexos: Anexo[], yPosition: number): number {
+    yPosition = this.pdfBuilder.addSection(
+      doc,
+      'ANEXOS E DOCUMENTOS',
+      yPosition,
+      { fontSize: 14 }
+    );
+    yPosition += 5;
 
     if (anexos.length === 0) {
       doc.setFontSize(9);
@@ -332,19 +458,20 @@ export class ReportService {
       doc.text('Nenhum anexo registrado', 20, yPosition);
       yPosition += 10;
     } else {
-      // Separar anexos por tipo (Consultas e Exames)
       const anexosConsultas = anexos.filter((a) => a.consultaId);
       const anexosExames = anexos.filter((a) => a.exameId);
 
-      // Anexos de Consultas
       if (anexosConsultas.length > 0) {
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Anexos de Consultas', 20, yPosition);
-        yPosition += 8;
+        yPosition = this.pdfBuilder.addSection(
+          doc,
+          'Anexos de Consultas',
+          yPosition,
+          { fontSize: 12 }
+        );
+        yPosition += 3;
 
         anexosConsultas.forEach((anexo, index) => {
-          yPosition = this.checkPageBreak(doc, yPosition, 35);
+          yPosition = this.pdfBuilder.checkPageBreak(doc, yPosition, 35);
 
           doc.setFontSize(10);
           doc.setFont('helvetica', 'bold');
@@ -360,7 +487,7 @@ export class ReportService {
           doc.text(`Tamanho: ${anexo.tamanhoFormatado}`, 25, yPosition);
           yPosition += 5;
           doc.text(
-            `Enviado em: ${this.formatDate(anexo.createdAt)}`,
+            `Enviado em: ${this.pdfBuilder.formatDate(anexo.createdAt)}`,
             25,
             yPosition
           );
@@ -371,7 +498,6 @@ export class ReportService {
             yPosition += 5;
           }
 
-          // Nota para acesso ao arquivo
           doc.setFontSize(8);
           doc.setFont('helvetica', 'italic');
           doc.setTextColor(100, 100, 100);
@@ -385,17 +511,19 @@ export class ReportService {
         });
       }
 
-      // Anexos de Exames
       if (anexosExames.length > 0) {
-        yPosition = this.checkPageBreak(doc, yPosition, 15);
+        yPosition = this.pdfBuilder.checkPageBreak(doc, yPosition, 15);
 
-        doc.setFontSize(12);
-        doc.setFont('helvetica', 'bold');
-        doc.text('Anexos de Exames', 20, yPosition);
-        yPosition += 8;
+        yPosition = this.pdfBuilder.addSection(
+          doc,
+          'Anexos de Exames',
+          yPosition,
+          { fontSize: 12 }
+        );
+        yPosition += 3;
 
         anexosExames.forEach((anexo, index) => {
-          yPosition = this.checkPageBreak(doc, yPosition, 35);
+          yPosition = this.pdfBuilder.checkPageBreak(doc, yPosition, 35);
 
           doc.setFontSize(10);
           doc.setFont('helvetica', 'bold');
@@ -411,7 +539,7 @@ export class ReportService {
           doc.text(`Tamanho: ${anexo.tamanhoFormatado}`, 25, yPosition);
           yPosition += 5;
           doc.text(
-            `Enviado em: ${this.formatDate(anexo.createdAt)}`,
+            `Enviado em: ${this.pdfBuilder.formatDate(anexo.createdAt)}`,
             25,
             yPosition
           );
@@ -422,7 +550,6 @@ export class ReportService {
             yPosition += 5;
           }
 
-          // Nota para acesso ao arquivo
           doc.setFontSize(8);
           doc.setFont('helvetica', 'italic');
           doc.setTextColor(100, 100, 100);
@@ -437,45 +564,13 @@ export class ReportService {
       }
     }
 
-    // Rodape com data de geracao
-    const totalPages = doc.getNumberOfPages();
-    for (let i = 1; i <= totalPages; i++) {
-      doc.setPage(i);
-      doc.setFontSize(8);
-      doc.setFont('helvetica', 'italic');
-      doc.text(`Gerado em: ${new Date().toLocaleString('pt-BR')}`, 20, 285);
-      doc.text(`Pagina ${i} de ${totalPages}`, 170, 285);
-    }
-
-    // Salvar PDF
-    const fileName = `prontuario_${
-      prontuario.residente?.nome || 'paciente'
-    }_${new Date().getTime()}.pdf`;
-    doc.save(fileName);
-  }
-
-  private checkPageBreak(
-    doc: jsPDF,
-    yPosition: number,
-    requiredSpace: number
-  ): number {
-    if (yPosition + requiredSpace > 280) {
-      doc.addPage();
-      return 20;
-    }
     return yPosition;
-  }
-
-  private formatDate(date: any): string {
-    if (!date) return 'N/A';
-    const d = new Date(date);
-    return d.toLocaleDateString('pt-BR');
   }
 }
 
-// Servico de geracao de relatorios PDF
-// Utiliza jsPDF para criar documentos formatados
-// Gera relatorios completos de prontuarios eletronicos
+// Servico especializado para relatorios de prontuarios eletronicos
+// Contem logica especifica para documentos medicos e de saude
+// Estende o servico base de relatorios com funcionalidades customizadas
 //    __  ____ ____ _  _
 //  / _\/ ___) ___) )( \
 // /    \___ \___ ) \/ (

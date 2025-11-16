@@ -16,23 +16,6 @@
         (ngSubmit)="onSubmit()"
         class="medicamento-form"
       >
-        <!-- ID do Profissional -->
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>ID do Profissional</mat-label>
-          <input
-            matInput
-            type="number"
-            formControlName="profissionalId"
-            placeholder="Digite o ID do profissional"
-          />
-          <mat-icon matSuffix>badge</mat-icon>
-          <mat-error
-            *ngIf="medicamentoForm.get('profissionalId')?.hasError('required')"
-          >
-            {{ getErrorMessage("profissionalId") }}
-          </mat-error>
-        </mat-form-field>
-
         <!-- Nome do Medicamento -->
         <mat-form-field appearance="outline" class="full-width">
           <mat-label>Nome do Medicamento</mat-label>

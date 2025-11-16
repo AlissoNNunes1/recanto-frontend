@@ -12,6 +12,8 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatTabsModule } from '@angular/material/tabs';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnexosPreviewComponent } from '../../anexos-preview/anexos-preview.component';
+import { Anexo, AnexosService } from '../../services/anexos.service';
+import { ProntuarioReportService } from '../../services/reports';
 import { ConfirmDialogComponent } from '../../shared/confirm-dialog/confirm-dialog.component';
 import {
   Consulta,
@@ -20,7 +22,6 @@ import {
   ProntuarioEletronico,
 } from '../prontuario';
 import { ProntuariosService } from '../prontuarios.service';
-import { ReportService } from '../report.service';
 
 @Component({
   selector: 'app-prontuario-detail',
@@ -47,6 +48,7 @@ export class ProntuarioDetailComponent implements OnInit {
   consultas: Consulta[] = [];
   exames: Exame[] = [];
   medicamentos: MedicamentoPrescrito[] = [];
+  anexos: Anexo[] = [];
 
   loading = true;
   error: string | null = null;
@@ -57,7 +59,8 @@ export class ProntuarioDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     private prontuariosService: ProntuariosService,
-    private reportService: ReportService,
+    private reportService: ProntuarioReportService,
+    private anexosService: AnexosService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
     @Inject(PLATFORM_ID) platformId: Object
@@ -86,6 +89,7 @@ export class ProntuarioDetailComponent implements OnInit {
         this.loadConsultas(id);
         this.loadExames(id);
         this.loadMedicamentos(id);
+        this.loadAnexos(id);
         this.loading = false;
       },
       error: (error) => {
@@ -125,6 +129,47 @@ export class ProntuarioDetailComponent implements OnInit {
       },
       error: (error) => {
         console.error('Erro ao carregar medicamentos:', error);
+      },
+    });
+  }
+
+  loadAnexos(prontuarioId: number): void {
+    // Carregar anexos de todas as consultas e exames do prontuario
+    this.anexos = [];
+
+    // Carregar anexos das consultas
+    this.prontuariosService.getConsultas(prontuarioId).subscribe({
+      next: (consultas) => {
+        consultas.forEach((consulta) => {
+          if (consulta.id) {
+            this.anexosService.listarPorConsulta(consulta.id).subscribe({
+              next: (anexos: Anexo[]) => {
+                this.anexos = [...this.anexos, ...anexos];
+              },
+              error: (error: any) => {
+                console.error('Erro ao carregar anexos da consulta:', error);
+              },
+            });
+          }
+        });
+      },
+    });
+
+    // Carregar anexos dos exames
+    this.prontuariosService.getExames(prontuarioId).subscribe({
+      next: (exames) => {
+        exames.forEach((exame) => {
+          if (exame.id) {
+            this.anexosService.listarPorExame(exame.id).subscribe({
+              next: (anexos: Anexo[]) => {
+                this.anexos = [...this.anexos, ...anexos];
+              },
+              error: (error: any) => {
+                console.error('Erro ao carregar anexos do exame:', error);
+              },
+            });
+          }
+        });
       },
     });
   }
@@ -308,7 +353,8 @@ export class ProntuarioDetailComponent implements OnInit {
         this.prontuario,
         this.consultas,
         this.exames,
-        this.medicamentos
+        this.medicamentos,
+        this.anexos
       );
     }
   }
