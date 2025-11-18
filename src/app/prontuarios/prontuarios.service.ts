@@ -1,7 +1,8 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { shareReplay, tap } from 'rxjs/operators';
 import {
   Consulta,
   ConsultaCreate,
@@ -19,6 +20,7 @@ import {
   ProntuariosFiltro,
   ProntuarioUpdate,
 } from './prontuario';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -26,9 +28,13 @@ import {
 export class ProntuariosService {
   private apiUrl = '/api/v1/prontuarios';
   private isBrowser: boolean;
+  private cache$ = new BehaviorSubject<ProntuarioEletronico[]>([]);
+  private cacheTime = 0;
+  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutos para dados medicos
 
   constructor(
     private http: HttpClient,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -38,11 +44,17 @@ export class ProntuariosService {
     if (!this.isBrowser) {
       return { headers: new HttpHeaders() };
     }
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
     return { headers };
+  }
+
+  // Invalidar cache
+  invalidarCache(): void {
+    this.cache$.next([]);
+    this.cacheTime = 0;
   }
 
   // ========== PRONTUÁRIOS ==========
@@ -61,7 +73,13 @@ export class ProntuariosService {
     return this.http.get<PaginacaoResponse<ProntuarioEletronico>>(this.apiUrl, {
       ...this.getHttpOptions(),
       params,
-    });
+    }).pipe(
+      tap((response) => {
+        this.cache$.next(response.data);
+        this.cacheTime = Date.now();
+      }),
+      shareReplay(1)
+    );
   }
 
   getProntuario(id: number): Observable<ProntuarioEletronico> {
@@ -87,6 +105,8 @@ export class ProntuariosService {
       this.apiUrl,
       prontuario,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache())
     );
   }
 
@@ -98,6 +118,8 @@ export class ProntuariosService {
       `${this.apiUrl}/${id}`,
       prontuario,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache())
     );
   }
 
@@ -135,6 +157,8 @@ export class ProntuariosService {
       `${this.apiUrl}/${prontuarioId}/consultas`,
       consulta,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache())
     );
   }
 
@@ -146,6 +170,8 @@ export class ProntuariosService {
       `${this.apiUrl}/consultas/${consultaId}`,
       consulta,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache())
     );
   }
 
@@ -157,6 +183,8 @@ export class ProntuariosService {
       `${this.apiUrl}/consultas/${consultaId}/realizar`,
       dadosAtualizacao,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache())
     );
   }
 
@@ -186,6 +214,8 @@ export class ProntuariosService {
       `${this.apiUrl}/${prontuarioId}/exames`,
       exame,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache())
     );
   }
 
@@ -194,6 +224,8 @@ export class ProntuariosService {
       `${this.apiUrl}/exames/${exameId}`,
       exame,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache())
     );
   }
 
@@ -231,6 +263,8 @@ export class ProntuariosService {
       `${this.apiUrl}/${prontuarioId}/medicamentos`,
       medicamento,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache())
     );
   }
 
@@ -242,6 +276,8 @@ export class ProntuariosService {
       `${this.apiUrl}/medicamentos/${medicamentoId}`,
       medicamento,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache())
     );
   }
 

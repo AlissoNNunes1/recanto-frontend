@@ -6,6 +6,7 @@ import {
   Component,
   Inject,
   OnInit,
+  OnDestroy,
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
@@ -21,7 +22,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ContentService } from '../../services/content.service';
+import { AuthService } from '../../auth/auth.service';
 import {
   PaginacaoResponse,
   ProntuarioEletronico,
@@ -49,12 +53,13 @@ import { ProntuariosService } from '../prontuarios.service';
   templateUrl: './prontuarios.component.html',
   styleUrls: ['./prontuarios.component.css'],
 })
-export class ProntuariosComponent implements OnInit, AfterViewInit {
+export class ProntuariosComponent implements OnInit, AfterViewInit, OnDestroy {
   prontuarios: ProntuarioEletronico[] = [];
   dataSource = new MatTableDataSource<ProntuarioEletronico>(this.prontuarios);
   selection = new SelectionModel<ProntuarioEletronico>(true, []);
   isAdmin: boolean = false;
   private isBrowser: boolean;
+  private unsubscribe$ = new Subject<void>();
 
   // Filtros
   filtroNome: string = '';
@@ -72,6 +77,7 @@ export class ProntuariosComponent implements OnInit, AfterViewInit {
 
   constructor(
     private prontuariosService: ProntuariosService,
+    private authService: AuthService,
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
     private contentService: ContentService,
@@ -83,17 +89,24 @@ export class ProntuariosComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.isBrowser) {
-      this.isAdmin = localStorage.getItem('role') === 'admin';
+      this.isAdmin = this.authService.isAdminRole();
     }
     this.loadProntuarios();
   }
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
-    this.paginator.page.subscribe(() => {
+    this.paginator.page.pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe(() => {
       this.currentPage = this.paginator.pageIndex + 1;
       this.loadProntuarios();
     });
+  }
+
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   announceSortChange(sortState: Sort) {
@@ -120,14 +133,16 @@ export class ProntuariosComponent implements OnInit, AfterViewInit {
       filtros.status = this.filtroStatus;
     }
 
-    this.prontuariosService.getProntuarios(filtros).subscribe({
+    this.prontuariosService.getProntuarios(filtros).pipe(
+      takeUntil(this.unsubscribe$)
+    ).subscribe({
       next: (response: PaginacaoResponse<ProntuarioEletronico>) => {
         this.prontuarios = response.data;
         this.dataSource.data = this.prontuarios;
         this.totalItems = response.pageInfo.totalItems;
       },
       error: (error) => {
-        console.error('Erro ao carregar prontuários:', error);
+        console.error('Erro ao carregar prontuarios:', error);
       },
     });
   }
