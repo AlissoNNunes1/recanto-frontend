@@ -92,13 +92,15 @@ export class FuncionariosService {
     // Se cache valido, retornar instantaneamente
     if (
       this.cache$.getValue().length &&
-      (agora - this.cacheTime) < this.CACHE_DURATION
+      agora - this.cacheTime < this.CACHE_DURATION
     ) {
       console.log('[FuncionariosService] Retornando do cache de memoria');
       return this.cache$.asObservable();
     }
 
-    console.log('[FuncionariosService] Fazendo requisicao nova (cache expirado)');
+    console.log(
+      '[FuncionariosService] Fazendo requisicao nova (cache expirado)'
+    );
 
     const filtros: FuncionarioFilterDto = {
       page: 1,
@@ -106,22 +108,24 @@ export class FuncionariosService {
     };
 
     return new Observable((observer) => {
-      this.listarFuncionarios(filtros).pipe(
-        map(response => response.data),
-        tap((data) => {
-          // Atualizar cache em memoria
-          this.cache$.next(data);
-          this.cacheTime = Date.now();
-          console.log('[FuncionariosService] Cache atualizado');
-        }),
-        shareReplay(1)
-      ).subscribe({
-        next: (funcionarios) => {
-          observer.next(funcionarios);
-          observer.complete();
-        },
-        error: (error) => observer.error(error),
-      });
+      this.listarFuncionarios(filtros)
+        .pipe(
+          map((response) => response.data),
+          tap((data) => {
+            // Atualizar cache em memoria
+            this.cache$.next(data);
+            this.cacheTime = Date.now();
+            console.log('[FuncionariosService] Cache atualizado');
+          }),
+          shareReplay(1)
+        )
+        .subscribe({
+          next: (funcionarios) => {
+            observer.next(funcionarios);
+            observer.complete();
+          },
+          error: (error) => observer.error(error),
+        });
     });
   }
 
@@ -133,35 +137,34 @@ export class FuncionariosService {
   }
 
   createFuncionario(funcionario: FuncionarioCreate): Observable<Funcionario> {
-    return this.http.post<Funcionario>(
-      this.apiUrl,
-      funcionario,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache()) // Invalidar cache ao criar
-    );
+    return this.http
+      .post<Funcionario>(this.apiUrl, funcionario, this.getHttpOptions())
+      .pipe(
+        tap(() => this.invalidarCache()) // Invalidar cache ao criar
+      );
   }
 
   updateFuncionario(
     id: number,
     funcionario: FuncionarioUpdate
   ): Observable<Funcionario> {
-    return this.http.put<Funcionario>(
-      `${this.apiUrl}/${id}`,
-      funcionario,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache()) // Invalidar cache ao atualizar
-    );
+    return this.http
+      .put<Funcionario>(
+        `${this.apiUrl}/${id}`,
+        funcionario,
+        this.getHttpOptions()
+      )
+      .pipe(
+        tap(() => this.invalidarCache()) // Invalidar cache ao atualizar
+      );
   }
 
   deleteFuncionario(id: number): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiUrl}/${id}`,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache()) // Invalidar cache ao deletar
-    );
+    return this.http
+      .delete<void>(`${this.apiUrl}/${id}`, this.getHttpOptions())
+      .pipe(
+        tap(() => this.invalidarCache()) // Invalidar cache ao deletar
+      );
   }
 
   // Metodo para invalidar cache manualmente

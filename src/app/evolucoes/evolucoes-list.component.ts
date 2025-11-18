@@ -107,7 +107,9 @@ export class EvolucoesListComponent implements OnInit {
       error: (error: any) => {
         console.error('Erro ao carregar evolucoes:', error);
         this.snackBar.open(
-          `Erro ao carregar evolucoes: ${error.error?.message || error.message}`,
+          `Erro ao carregar evolucoes: ${
+            error.error?.message || error.message
+          }`,
           'Fechar',
           { duration: 5000 }
         );

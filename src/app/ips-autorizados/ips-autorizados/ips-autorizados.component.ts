@@ -2,8 +2,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   Component,
   Inject,
-  OnInit,
   OnDestroy,
+  OnInit,
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
@@ -20,11 +20,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { AuthService } from '../../auth/auth.service';
 import { AddIpDialogComponent } from '../add-ip-dialog/add-ip-dialog.component';
 import { EditIpDialogComponent } from '../edit-ip-dialog/edit-ip-dialog.component';
 import { IPAutorizado } from '../ip-autorizado';
 import { IpsAutorizadosService } from '../ips-autorizados.service';
-import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-ips-autorizados',
@@ -95,17 +95,18 @@ export class IpsAutorizadosComponent implements OnInit, OnDestroy {
   }
 
   loadIPs(): void {
-    this.ipsService.listarIPs(1, 100).pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe({
-      next: (response) => {
-        this.ips = response.data;
-        this.dataSource.data = this.ips;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar IPs autorizados:', error);
-      },
-    });
+    this.ipsService
+      .listarIPs(1, 100)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (response) => {
+          this.ips = response.data;
+          this.dataSource.data = this.ips;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar IPs autorizados:', error);
+        },
+      });
   }
 
   applyFilter(event: Event): void {
@@ -119,18 +120,20 @@ export class IpsAutorizadosComponent implements OnInit, OnDestroy {
       panelClass: 'responsive-dialog',
     });
 
-    dialogRef.afterClosed().pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe((result) => {
-      if (result) {
-        this.ipsService.createIP(result).pipe(
-          takeUntil(this.unsubscribe$)
-        ).subscribe({
-          next: () => this.loadIPs(),
-          error: (error) => console.error('Erro ao criar IP:', error),
-        });
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((result) => {
+        if (result) {
+          this.ipsService
+            .createIP(result)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+              next: () => this.loadIPs(),
+              error: (error) => console.error('Erro ao criar IP:', error),
+            });
+        }
+      });
   }
 
   editIP(ip: IPAutorizado): void {
@@ -140,28 +143,31 @@ export class IpsAutorizadosComponent implements OnInit, OnDestroy {
       panelClass: 'responsive-dialog',
     });
 
-    dialogRef.afterClosed().pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe((result) => {
-      if (result) {
-        this.ipsService.updateIP(ip.id, result).pipe(
-          takeUntil(this.unsubscribe$)
-        ).subscribe({
-          next: () => this.loadIPs(),
-          error: (error) => console.error('Erro ao atualizar IP:', error),
-        });
-      }
-    });
+    dialogRef
+      .afterClosed()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((result) => {
+        if (result) {
+          this.ipsService
+            .updateIP(ip.id, result)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+              next: () => this.loadIPs(),
+              error: (error) => console.error('Erro ao atualizar IP:', error),
+            });
+        }
+      });
   }
 
   deleteIP(id: number, ip: string): void {
     if (confirm(`Tem certeza que deseja excluir o IP ${ip}?`)) {
-      this.ipsService.deleteIP(id).pipe(
-        takeUntil(this.unsubscribe$)
-      ).subscribe({
-        next: () => this.loadIPs(),
-        error: (error) => console.error('Erro ao excluir IP:', error),
-      });
+      this.ipsService
+        .deleteIP(id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+          next: () => this.loadIPs(),
+          error: (error) => console.error('Erro ao excluir IP:', error),
+        });
     }
   }
 

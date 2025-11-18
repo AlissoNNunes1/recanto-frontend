@@ -4,8 +4,8 @@ import { CommonModule, SlicePipe, isPlatformBrowser } from '@angular/common';
 import {
   Component,
   Inject,
-  OnInit,
   OnDestroy,
+  OnInit,
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
@@ -145,7 +145,8 @@ export class ResidentsComponent implements OnInit, OnDestroy {
   }
 
   private loadResidentsFromService(): void {
-    this.residentsService.getResidents()
+    this.residentsService
+      .getResidents()
       .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
       .subscribe({
         next: (residents) => {
@@ -187,12 +188,14 @@ export class ResidentsComponent implements OnInit, OnDestroy {
       panelClass: 'responsive-dialog',
     });
 
-    dialogRef.afterClosed()
+    dialogRef
+      .afterClosed()
       .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
       .subscribe((result) => {
         if (result) {
           this.isLoading = true;
-          this.residentsService.createResident(result)
+          this.residentsService
+            .createResident(result)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe({
               next: () => this.refreshData(),
@@ -212,7 +215,8 @@ export class ResidentsComponent implements OnInit, OnDestroy {
       'Tem certeza que deseja deletar este residente? Esta ação não pode ser desfeita.';
     if (confirm(confirmMessage)) {
       this.isLoading = true;
-      this.residentsService.deleteResident(id)
+      this.residentsService
+        .deleteResident(id)
         .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
         .subscribe({
           next: () => this.refreshData(),
@@ -234,7 +238,8 @@ export class ResidentsComponent implements OnInit, OnDestroy {
       panelClass: 'responsive-dialog',
     });
 
-    dialogRef.afterClosed()
+    dialogRef
+      .afterClosed()
       .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
       .subscribe((result) => {
         if (result) {

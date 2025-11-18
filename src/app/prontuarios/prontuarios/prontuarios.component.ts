@@ -5,8 +5,8 @@ import {
   AfterViewInit,
   Component,
   Inject,
-  OnInit,
   OnDestroy,
+  OnInit,
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
@@ -24,8 +24,8 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ContentService } from '../../services/content.service';
 import { AuthService } from '../../auth/auth.service';
+import { ContentService } from '../../services/content.service';
 import {
   PaginacaoResponse,
   ProntuarioEletronico,
@@ -96,9 +96,7 @@ export class ProntuariosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
-    this.paginator.page.pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe(() => {
+    this.paginator.page.pipe(takeUntil(this.unsubscribe$)).subscribe(() => {
       this.currentPage = this.paginator.pageIndex + 1;
       this.loadProntuarios();
     });
@@ -133,18 +131,19 @@ export class ProntuariosComponent implements OnInit, AfterViewInit, OnDestroy {
       filtros.status = this.filtroStatus;
     }
 
-    this.prontuariosService.getProntuarios(filtros).pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe({
-      next: (response: PaginacaoResponse<ProntuarioEletronico>) => {
-        this.prontuarios = response.data;
-        this.dataSource.data = this.prontuarios;
-        this.totalItems = response.pageInfo.totalItems;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar prontuarios:', error);
-      },
-    });
+    this.prontuariosService
+      .getProntuarios(filtros)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (response: PaginacaoResponse<ProntuarioEletronico>) => {
+          this.prontuarios = response.data;
+          this.dataSource.data = this.prontuarios;
+          this.totalItems = response.pageInfo.totalItems;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar prontuarios:', error);
+        },
+      });
   }
 
   applyFilter(): void {

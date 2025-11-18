@@ -1,12 +1,17 @@
+import {
+  HTTP_INTERCEPTORS,
+  provideHttpClient,
+  withFetch,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withFetch, HTTP_INTERCEPTORS, withInterceptorsFromDi} from '@angular/common/http';
 import { routes } from './app.routes';
 
-import { provideClientHydration } from '@angular/platform-browser';
-import { AuthInterceptor } from './auth/auth-inteceptor.service'
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
+import { provideClientHydration } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { AuthInterceptor } from './auth/auth-inteceptor.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -24,9 +29,9 @@ export const appConfig: ApplicationConfig = {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
-      multi: true
-    }
-  ]
+      multi: true,
+    },
+  ],
 };
 
 // Configuracao global da aplicacao

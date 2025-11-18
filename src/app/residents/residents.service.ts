@@ -54,7 +54,7 @@ export class ResidentsService {
     // Se cache valido, retornar instantaneamente
     if (
       this.cache$.getValue().length &&
-      (agora - this.cacheTime) < this.CACHE_DURATION
+      agora - this.cacheTime < this.CACHE_DURATION
     ) {
       console.log('[ResidentsService] Retornando do cache de memoria');
       return this.cache$.asObservable();
@@ -106,32 +106,27 @@ export class ResidentsService {
   }
 
   createResident(resident: ResidentCreate): Observable<Resident> {
-    return this.http.post<Resident>(
-      this.apiUrl,
-      resident,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache()) // Invalidar cache ao criar
-    );
+    return this.http
+      .post<Resident>(this.apiUrl, resident, this.getHttpOptions())
+      .pipe(
+        tap(() => this.invalidarCache()) // Invalidar cache ao criar
+      );
   }
 
   updateResident(id: number, resident: ResidentUpdate): Observable<Resident> {
-    return this.http.put<Resident>(
-      `${this.apiUrl}/${id}`,
-      resident,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache()) // Invalidar cache ao atualizar
-    );
+    return this.http
+      .put<Resident>(`${this.apiUrl}/${id}`, resident, this.getHttpOptions())
+      .pipe(
+        tap(() => this.invalidarCache()) // Invalidar cache ao atualizar
+      );
   }
 
   deleteResident(id: number): Observable<Message> {
-    return this.http.delete<Message>(
-      `${this.apiUrl}/${id}`,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache()) // Invalidar cache ao deletar
-    );
+    return this.http
+      .delete<Message>(`${this.apiUrl}/${id}`, this.getHttpOptions())
+      .pipe(
+        tap(() => this.invalidarCache()) // Invalidar cache ao deletar
+      );
   }
 
   // Metodo para invalidar cache manualmente

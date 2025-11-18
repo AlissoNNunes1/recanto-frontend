@@ -35,7 +35,7 @@ export class DashboardService {
     // Se temos cache valido, retornar do cache
     const agora = Date.now();
     const cached = this.dashboardCache$.getValue();
-    
+
     if (cached && (agora - this.cacheTime) < this.CACHE_DURATION) {
       console.log('Retornando dashboard do cache');
       return this.dashboardCache$.asObservable().pipe(
@@ -44,7 +44,7 @@ export class DashboardService {
     }
 
     console.log('Carregando dashboard da API (cache expirado ou primeira carga)');
-    
+
     const options = this.getHttpOptions();
 
     // Criar parametros de query para cada endpoint

@@ -2,8 +2,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   Component,
   Inject,
-  OnInit,
   OnDestroy,
+  OnInit,
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
@@ -20,9 +20,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { AuthService } from '../../auth/auth.service';
 import { Medicamento } from '../medicamento';
 import { MedicamentosService } from '../medicamentos.service';
-import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-medicamentos',
@@ -96,17 +96,18 @@ export class MedicamentosComponent implements OnInit, OnDestroy {
   }
 
   loadMedicamentos(): void {
-    this.medicamentosService.listarMedicamentos(1, 100).pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe({
-      next: (response) => {
-        this.medicamentos = response.data;
-        this.dataSource.data = this.medicamentos;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar medicamentos:', error);
-      },
-    });
+    this.medicamentosService
+      .listarMedicamentos(1, 100)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (response) => {
+          this.medicamentos = response.data;
+          this.dataSource.data = this.medicamentos;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar medicamentos:', error);
+        },
+      });
   }
 
   applyFilter(event: Event): void {
@@ -126,31 +127,36 @@ export class MedicamentosComponent implements OnInit, OnDestroy {
 
   deleteMedicamento(id: number, nome: string): void {
     if (confirm(`Tem certeza que deseja excluir o medicamento ${nome}?`)) {
-      this.medicamentosService.deleteMedicamento(id).pipe(
-        takeUntil(this.unsubscribe$)
-      ).subscribe({
-        next: () => this.loadMedicamentos(),
-        error: (error) => console.error('Erro ao excluir medicamento:', error),
-      });
+      this.medicamentosService
+        .deleteMedicamento(id)
+        .pipe(takeUntil(this.unsubscribe$))
+        .subscribe({
+          next: () => this.loadMedicamentos(),
+          error: (error) =>
+            console.error('Erro ao excluir medicamento:', error),
+        });
     }
   }
 
   deactivateMedicamento(id: number): void {
-    this.medicamentosService.deactivateMedicamento(id).pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe({
-      next: () => this.loadMedicamentos(),
-      error: (error) => console.error('Erro ao desativar medicamento:', error),
-    });
+    this.medicamentosService
+      .deactivateMedicamento(id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: () => this.loadMedicamentos(),
+        error: (error) =>
+          console.error('Erro ao desativar medicamento:', error),
+      });
   }
 
   reactivateMedicamento(id: number): void {
-    this.medicamentosService.reactivateMedicamento(id).pipe(
-      takeUntil(this.unsubscribe$)
-    ).subscribe({
-      next: () => this.loadMedicamentos(),
-      error: (error) => console.error('Erro ao reativar medicamento:', error),
-    });
+    this.medicamentosService
+      .reactivateMedicamento(id)
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: () => this.loadMedicamentos(),
+        error: (error) => console.error('Erro ao reativar medicamento:', error),
+      });
   }
 
   getControlledClass(controlado: boolean): string {

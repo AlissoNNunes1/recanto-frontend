@@ -1,5 +1,11 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
+import {
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -11,13 +17,13 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 import {
   AtividadeRecente,
   CardStats,
   DashboardStats,
 } from '../services/dashboard/dashboard';
 import { DashboardService } from '../services/dashboard/dashboard.service';
-import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -81,7 +87,8 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   loadDashboard(): void {
     this.loading = true;
-    this.dashboardService.getDashboardStats()
+    this.dashboardService
+      .getDashboardStats()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
         next: (stats) => {

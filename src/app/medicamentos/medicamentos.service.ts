@@ -3,13 +3,13 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { shareReplay, tap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 import {
   Medicamento,
   MedicamentoCreate,
   MedicamentoUpdate,
   PaginatedResponse,
 } from './medicamento';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -77,16 +77,18 @@ export class MedicamentosService {
       }
     }
 
-    return this.http.get<PaginatedResponse<Medicamento>>(this.apiUrl, {
-      ...this.getHttpOptions(),
-      params,
-    }).pipe(
-      tap((response) => {
-        this.cache$.next(response.data);
-        this.cacheTime = Date.now();
-      }),
-      shareReplay(1)
-    );
+    return this.http
+      .get<PaginatedResponse<Medicamento>>(this.apiUrl, {
+        ...this.getHttpOptions(),
+        params,
+      })
+      .pipe(
+        tap((response) => {
+          this.cache$.next(response.data);
+          this.cacheTime = Date.now();
+        }),
+        shareReplay(1)
+      );
   }
 
   // Obter medicamento por ID
@@ -99,52 +101,48 @@ export class MedicamentosService {
 
   // Criar novo medicamento
   createMedicamento(medicamento: MedicamentoCreate): Observable<Medicamento> {
-    return this.http.post<Medicamento>(this.apiUrl, medicamento, this.getHttpOptions()).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .post<Medicamento>(this.apiUrl, medicamento, this.getHttpOptions())
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   // Atualizar medicamento
-  updateMedicamento(id: number, medicamento: MedicamentoUpdate): Observable<Medicamento> {
-    return this.http.put<Medicamento>(
-      `${this.apiUrl}/${id}`,
-      medicamento,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+  updateMedicamento(
+    id: number,
+    medicamento: MedicamentoUpdate
+  ): Observable<Medicamento> {
+    return this.http
+      .put<Medicamento>(
+        `${this.apiUrl}/${id}`,
+        medicamento,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   // Desativar medicamento
   deactivateMedicamento(id: number): Observable<void> {
-    return this.http.patch<void>(
-      `${this.apiUrl}/${id}/deactivate`,
-      {},
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .patch<void>(`${this.apiUrl}/${id}/deactivate`, {}, this.getHttpOptions())
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   // Reativar medicamento
   reactivateMedicamento(id: number): Observable<Medicamento> {
-    return this.http.patch<Medicamento>(
-      `${this.apiUrl}/${id}/reactivate`,
-      {},
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .patch<Medicamento>(
+        `${this.apiUrl}/${id}/reactivate`,
+        {},
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   // Deletar medicamento
   deleteMedicamento(id: number): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiUrl}/${id}`,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .delete<void>(`${this.apiUrl}/${id}`, this.getHttpOptions())
+      .pipe(tap(() => this.invalidarCache()));
   }
 }
 

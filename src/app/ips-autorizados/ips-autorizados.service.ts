@@ -3,13 +3,13 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { shareReplay, tap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 import {
   IPAutorizado,
   IPAutorizadoCreate,
   IPAutorizadoUpdate,
   PaginatedResponse,
 } from './ip-autorizado';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -55,16 +55,18 @@ export class IpsAutorizadosService {
       .set('page', page.toString())
       .set('limit', limit.toString());
 
-    return this.http.get<PaginatedResponse<IPAutorizado>>(this.apiUrl, {
-      ...this.getHttpOptions(),
-      params,
-    }).pipe(
-      tap((response) => {
-        this.cache$.next(response.data);
-        this.cacheTime = Date.now();
-      }),
-      shareReplay(1)
-    );
+    return this.http
+      .get<PaginatedResponse<IPAutorizado>>(this.apiUrl, {
+        ...this.getHttpOptions(),
+        params,
+      })
+      .pipe(
+        tap((response) => {
+          this.cache$.next(response.data);
+          this.cacheTime = Date.now();
+        }),
+        shareReplay(1)
+      );
   }
 
   // Obter IP por ID
@@ -77,30 +79,23 @@ export class IpsAutorizadosService {
 
   // Criar novo IP autorizado
   createIP(ip: IPAutorizadoCreate): Observable<IPAutorizado> {
-    return this.http.post<IPAutorizado>(this.apiUrl, ip, this.getHttpOptions()).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .post<IPAutorizado>(this.apiUrl, ip, this.getHttpOptions())
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   // Atualizar IP autorizado
   updateIP(id: number, ip: IPAutorizadoUpdate): Observable<IPAutorizado> {
-    return this.http.put<IPAutorizado>(
-      `${this.apiUrl}/${id}`,
-      ip,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .put<IPAutorizado>(`${this.apiUrl}/${id}`, ip, this.getHttpOptions())
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   // Deletar IP autorizado
   deleteIP(id: number): Observable<void> {
-    return this.http.delete<void>(
-      `${this.apiUrl}/${id}`,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .delete<void>(`${this.apiUrl}/${id}`, this.getHttpOptions())
+      .pipe(tap(() => this.invalidarCache()));
   }
 }
 

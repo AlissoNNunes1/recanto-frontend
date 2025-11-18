@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { shareReplay, tap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 import {
   Consulta,
   ConsultaCreate,
@@ -20,7 +21,6 @@ import {
   ProntuariosFiltro,
   ProntuarioUpdate,
 } from './prontuario';
-import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -70,16 +70,18 @@ export class ProntuariosService {
     if (filtros?.residenteNome)
       params = params.set('residenteNome', filtros.residenteNome);
 
-    return this.http.get<PaginacaoResponse<ProntuarioEletronico>>(this.apiUrl, {
-      ...this.getHttpOptions(),
-      params,
-    }).pipe(
-      tap((response) => {
-        this.cache$.next(response.data);
-        this.cacheTime = Date.now();
-      }),
-      shareReplay(1)
-    );
+    return this.http
+      .get<PaginacaoResponse<ProntuarioEletronico>>(this.apiUrl, {
+        ...this.getHttpOptions(),
+        params,
+      })
+      .pipe(
+        tap((response) => {
+          this.cache$.next(response.data);
+          this.cacheTime = Date.now();
+        }),
+        shareReplay(1)
+      );
   }
 
   getProntuario(id: number): Observable<ProntuarioEletronico> {
@@ -101,26 +103,26 @@ export class ProntuariosService {
   createProntuario(
     prontuario: ProntuarioCreate
   ): Observable<ProntuarioEletronico> {
-    return this.http.post<ProntuarioEletronico>(
-      this.apiUrl,
-      prontuario,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .post<ProntuarioEletronico>(
+        this.apiUrl,
+        prontuario,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   updateProntuario(
     id: number,
     prontuario: ProntuarioUpdate
   ): Observable<ProntuarioEletronico> {
-    return this.http.put<ProntuarioEletronico>(
-      `${this.apiUrl}/${id}`,
-      prontuario,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .put<ProntuarioEletronico>(
+        `${this.apiUrl}/${id}`,
+        prontuario,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   // ========== CONSULTAS ==========
@@ -153,39 +155,39 @@ export class ProntuariosService {
     prontuarioId: number,
     consulta: ConsultaCreate
   ): Observable<Consulta> {
-    return this.http.post<Consulta>(
-      `${this.apiUrl}/${prontuarioId}/consultas`,
-      consulta,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .post<Consulta>(
+        `${this.apiUrl}/${prontuarioId}/consultas`,
+        consulta,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   updateConsulta(
     consultaId: number,
     consulta: ConsultaUpdate
   ): Observable<Consulta> {
-    return this.http.put<Consulta>(
-      `${this.apiUrl}/consultas/${consultaId}`,
-      consulta,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .put<Consulta>(
+        `${this.apiUrl}/consultas/${consultaId}`,
+        consulta,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   realizarConsulta(
     consultaId: number,
     dadosAtualizacao: ConsultaUpdate
   ): Observable<Consulta> {
-    return this.http.put<Consulta>(
-      `${this.apiUrl}/consultas/${consultaId}/realizar`,
-      dadosAtualizacao,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .put<Consulta>(
+        `${this.apiUrl}/consultas/${consultaId}/realizar`,
+        dadosAtualizacao,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   // ========== EXAMES ==========
@@ -210,23 +212,23 @@ export class ProntuariosService {
   }
 
   createExame(prontuarioId: number, exame: ExameCreate): Observable<Exame> {
-    return this.http.post<Exame>(
-      `${this.apiUrl}/${prontuarioId}/exames`,
-      exame,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .post<Exame>(
+        `${this.apiUrl}/${prontuarioId}/exames`,
+        exame,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   updateExame(exameId: number, exame: Partial<ExameCreate>): Observable<Exame> {
-    return this.http.put<Exame>(
-      `${this.apiUrl}/exames/${exameId}`,
-      exame,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .put<Exame>(
+        `${this.apiUrl}/exames/${exameId}`,
+        exame,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   // ========== MEDICAMENTOS ==========
@@ -259,26 +261,26 @@ export class ProntuariosService {
     prontuarioId: number,
     medicamento: MedicamentoCreate
   ): Observable<MedicamentoPrescrito> {
-    return this.http.post<MedicamentoPrescrito>(
-      `${this.apiUrl}/${prontuarioId}/medicamentos`,
-      medicamento,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .post<MedicamentoPrescrito>(
+        `${this.apiUrl}/${prontuarioId}/medicamentos`,
+        medicamento,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   updateMedicamento(
     medicamentoId: number,
     medicamento: Partial<MedicamentoCreate>
   ): Observable<MedicamentoPrescrito> {
-    return this.http.put<MedicamentoPrescrito>(
-      `${this.apiUrl}/medicamentos/${medicamentoId}`,
-      medicamento,
-      this.getHttpOptions()
-    ).pipe(
-      tap(() => this.invalidarCache())
-    );
+    return this.http
+      .put<MedicamentoPrescrito>(
+        `${this.apiUrl}/medicamentos/${medicamentoId}`,
+        medicamento,
+        this.getHttpOptions()
+      )
+      .pipe(tap(() => this.invalidarCache()));
   }
 
   suspenderMedicamento(

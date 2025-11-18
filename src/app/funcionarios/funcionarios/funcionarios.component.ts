@@ -4,8 +4,8 @@ import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
   Component,
   Inject,
-  OnInit,
   OnDestroy,
+  OnInit,
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
@@ -151,7 +151,8 @@ export class FuncionariosComponent implements OnInit, OnDestroy {
   getFuncionarios(): void {
     const cacheKey = 'funcionarios';
     if (this.contentService.has(cacheKey)) {
-      this.contentService.get<Funcionario[]>(cacheKey)
+      this.contentService
+        .get<Funcionario[]>(cacheKey)
         .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
         .subscribe({
           next: (cachedFuncionarios) => {
@@ -162,7 +163,8 @@ export class FuncionariosComponent implements OnInit, OnDestroy {
           },
         });
     } else {
-      this.funcionariosService.getFuncionarios()
+      this.funcionariosService
+        .getFuncionarios()
         .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
         .subscribe((funcionarios) => {
           this.funcionarios = funcionarios;
@@ -174,11 +176,13 @@ export class FuncionariosComponent implements OnInit, OnDestroy {
 
   deleteFuncionario(id: number): void {
     if (confirm('Tem certeza que deseja excluir este funcionário?')) {
-      this.funcionariosService.deleteFuncionario(id)
+      this.funcionariosService
+        .deleteFuncionario(id)
         .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
         .subscribe({
           next: () => this.getFuncionarios(),
-          error: (error) => console.error('Erro ao excluir funcionário:', error),
+          error: (error) =>
+            console.error('Erro ao excluir funcionário:', error),
         });
     }
   }

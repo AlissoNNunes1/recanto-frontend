@@ -22,18 +22,18 @@ export class AuthService {
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
-    
+
     // Inicializa cache com valores do localStorage ao carregar
     // Crucial para manter estado apos F5 refresh
     if (this.isBrowser) {
       const token = localStorage.getItem('token');
       const role = localStorage.getItem('role');
       const nome = localStorage.getItem('nome');
-      
+
       if (token) this.currentToken$.next(token);
       if (role) this.currentRole$.next(role?.toUpperCase());
       if (nome) this.currentNome$.next(nome);
-      
+
       console.log('AuthService inicializado com cache:', {
         hasToken: !!token,
         role: role,
@@ -71,12 +71,12 @@ export class AuthService {
           if (response.newToken) {
             localStorage.setItem('newToken', response.newToken);
           }
-          
+
           // Atualiza cache em memória
           this.currentToken$.next(response.token);
           this.currentRole$.next(response.role);
           this.currentNome$.next(response.nome);
-          
+
           console.log('Login por dispositivo bem-sucedido');
         }
       }),
@@ -110,12 +110,12 @@ export class AuthService {
           if (response.newToken) {
             localStorage.setItem('newToken', response.newToken);
           }
-          
+
           // Atualiza cache em memória
           this.currentToken$.next(response.token);
           this.currentRole$.next(response.role);
           this.currentNome$.next(response.nome);
-          
+
           console.log('Login por credenciais bem-sucedido');
         }
       }),
@@ -144,7 +144,7 @@ export class AuthService {
 
   get isAdmin(): boolean {
     // Usa cache em memória primeiro (mais rápido)
-    const role = this.currentRole$.getValue() || 
+    const role = this.currentRole$.getValue() ||
                  (this.isBrowser ? localStorage.getItem('role') : null);
     return role?.toUpperCase() === 'ADMIN';
   }
@@ -163,7 +163,7 @@ export class AuthService {
    * Obtem role atual (nao null)
    */
   getRole(): string {
-    return this.currentRole$.getValue() || 
+    return this.currentRole$.getValue() ||
            (this.isBrowser ? localStorage.getItem('role') || 'FUNCIONARIO' : 'FUNCIONARIO');
   }
 
@@ -171,7 +171,7 @@ export class AuthService {
    * Obtem nome atual (nao null)
    */
   getNome(): string {
-    return this.currentNome$.getValue() || 
+    return this.currentNome$.getValue() ||
            (this.isBrowser ? localStorage.getItem('nome') || 'Usuario' : 'Usuario');
   }
 
@@ -202,7 +202,7 @@ export class AuthService {
             if (response.newToken) {
               localStorage.setItem('newToken', response.newToken);
             }
-            
+
             // Atualiza cache em memória
             this.currentToken$.next(response.token);
           }
@@ -219,12 +219,12 @@ export class AuthService {
       localStorage.removeItem('nome');
       localStorage.removeItem('usuarioId');
     }
-    
+
     // Limpa cache em memória
     this.currentToken$.next(null);
     this.currentRole$.next(null);
     this.currentNome$.next(null);
-    
+
     this.router.navigate(['/login']);
   }
 
@@ -232,7 +232,7 @@ export class AuthService {
     // Usa cache em memória primeiro (mais rápido)
     const token = this.currentToken$.getValue();
     if (token) return token;
-    
+
     // Se não tem em cache, busca do localStorage
     if (this.isBrowser) {
       const storedToken = localStorage.getItem('token');
@@ -241,7 +241,7 @@ export class AuthService {
         return storedToken;
       }
     }
-    
+
     return null;
   }
 
