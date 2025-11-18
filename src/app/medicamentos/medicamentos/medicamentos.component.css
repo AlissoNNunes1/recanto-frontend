@@ -1,0 +1,212 @@
+.medicamentos-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 600;
+  color: #1976d2;
+}
+
+.search-field {
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 20px;
+}
+
+.table-container {
+  overflow-x: auto;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th {
+  background: #f5f5f5;
+  font-weight: 600;
+  text-align: left;
+  padding: 16px;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+td {
+  padding: 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+tr:hover {
+  background: #fafafa;
+}
+
+.status-ativo {
+  background: #e8f5e9;
+  color: #2e7d32;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-inativo {
+  background: #ffebee;
+  color: #c62828;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.status-controlado {
+  color: #f57c00;
+  font-weight: 600;
+}
+
+.text-neutral {
+  color: #999;
+}
+
+.icon-controlado {
+  color: #f57c00;
+}
+
+mat-chip {
+  margin-right: 8px;
+}
+
+.forma-comprimido {
+  background: #e3f2fd;
+  color: #1976d2;
+}
+
+.forma-capsula {
+  background: #f3e5f5;
+  color: #7b1fa2;
+}
+
+.forma-solucao {
+  background: #e0f2f1;
+  color: #00796b;
+}
+
+.forma-suspensao {
+  background: #ede7f6;
+  color: #512da8;
+}
+
+.forma-injetavel {
+  background: #fce4ec;
+  color: #c2185b;
+}
+
+.forma-pomada,
+.forma-creme {
+  background: #fff3e0;
+  color: #e65100;
+}
+
+.forma-colirio {
+  background: #e0f2f1;
+  color: #00897b;
+}
+
+.forma-spray {
+  background: #f1f8e9;
+  color: #558b2f;
+}
+
+.forma-xarope {
+  background: #fce4ec;
+  color: #ad1457;
+}
+
+.forma-gotas {
+  background: #e0f2f1;
+  color: #00695c;
+}
+
+.forma-adesivo {
+  background: #fff9c4;
+  color: #9a7700;
+}
+
+.forma-outros {
+  background: #f0f0f0;
+  color: #616161;
+}
+
+button.action-btn-edit {
+  color: #1976d2;
+}
+
+button.action-btn-deactivate,
+button.action-btn-activate {
+  color: #f57c00;
+}
+
+button.action-btn-delete {
+  color: #d32f2f;
+}
+
+mat-paginator {
+  background: #f5f5f5;
+  border-top: 1px solid #e0e0e0;
+}
+
+@media (max-width: 768px) {
+  .medicamentos-container {
+    padding: 12px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .header h1 {
+    font-size: 20px;
+  }
+
+  .header button {
+    width: 100%;
+  }
+
+  .search-field {
+    max-width: 100%;
+  }
+
+  table {
+    font-size: 12px;
+  }
+
+  th,
+  td {
+    padding: 8px;
+  }
+
+  .displayedColumns {
+    font-size: 10px;
+  }
+}
+
+/*
+   __  ____ ____ _  _
+ / _\/ ___) ___) )( \
+/    \___ \___ ) \/ (
+\_/\_(____(____|____/
+*/
