@@ -68,6 +68,27 @@ td.mat-cell {
   text-align: center;
 }
 
+.acoes-header {
+  text-align: center;
+  width: 220px;
+}
+
+.acoes-cell {
+  text-align: center;
+  padding: 8px !important;
+}
+
+.acoes-buttons {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.acao-btn {
+  min-width: 40px;
+}
+
 mat-paginator {
   margin-top: 16px;
 }

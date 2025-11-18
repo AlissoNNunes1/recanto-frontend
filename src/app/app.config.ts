@@ -4,29 +4,23 @@ import { provideHttpClient, withFetch, HTTP_INTERCEPTORS, withInterceptorsFromDi
 import { routes } from './app.routes';
 
 import { provideClientHydration } from '@angular/platform-browser';
-import { AuthInterceptor } from './auth/auth-inteceptor.service' // Ajuste o caminho conforme necessário
+import { AuthInterceptor } from './auth/auth-inteceptor.service'
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { IMAGE_LOADER, ImageLoaderConfig } from '@angular/common';
-
-
-
 
 export const appConfig: ApplicationConfig = {
   providers: [
     {
-    provide: IMAGE_LOADER,
-    useValue: (config: ImageLoaderConfig) => {
-      return 'https://raw.githubusercontent.com/AlissoNNunes1/recanto-frontend/main/src/assets/${config.src}';
-
+      provide: IMAGE_LOADER,
+      useValue: (config: ImageLoaderConfig) => {
+        return 'https://raw.githubusercontent.com/AlissoNNunes1/recanto-frontend/main/src/assets/${config.src}';
+      },
     },
-  },
-    provideHttpClient(withInterceptorsFromDi()),
+    provideHttpClient(withInterceptorsFromDi(), withFetch()),
     provideAnimations(),
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(routes),
-    provideHttpClient(withFetch()),
     provideClientHydration(),
-
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
@@ -34,3 +28,11 @@ export const appConfig: ApplicationConfig = {
     }
   ]
 };
+
+// Configuracao global da aplicacao
+// Providers de HTTP, animacoes, routing, autenticacao
+// Hidratacao do cliente para SSR
+//    __  ____ ____ _  _
+//  / _\/ ___) ___) )( \
+// /    \___ \___ ) \/ (
+// \_/\_(____(____|____/

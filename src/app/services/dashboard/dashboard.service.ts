@@ -1,35 +1,50 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable, forkJoin, map } from 'rxjs';
+import { BehaviorSubject, Observable, forkJoin, map, shareReplay, tap } from 'rxjs';
 import { AtividadeRecente, DashboardStats } from './dashboard';
+import { AuthService } from '../../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
   private isBrowser: boolean;
+  private dashboardCache$ = new BehaviorSubject<DashboardStats | null>(null);
+  private cacheTime = 0;
+  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
 
   constructor(
     private http: HttpClient,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
   private getHttpOptions() {
-    if (!this.isBrowser) {
-      return { headers: new HttpHeaders() };
-    }
-    const token = localStorage.getItem('token');
+    const token = this.authService.getToken();
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
     return { headers };
   }
 
-  // Obter estatisticas do dashboard
+  // Obter estatisticas do dashboard (com cache)
   getDashboardStats(): Observable<DashboardStats> {
+    // Se temos cache valido, retornar do cache
+    const agora = Date.now();
+    const cached = this.dashboardCache$.getValue();
+    
+    if (cached && (agora - this.cacheTime) < this.CACHE_DURATION) {
+      console.log('Retornando dashboard do cache');
+      return this.dashboardCache$.asObservable().pipe(
+        map(stats => stats!)
+      );
+    }
+
+    console.log('Carregando dashboard da API (cache expirado ou primeira carga)');
+    
     const options = this.getHttpOptions();
 
     // Criar parametros de query para cada endpoint
@@ -95,8 +110,24 @@ export class DashboardService {
           },
         };
         return stats;
-      })
+      }),
+      tap((stats) => {
+        // Armazenar em cache
+        this.dashboardCache$.next(stats);
+        this.cacheTime = Date.now();
+        console.log('Dashboard cacheado por 5 minutos');
+      }),
+      shareReplay(1) // Compartilhar resultado entre multiplos subscribers
     );
+  }
+
+  /**
+   * Invalida cache manualmente (para apos criar/editar dados)
+   */
+  invalidateCache(): void {
+    this.dashboardCache$.next(null);
+    this.cacheTime = 0;
+    console.log('Cache do dashboard invalidado');
   }
 
   private contarAtivos(items: any[]): number {
@@ -141,8 +172,6 @@ export class DashboardService {
 }
 
 // Servico de dashboard administrativo
-// Agrega dados de multiplas APIs para estatisticas
-//    __  ____ ____ _  _
-//  / _\/ ___) ___) )( \
-// /    \___ \___ ) \/ (
-// \_/\_(____(____|____/
+// Agrega dados de multiplas APIs para estadisticas
+// Cache de 5 minutos para melhor performance
+// Usa token do AuthService ao inves de localStorage

@@ -140,21 +140,35 @@ export class SinaisVitaisListComponent implements OnInit {
 
   formatarPressao(sinalVital: SinalVital): string {
     if (sinalVital.pressaoSistolica && sinalVital.pressaoDiastolica) {
-      return `${sinalVital.pressaoSistolica}/${sinalVital.pressaoDiastolica}`;
+      const sistolica = Number(sinalVital.pressaoSistolica);
+      const diastolica = Number(sinalVital.pressaoDiastolica);
+      return `${sistolica}/${diastolica}`;
     }
     return '-';
   }
 
-  formatarTemperatura(temperatura?: number): string {
-    return temperatura ? `${temperatura.toFixed(1)} C` : '-';
+  formatarTemperatura(temperatura?: number | string): string {
+    if (temperatura) {
+      const temp = Number(temperatura);
+      return !isNaN(temp) ? `${temp.toFixed(1)} C` : '-';
+    }
+    return '-';
   }
 
-  formatarFrequencia(frequencia?: number): string {
-    return frequencia ? `${frequencia} bpm` : '-';
+  formatarFrequencia(frequencia?: number | string): string {
+    if (frequencia) {
+      const freq = Number(frequencia);
+      return !isNaN(freq) ? `${freq} bpm` : '-';
+    }
+    return '-';
   }
 
-  formatarSaturacao(saturacao?: number): string {
-    return saturacao ? `${saturacao}%` : '-';
+  formatarSaturacao(saturacao?: number | string): string {
+    if (saturacao) {
+      const sat = Number(saturacao);
+      return !isNaN(sat) ? `${sat}%` : '-';
+    }
+    return '-';
   }
 
   formatarData(data: Date): string {

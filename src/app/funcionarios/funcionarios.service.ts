@@ -1,7 +1,9 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, shareReplay, tap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 import {
   CreateUsuarioForFuncionarioDto,
   Funcionario,
@@ -19,20 +21,28 @@ export class FuncionariosService {
   private apiUrl = '/api/v1/funcionarios';
   private isBrowser: boolean;
 
+  // Cache em memoria com BehaviorSubject
+  private cache$ = new BehaviorSubject<Funcionario[]>([]);
+  private cacheTime = 0;
+  private readonly CACHE_DURATION = 5 * 60 * 1000; // 5 minutos
+
   constructor(
     private http: HttpClient,
+    private authService: AuthService,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
   }
 
   private getHttpOptions() {
-    console.log('Chamando getHttpOptions'); // Verifica se a função está sendo chamada
     if (!this.isBrowser) {
       return { headers: new HttpHeaders() };
     }
-    const token = localStorage.getItem('token');
-    console.log(`Token: ${token}`); // Deve mostrar o token no console
+    // Usar token do AuthService (em memoria) ao invez de localStorage
+    const token = this.authService.getToken();
+    if (!token) {
+      return { headers: new HttpHeaders() };
+    }
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
     });
@@ -75,17 +85,39 @@ export class FuncionariosService {
     });
   }
 
-  // Método de compatibilidade para código existente
+  // Metodo de compatibilidade para codigo existente com cache
   getFuncionarios(): Observable<Funcionario[]> {
+    const agora = Date.now();
+
+    // Se cache valido, retornar instantaneamente
+    if (
+      this.cache$.getValue().length &&
+      (agora - this.cacheTime) < this.CACHE_DURATION
+    ) {
+      console.log('[FuncionariosService] Retornando do cache de memoria');
+      return this.cache$.asObservable();
+    }
+
+    console.log('[FuncionariosService] Fazendo requisicao nova (cache expirado)');
+
     const filtros: FuncionarioFilterDto = {
       page: 1,
       limit: 100, // Buscar todos para compatibilidade
     };
 
     return new Observable((observer) => {
-      this.listarFuncionarios(filtros).subscribe({
-        next: (response) => {
-          observer.next(response.data);
+      this.listarFuncionarios(filtros).pipe(
+        map(response => response.data),
+        tap((data) => {
+          // Atualizar cache em memoria
+          this.cache$.next(data);
+          this.cacheTime = Date.now();
+          console.log('[FuncionariosService] Cache atualizado');
+        }),
+        shareReplay(1)
+      ).subscribe({
+        next: (funcionarios) => {
+          observer.next(funcionarios);
           observer.complete();
         },
         error: (error) => observer.error(error),
@@ -105,6 +137,8 @@ export class FuncionariosService {
       this.apiUrl,
       funcionario,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache()) // Invalidar cache ao criar
     );
   }
 
@@ -116,6 +150,8 @@ export class FuncionariosService {
       `${this.apiUrl}/${id}`,
       funcionario,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache()) // Invalidar cache ao atualizar
     );
   }
 
@@ -123,7 +159,16 @@ export class FuncionariosService {
     return this.http.delete<void>(
       `${this.apiUrl}/${id}`,
       this.getHttpOptions()
+    ).pipe(
+      tap(() => this.invalidarCache()) // Invalidar cache ao deletar
     );
+  }
+
+  // Metodo para invalidar cache manualmente
+  invalidarCache(): void {
+    this.cache$.next([]);
+    this.cacheTime = 0;
+    console.log('[FuncionariosService] Cache invalidado');
   }
 
   // Atribuir usuário a funcionário

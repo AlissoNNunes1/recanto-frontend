@@ -153,6 +153,12 @@ export class SinaisVitaisStatsComponent implements OnInit {
       });
   }
 
+  converterParaNumero(valor?: number | string): number | null {
+    if (valor === undefined || valor === null) return null;
+    const num = Number(valor);
+    return !isNaN(num) ? num : null;
+  }
+
   atualizarGraficos(): void {
     if (!this.estatisticas) return;
 
@@ -167,28 +173,28 @@ export class SinaisVitaisStatsComponent implements OnInit {
     // Atualizar grafico de pressao
     this.pressaoChartData.labels = labels;
     this.pressaoChartData.datasets[0].data = historico.map(
-      (sv) => sv.pressaoSistolica || null
+      (sv) => this.converterParaNumero(sv.pressaoSistolica)
     );
     this.pressaoChartData.datasets[1].data = historico.map(
-      (sv) => sv.pressaoDiastolica || null
+      (sv) => this.converterParaNumero(sv.pressaoDiastolica)
     );
 
     // Atualizar grafico de temperatura
     this.temperaturaChartData.labels = labels;
     this.temperaturaChartData.datasets[0].data = historico.map(
-      (sv) => sv.temperatura || null
+      (sv) => this.converterParaNumero(sv.temperatura)
     );
 
     // Atualizar grafico de frequencia cardiaca
     this.frequenciaChartData.labels = labels;
     this.frequenciaChartData.datasets[0].data = historico.map(
-      (sv) => sv.frequenciaCardiaca || null
+      (sv) => this.converterParaNumero(sv.frequenciaCardiaca)
     );
 
     // Atualizar grafico de saturacao
     this.saturacaoChartData.labels = labels;
     this.saturacaoChartData.datasets[0].data = historico.map(
-      (sv) => sv.saturacaoOxigenio || null
+      (sv) => this.converterParaNumero(sv.saturacaoOxigenio)
     );
   }
 

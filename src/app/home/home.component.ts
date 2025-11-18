@@ -1,5 +1,5 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { Component, Inject, OnInit, OnDestroy, PLATFORM_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -9,12 +9,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import {
   AtividadeRecente,
   CardStats,
   DashboardStats,
 } from '../services/dashboard/dashboard';
 import { DashboardService } from '../services/dashboard/dashboard.service';
+import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -33,10 +36,11 @@ import { DashboardService } from '../services/dashboard/dashboard.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css'],
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   role: string = '';
   nome: string = '';
   private isBrowser: boolean;
+  private unsubscribe$ = new Subject<void>();
   loading = false;
 
   // Dashboard data
@@ -47,6 +51,7 @@ export class HomeComponent implements OnInit {
   constructor(
     @Inject(PLATFORM_ID) platformId: Object,
     private dashboardService: DashboardService,
+    private authService: AuthService,
     private router: Router
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
@@ -54,33 +59,42 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     if (this.isBrowser) {
-      this.role = localStorage.getItem('role') || 'funcionario';
-      this.nome = localStorage.getItem('nome') || 'Usuario';
-      this.nome = this.nome.split(' ')[0];
+      // Usar AuthService ao inves de localStorage
+      this.role = this.authService.getRole();
+      this.nome = this.authService.getNome().split(' ')[0];
+
+      console.log('Home component inicializado com role:', this.role);
 
       // Carregar dashboard apenas para admin
-      if (this.role === 'admin') {
+      if (this.authService.isAdmin) {
         this.loadDashboard();
       }
     } else {
-      this.role = 'funcionario';
+      this.role = 'FUNCIONARIO';
     }
+  }
+
+  ngOnDestroy() {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
   }
 
   loadDashboard(): void {
     this.loading = true;
-    this.dashboardService.getDashboardStats().subscribe({
-      next: (stats) => {
-        this.dashboardStats = stats;
-        this.buildCards(stats);
-        this.atividadesRecentes = stats.auditoria.ultimasAtividades;
-        this.loading = false;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar dashboard:', error);
-        this.loading = false;
-      },
-    });
+    this.dashboardService.getDashboardStats()
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe({
+        next: (stats) => {
+          this.dashboardStats = stats;
+          this.buildCards(stats);
+          this.atividadesRecentes = stats.auditoria.ultimasAtividades;
+          this.loading = false;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar dashboard:', error);
+          this.loading = false;
+        },
+      });
   }
 
   buildCards(stats: DashboardStats): void {
@@ -208,3 +222,11 @@ export class HomeComponent implements OnInit {
     return `${days}d atras`;
   }
 }
+
+// Home component do dashboard
+// Exibe informacoes gerais para admin (residentes, funcionarios, usuarios)
+// Carrega dados dinamicamente via DashboardService
+//    __  ____ ____ _  _
+//  / _\/ ___) ___) )( \
+// /    \___ \___ ) \/ (
+// \_/\_(____(____|____/

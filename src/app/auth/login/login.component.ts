@@ -49,35 +49,28 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   loginAutomatico() {
+    // Tenta login automatico usando fingerprint do dispositivo
+    // Mais rapido do que fazer fetch externo para IP
     this.authService
-      .getPublicIp()
+      .loginByDevice()
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe({
-        next: (ip: string) => {
-          this.authService
-            .login(ip)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe({
-              next: (response: any) => {
-                console.log('Login successful');
-                if (this.isBrowser) {
-                  localStorage.setItem('token', response.token);
-                  localStorage.setItem('role', response.role);
-                  localStorage.setItem('nome', response.nome);
-                }
-                this.router.navigate(['/home']);
-              },
-              error: (err: any) => {
-                if (err === 'IP não autorizado') {
-                  this.ipNaoAutorizado = true;
-                } else {
-                  console.error('Login failed', err);
-                }
-              },
-            });
+        next: (response: any) => {
+          console.log('Login por dispositivo bem-sucedido');
+          if (this.isBrowser) {
+            localStorage.setItem('token', response.token);
+            localStorage.setItem('role', response.role);
+            localStorage.setItem('nome', response.nome);
+          }
+          this.router.navigate(['/home']);
         },
         error: (err: any) => {
-          console.error('Failed to get public IP', err);
+          if (err === 'Dispositivo nao autorizado') {
+            this.ipNaoAutorizado = true;
+            console.log('Dispositivo nao autorizado, aguardando login manual');
+          } else {
+            console.error('Erro no login automatico:', err);
+          }
         },
       });
   }

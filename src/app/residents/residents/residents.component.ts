@@ -5,6 +5,7 @@ import {
   Component,
   Inject,
   OnInit,
+  OnDestroy,
   PLATFORM_ID,
   ViewChild,
 } from '@angular/core';
@@ -18,7 +19,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSort, MatSortModule, Sort } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Router } from '@angular/router';
-import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { AuthService } from '../../auth/auth.service';
 import { ContentService } from '../../services/content.service';
 import { AddResidentFormComponent } from '../add-resident-form/add-resident-form.component';
 import { Resident } from '../resident';
@@ -44,12 +47,13 @@ import { UpdateResidentDialogComponent } from '../update-resident-dialog/update-
   templateUrl: './residents.component.html',
   styleUrls: ['./residents.component.css'],
 })
-export class ResidentsComponent implements OnInit {
+export class ResidentsComponent implements OnInit, OnDestroy {
   residents: Resident[] = [];
   dataSource = new MatTableDataSource<Resident>(this.residents);
   selection = new SelectionModel<Resident>(true, []);
-  isAdmin = false;
+
   private isBrowser: boolean;
+  private unsubscribe$ = new Subject<void>();
 
   @ViewChild(MatSort, { static: true }) sort!: MatSort;
 
@@ -62,11 +66,15 @@ export class ResidentsComponent implements OnInit {
   // Controle de busca
   searchControl = new FormControl('');
 
+  // Usar AuthService ao invez de localStorage
+  isAdmin: boolean = false;
+
   constructor(
     private residentsService: ResidentsService,
     private _liveAnnouncer: LiveAnnouncer,
     public dialog: MatDialog,
     private contentService: ContentService,
+    private authService: AuthService,
     private router: Router,
     @Inject(PLATFORM_ID) platformId: Object
   ) {
@@ -76,16 +84,26 @@ export class ResidentsComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource.sort = this.sort;
     if (this.isBrowser) {
-      this.isAdmin = localStorage.getItem('role') === 'admin';
+      // Usar AuthService ao invez de localStorage
+      this.isAdmin = this.authService.isAdminRole();
     }
     this.setupSearchControl();
     this.getResidents();
   }
 
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
   /** Configura o controle de busca com debounce */
   private setupSearchControl(): void {
     this.searchControl.valueChanges
-      .pipe(debounceTime(300), distinctUntilChanged())
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(),
+        takeUntil(this.unsubscribe$) // Cleanup automatico
+      )
       .subscribe((searchTerm) => this.applyFilterByControl(searchTerm || ''));
   }
 
@@ -127,23 +145,25 @@ export class ResidentsComponent implements OnInit {
   }
 
   private loadResidentsFromService(): void {
-    this.residentsService.getResidents().subscribe({
-      next: (residents) => {
-        this.residents = residents;
-        this.dataSource.data = this.residents;
-        this.totalItems = this.residents.length;
-        this.contentService.set('residents', residents);
-        this.isLoading = false;
-        this.hasError = false;
-      },
-      error: (error) => {
-        console.error('Erro ao carregar residentes:', error);
-        this.hasError = true;
-        this.errorMessage =
-          'Erro ao carregar lista de residentes. Tente novamente.';
-        this.isLoading = false;
-      },
-    });
+    this.residentsService.getResidents()
+      .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
+      .subscribe({
+        next: (residents) => {
+          this.residents = residents;
+          this.dataSource.data = this.residents;
+          this.totalItems = this.residents.length;
+          this.contentService.set('residents', residents);
+          this.isLoading = false;
+          this.hasError = false;
+        },
+        error: (error) => {
+          console.error('Erro ao carregar residentes:', error);
+          this.hasError = true;
+          this.errorMessage =
+            'Erro ao carregar lista de residentes. Tente novamente.';
+          this.isLoading = false;
+        },
+      });
   }
 
   refreshData(): void {
@@ -167,20 +187,24 @@ export class ResidentsComponent implements OnInit {
       panelClass: 'responsive-dialog',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.isLoading = true;
-        this.residentsService.createResident(result).subscribe({
-          next: () => this.refreshData(),
-          error: (error) => {
-            console.error('Erro ao criar residente:', error);
-            this.hasError = true;
-            this.errorMessage = 'Erro ao criar residente. Tente novamente.';
-            this.isLoading = false;
-          },
-        });
-      }
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
+      .subscribe((result) => {
+        if (result) {
+          this.isLoading = true;
+          this.residentsService.createResident(result)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+              next: () => this.refreshData(),
+              error: (error) => {
+                console.error('Erro ao criar residente:', error);
+                this.hasError = true;
+                this.errorMessage = 'Erro ao criar residente. Tente novamente.';
+                this.isLoading = false;
+              },
+            });
+        }
+      });
   }
 
   deleteResident(id: number): void {
@@ -188,15 +212,17 @@ export class ResidentsComponent implements OnInit {
       'Tem certeza que deseja deletar este residente? Esta ação não pode ser desfeita.';
     if (confirm(confirmMessage)) {
       this.isLoading = true;
-      this.residentsService.deleteResident(id).subscribe({
-        next: () => this.refreshData(),
-        error: (error) => {
-          console.error('Erro ao deletar residente:', error);
-          this.hasError = true;
-          this.errorMessage = 'Erro ao deletar residente. Tente novamente.';
-          this.isLoading = false;
-        },
-      });
+      this.residentsService.deleteResident(id)
+        .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
+        .subscribe({
+          next: () => this.refreshData(),
+          error: (error) => {
+            console.error('Erro ao deletar residente:', error);
+            this.hasError = true;
+            this.errorMessage = 'Erro ao deletar residente. Tente novamente.';
+            this.isLoading = false;
+          },
+        });
     }
   }
 
@@ -208,23 +234,26 @@ export class ResidentsComponent implements OnInit {
       panelClass: 'responsive-dialog',
     });
 
-    dialogRef.afterClosed().subscribe((result) => {
-      if (result) {
-        this.isLoading = true;
-        this.residentsService
-          .updateResident(selectedResident.id, result)
-          .subscribe({
-            next: () => this.refreshData(),
-            error: (error) => {
-              console.error('Erro ao atualizar residente:', error);
-              this.hasError = true;
-              this.errorMessage =
-                'Erro ao atualizar residente. Tente novamente.';
-              this.isLoading = false;
-            },
-          });
-      }
-    });
+    dialogRef.afterClosed()
+      .pipe(takeUntil(this.unsubscribe$)) // Cleanup automatico
+      .subscribe((result) => {
+        if (result) {
+          this.isLoading = true;
+          this.residentsService
+            .updateResident(selectedResident.id, result)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+              next: () => this.refreshData(),
+              error: (error) => {
+                console.error('Erro ao atualizar residente:', error);
+                this.hasError = true;
+                this.errorMessage =
+                  'Erro ao atualizar residente. Tente novamente.';
+                this.isLoading = false;
+              },
+            });
+        }
+      });
   }
 
   // função para atualizar a pagina

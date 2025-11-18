@@ -1,10 +1,8 @@
-// src/app/auth/auth.service.ts
-
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Router } from '@angular/router';
-import { from, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, from, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { FingerprintService } from '../services/fingerprint.service';
 
@@ -13,6 +11,9 @@ import { FingerprintService } from '../services/fingerprint.service';
 })
 export class AuthService {
   private isBrowser: boolean;
+  private currentToken$ = new BehaviorSubject<string | null>(null);
+  private currentRole$ = new BehaviorSubject<string | null>(null);
+  private currentNome$ = new BehaviorSubject<string | null>(null);
 
   constructor(
     private http: HttpClient,
@@ -21,28 +22,29 @@ export class AuthService {
     @Inject(PLATFORM_ID) platformId: Object
   ) {
     this.isBrowser = isPlatformBrowser(platformId);
+    
+    // Inicializa cache com valores do localStorage ao carregar
+    // Crucial para manter estado apos F5 refresh
+    if (this.isBrowser) {
+      const token = localStorage.getItem('token');
+      const role = localStorage.getItem('role');
+      const nome = localStorage.getItem('nome');
+      
+      if (token) this.currentToken$.next(token);
+      if (role) this.currentRole$.next(role?.toUpperCase());
+      if (nome) this.currentNome$.next(nome);
+      
+      console.log('AuthService inicializado com cache:', {
+        hasToken: !!token,
+        role: role,
+        nome: nome
+      });
+    }
   }
 
   private handleError(error: any) {
     console.error('An error occurred:', error);
     return throwError('Something bad happened; please try again later.');
-  }
-
-  /**
-   * Obtem IP publico (mantido para compatibilidade)
-   * Agora usa fingerprint como identificador principal
-   */
-  getPublicIp(): Observable<string> {
-    return from(
-      fetch('https://api.ipify.org?format=json')
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Network response was not ok');
-          }
-          return response.json();
-        })
-        .then((data) => data.ip)
-    );
   }
 
   /**
@@ -69,13 +71,18 @@ export class AuthService {
           if (response.newToken) {
             localStorage.setItem('newToken', response.newToken);
           }
+          
+          // Atualiza cache em memória
+          this.currentToken$.next(response.token);
+          this.currentRole$.next(response.role);
+          this.currentNome$.next(response.nome);
+          
           console.log('Login por dispositivo bem-sucedido');
         }
       }),
       catchError((error) => {
         console.error('Erro no login por dispositivo:', error);
         if (error.status === 401) {
-          // Dispositivo nao autorizado - redirecionar para login por credenciais
           console.log('Dispositivo nao autorizado, redirecionando para login');
           return throwError('Dispositivo nao autorizado');
         }
@@ -103,6 +110,12 @@ export class AuthService {
           if (response.newToken) {
             localStorage.setItem('newToken', response.newToken);
           }
+          
+          // Atualiza cache em memória
+          this.currentToken$.next(response.token);
+          this.currentRole$.next(response.role);
+          this.currentNome$.next(response.nome);
+          
           console.log('Login por credenciais bem-sucedido');
         }
       }),
@@ -130,8 +143,36 @@ export class AuthService {
   }
 
   get isAdmin(): boolean {
-    if (!this.isBrowser) return false;
-    return localStorage.getItem('role') === 'ADMIN';
+    // Usa cache em memória primeiro (mais rápido)
+    const role = this.currentRole$.getValue() || 
+                 (this.isBrowser ? localStorage.getItem('role') : null);
+    return role?.toUpperCase() === 'ADMIN';
+  }
+
+  /**
+   * Verifica se role e admin (compatibilidade)
+   */
+  isAdminRole(role?: string | null): boolean {
+    if (!role && this.isBrowser) {
+      role = localStorage.getItem('role');
+    }
+    return role?.toUpperCase() === 'ADMIN';
+  }
+
+  /**
+   * Obtem role atual (nao null)
+   */
+  getRole(): string {
+    return this.currentRole$.getValue() || 
+           (this.isBrowser ? localStorage.getItem('role') || 'FUNCIONARIO' : 'FUNCIONARIO');
+  }
+
+  /**
+   * Obtem nome atual (nao null)
+   */
+  getNome(): string {
+    return this.currentNome$.getValue() || 
+           (this.isBrowser ? localStorage.getItem('nome') || 'Usuario' : 'Usuario');
   }
 
   refreshToken(): Observable<any> {
@@ -161,6 +202,9 @@ export class AuthService {
             if (response.newToken) {
               localStorage.setItem('newToken', response.newToken);
             }
+            
+            // Atualiza cache em memória
+            this.currentToken$.next(response.token);
           }
         }),
         catchError(this.handleError)
@@ -174,18 +218,56 @@ export class AuthService {
       localStorage.removeItem('role');
       localStorage.removeItem('nome');
       localStorage.removeItem('usuarioId');
-      // NAO limpar fingerprint no logout - manter para proximo login
     }
+    
+    // Limpa cache em memória
+    this.currentToken$.next(null);
+    this.currentRole$.next(null);
+    this.currentNome$.next(null);
+    
     this.router.navigate(['/login']);
   }
 
   getToken(): string | null {
-    if (!this.isBrowser) return null;
-    return localStorage.getItem('token');
+    // Usa cache em memória primeiro (mais rápido)
+    const token = this.currentToken$.getValue();
+    if (token) return token;
+    
+    // Se não tem em cache, busca do localStorage
+    if (this.isBrowser) {
+      const storedToken = localStorage.getItem('token');
+      if (storedToken) {
+        this.currentToken$.next(storedToken);
+        return storedToken;
+      }
+    }
+    
+    return null;
   }
 
   isAuthenticated(): boolean {
     return this.getToken() !== null;
+  }
+
+  /**
+   * Obtem token como Observable para componentes reativos
+   */
+  getToken$(): Observable<string | null> {
+    return this.currentToken$.asObservable();
+  }
+
+  /**
+   * Obtem role como Observable para componentes reativos
+   */
+  getRole$(): Observable<string | null> {
+    return this.currentRole$.asObservable();
+  }
+
+  /**
+   * Obtem nome como Observable para componentes reativos
+   */
+  getNome$(): Observable<string | null> {
+    return this.currentNome$.asObservable();
   }
 
   /**
@@ -206,7 +288,8 @@ export class AuthService {
 
 // Servico de autenticacao com suporte a fingerprint de dispositivo
 // Permite login automatico independente do IP (suporta IPs dinamicos)
-// Mantem compatibilidade com login por credenciais
+// Cache em memória para melhorar performance
+// Observable para reatividade em componentes
 //    __  ____ ____ _  _
 //  / _\/ ___) ___) )( \
 // /    \___ \___ ) \/ (

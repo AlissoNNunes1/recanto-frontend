@@ -98,16 +98,19 @@ export class EvolucoesListComponent implements OnInit {
   carregarEvolucoes(): void {
     this.loading = true;
     this.evolucoesService.listar(this.filtros).subscribe({
-      next: (response) => {
-        this.evolucoes = response.data;
-        this.totalItems = response.pageInfo.totalItems;
+      next: (response: any) => {
+        console.log('Resposta da API:', response);
+        this.evolucoes = response.data || [];
+        this.totalItems = response.pageInfo?.totalItems || 0;
         this.loading = false;
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Erro ao carregar evolucoes:', error);
-        this.snackBar.open('Erro ao carregar evolucoes', 'Fechar', {
-          duration: 3000,
-        });
+        this.snackBar.open(
+          `Erro ao carregar evolucoes: ${error.error?.message || error.message}`,
+          'Fechar',
+          { duration: 5000 }
+        );
         this.loading = false;
       },
     });
